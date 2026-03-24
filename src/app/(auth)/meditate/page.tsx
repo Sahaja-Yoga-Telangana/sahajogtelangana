@@ -151,7 +151,7 @@ function FeatureCard({
   return (
     <article className="group h-full rounded-[28px] border border-[color:var(--border)] bg-gradient-to-br from-white via-[color:var(--surface)] to-[color:var(--surface-2)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft md:p-8">
       <div className="flex h-full flex-col">
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)]">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-white">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <h3 className="mt-6 text-xl font-semibold text-[color:var(--ink)] md:text-2xl">{title}</h3>
@@ -364,7 +364,7 @@ export default function MeditatePage() {
               </div>
               <div className="mx-auto mt-6 max-w-xs rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)] p-2">
                 <Image
-                  src="/meditation-chair-neutral.png"
+                  src="/balancing-left.png"
                   alt="Left side balancing posture"
                   width={800}
                   height={1500}
@@ -385,7 +385,7 @@ export default function MeditatePage() {
               </div>
               <div className="mx-auto mt-6 max-w-xs rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)] p-2">
                 <Image
-                  src="/meditation-chair-raised.png"
+                  src="/balancing-right.png"
                   alt="Right side balancing posture"
                   width={800}
                   height={1500}
