@@ -19,6 +19,7 @@ export type EventFormValues = {
   price12To24: number;
   price25AndAbove: number;
   image: string;
+  qrImage: string;
 };
 
 export default function EventForm({
@@ -35,6 +36,8 @@ export default function EventForm({
   submitLabel?: string;
 }) {
   const [imageUploading, setImageUploading] = useState(false);
+  const [qrUploading, setQrUploading] = useState(false);
+  const mediaUploading = imageUploading || qrUploading;
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -169,18 +172,24 @@ export default function EventForm({
           </div>
         </div>
 
-        <div>
+        <div className="space-y-6">
           <ImageUpload
             value={formData.image}
             onChange={(image) => setFormData((prev) => ({ ...prev, image }))}
             onUploadStateChange={setImageUploading}
           />
+          <ImageUpload
+            value={formData.qrImage}
+            onChange={(qrImage) => setFormData((prev) => ({ ...prev, qrImage }))}
+            label="Payment QR image"
+            onUploadStateChange={setQrUploading}
+          />
         </div>
       </div>
 
       <div className="flex items-center justify-end">
-        <button type="submit" disabled={submitting || imageUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60">
-          {imageUploading ? 'Uploading image...' : submitting ? 'Saving...' : submitLabel}
+        <button type="submit" disabled={submitting || mediaUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60">
+          {mediaUploading ? 'Uploading media...' : submitting ? 'Saving...' : submitLabel}
         </button>
       </div>
     </form>

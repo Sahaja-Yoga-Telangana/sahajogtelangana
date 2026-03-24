@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
         pricing.below12 === 0 &&
         pricing.age12To24 === 0 &&
         pricing.age25AndAbove === 0;
-      const requiredFields = ['eventId', 'eventTitle', 'name', 'state', 'city', 'age', 'email', 'amountPaid'];
+      const requiredFields = ['eventId', 'eventTitle', 'name', 'state', 'city', 'age', 'email'];
       for (const field of requiredFields) {
         if (!body[field]) {
           return NextResponse.json({
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
       }
       
       // Check if amount matches expected amount based on age
-      if (body.amountPaid !== expectedAmount) {
+      if (body.amountPaid !== undefined && body.amountPaid !== expectedAmount) {
         return NextResponse.json({
           status: 400,
           message: `Invalid amount. Expected ₹${expectedAmount} for age ${age}`,
@@ -236,6 +236,7 @@ export async function POST(request: NextRequest) {
       // Create new registration
       const newRegistration = await EventRegistration.create({
         ...body,
+        amountPaid: expectedAmount,
         transactionNumber: isFreeEvent ? '' : body.transactionNumber,
       });
       

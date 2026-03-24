@@ -59,6 +59,11 @@ const eventSchema = new Schema({
     required: false,
     trim: true,
   },
+  qrImage: {
+    type: Schema.Types.String,
+    required: false,
+    trim: true,
+  },
   isActive: {
     type: Schema.Types.Boolean,
     default: true,
@@ -81,6 +86,7 @@ if (existingEventModel) {
     priceBelow12: { type: Schema.Types.Number, required: false, default: 1000 },
     price12To24: { type: Schema.Types.Number, required: false, default: 1800 },
     price25AndAbove: { type: Schema.Types.Number, required: false, default: 2600 },
+    qrImage: { type: Schema.Types.String, required: false, trim: true },
   });
 }
 

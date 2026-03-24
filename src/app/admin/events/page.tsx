@@ -19,6 +19,7 @@ const initialFormData: EventFormValues = {
   price12To24: 1800,
   price25AndAbove: 2600,
   image: '',
+  qrImage: '',
 };
 
 export default function AdminEvents() {
@@ -101,6 +102,7 @@ export default function AdminEvents() {
       price12To24: event.price12To24 ?? 1800,
       price25AndAbove: event.price25AndAbove ?? 2600,
       image: event.image ?? '',
+      qrImage: event.qrImage ?? '',
     });
     setFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -58,6 +58,9 @@ const menuItems = [
   },
 ];
 
+const cardIconClasses =
+  'inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_92%,transparent),_color-mix(in_srgb,var(--surface-2)_86%,transparent))] text-[color:var(--primary)] shadow-sm transition-colors duration-300 group-hover:bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_96%,transparent),_color-mix(in_srgb,var(--accent-200)_34%,transparent))] dark:text-[color:var(--accent)]';
+
 export default async function AdminDashboard() {
   const session: CustomSession | null = await getServerSession(authOptions);
 
@@ -76,7 +79,7 @@ export default async function AdminDashboard() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-5">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface)] text-[color:var(--primary)]">
+              <div className={cardIconClasses}>
                 <MdDashboard size={24} />
               </div>
               <p className="mt-4 text-sm font-semibold text-[color:var(--ink)]">Signed in as</p>
@@ -101,7 +104,7 @@ export default async function AdminDashboard() {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)] transition-colors duration-300 group-hover:bg-[color:var(--accent-200)]">
+                <div className={cardIconClasses}>
                   {item.icon}
                 </div>
                 <h2 className="mt-5 text-xl font-semibold text-[color:var(--ink)]">{item.name}</h2>

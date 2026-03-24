@@ -1,6 +1,12 @@
 import Image from 'next/image';
 
-export default function PaymentInfoCard({ isBulkRegistration }: { isBulkRegistration: boolean }) {
+export default function PaymentInfoCard({
+  isBulkRegistration,
+  qrImage,
+}: {
+  isBulkRegistration: boolean;
+  qrImage?: string;
+}) {
   return (
     <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm">
       <h3 className="mb-4 text-center text-xl font-semibold text-[color:var(--ink)]">Payment Information</h3>
@@ -9,11 +15,12 @@ export default function PaymentInfoCard({ isBulkRegistration }: { isBulkRegistra
       <div className="mb-4 flex justify-center">
         <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
           <Image
-            src="/assets/images/TrustPaymentQR.png"
+            src={qrImage || '/assets/images/TrustPaymentQR.png'}
             alt="Payment QR Code"
             width={384}
             height={384}
             className="h-96 w-96 object-contain"
+            unoptimized={!!qrImage && /^https?:\/\//.test(qrImage)}
           />
         </div>
       </div>

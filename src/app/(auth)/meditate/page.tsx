@@ -149,9 +149,9 @@ function FeatureCard({
   stores?: Array<{ href: string; label: string }>;
 }) {
   return (
-    <article className="group h-full rounded-[28px] border border-[color:var(--border)] bg-gradient-to-br from-white via-[color:var(--surface)] to-[color:var(--surface-2)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft md:p-8">
+    <article className="group h-full rounded-[28px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_72%,transparent))] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft md:p-8">
       <div className="flex h-full flex-col">
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-white">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_96%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] text-[color:var(--primary)] shadow-sm dark:text-[color:var(--accent)]">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <h3 className="mt-6 text-xl font-semibold text-[color:var(--ink)] md:text-2xl">{title}</h3>

@@ -14,6 +14,7 @@ export type AppEvent = {
   price12To24?: number;
   price25AndAbove?: number;
   image?: string;
+  qrImage?: string;
   isActive?: boolean;
 };
 

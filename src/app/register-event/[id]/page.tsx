@@ -24,6 +24,7 @@ type EventDetails = {
   price12To24?: number;
   price25AndAbove?: number;
   image?: string;
+  qrImage?: string;
 };
 
 type Participant = {
@@ -105,7 +106,8 @@ export default function EventRegistration({ params }: { params: { id: string } }
               priceBelow12: 1000,
               price12To24: 1800,
               price25AndAbove: 2600,
-              image: '/ShriMatajiKrishnaPuja.jpg'
+              image: '/ShriMatajiKrishnaPuja.jpg',
+              qrImage: '/assets/images/TrustPaymentQR.png',
             });
           } else {
             throw new Error('Event not found');
@@ -1079,7 +1081,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     </p>
                   </div>
 
-                  {!isFreeEvent ? <PaymentInfoCard isBulkRegistration={isBulkRegistration} /> : null}
+                  {!isFreeEvent ? <PaymentInfoCard isBulkRegistration={isBulkRegistration} qrImage={event?.qrImage} /> : null}
                 </div>
               </div>
             </div>
