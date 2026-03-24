@@ -36,6 +36,12 @@ const IntroButton = () => {
             >
               English
             </button>
+            <button
+              onClick={() => downloadPDF('telugu-booklet.pdf')}
+              className="flexCenter gap-3 rounded-full btn_green"
+            >
+              Telugu
+            </button>
           </div>
         </div>
       </div>
