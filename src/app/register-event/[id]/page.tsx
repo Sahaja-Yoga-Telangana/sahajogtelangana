@@ -1,0 +1,1118 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
+import { format } from 'date-fns';
+import { getEventDateLabel } from '@/lib/events';
+import PaymentInfoCard from '@/components/events/PaymentInfoCard';
+import { FiArrowLeft, FiCalendar, FiClock, FiExternalLink, FiMapPin, FiPhone } from 'react-icons/fi';
+
+type EventDetails = {
+  _id: string;
+  title: string;
+  description: string;
+  date: string;
+  endDate?: string | null;
+  time: string;
+  location: string;
+  googleMapLink?: string;
+  contactDetails?: string;
+  priceBelow12?: number;
+  price12To24?: number;
+  price25AndAbove?: number;
+  image?: string;
+};
+
+type Participant = {
+  name: string;
+  state: string;
+  city: string;
+  age: string;
+  amountPaid: number;
+  email: string;
+};
+
+type RegistrationResponse = {
+  _id: string;
+  name: string;
+  eventTitle: string;
+  age: number;
+  amountPaid: number;
+  state: string;
+  city: string;
+  transactionNumber: string;
+  createdAt: string;
+}
+
+export default function EventRegistration({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const [event, setEvent] = useState<EventDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    state: '',
+    city: '',
+    age: '',
+    email: '',
+  });
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [isBulkRegistration, setIsBulkRegistration] = useState(false);
+  const [transactionNumber, setTransactionNumber] = useState('');
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [participantErrors, setParticipantErrors] = useState<Record<number, Record<string, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [receiptData, setReceiptData] = useState<RegistrationResponse | null>(null);
+  const [bulkReceiptData, setBulkReceiptData] = useState<RegistrationResponse[] | null>(null);
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Fetch event details
+    const fetchEvent = async () => {
+      try {
+        setLoading(true);
+        
+        // Attempt to fetch from API
+        try {
+          const response = await axios.get(`/api/events/${params.id}`);
+          if (response.data.status === 200) {
+            setEvent(response.data.data);
+          }
+        } catch (error) {
+          // If API fails, check if this is the sample event
+          if (params.id === 'krishna-puja-2025') {
+            setEvent({
+              _id: 'krishna-puja-2025',
+              title: 'Shri Krishna Puja 2025',
+              description: 'Join us for the auspicious celebration of Shri Krishna Puja 2025. This three-day event will feature meditation, music, collective gatherings, and special pujas dedicated to Lord Krishna. All Sahaja Yogis and seekers are welcome to attend.',
+              date: '2025-08-15T00:00:00.000Z',
+              endDate: '2025-08-17T00:00:00.000Z',
+              time: 'August 15-17, 9:00 AM - 7:00 PM',
+              location: 'Hyderabad, Telangana',
+              googleMapLink: 'https://maps.google.com/',
+              contactDetails: 'Event coordination desk: +91 90000 00000',
+              priceBelow12: 1000,
+              price12To24: 1800,
+              price25AndAbove: 2600,
+              image: '/ShriMatajiKrishnaPuja.jpg'
+            });
+          } else {
+            throw new Error('Event not found');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching event:', error);
+        router.push('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvent();
+  }, [params.id, router]);
+
+  useEffect(() => {
+    // Calculate total amount for all participants
+    if (isBulkRegistration) {
+      const total = participants.reduce((sum, participant) => {
+        const amount = getAmountByAge(parseInt(participant.age));
+        return sum + amount;
+      }, 0);
+      setTotalAmount(total);
+    } else {
+      const age = parseInt(formData.age);
+      if (!isNaN(age)) {
+        setTotalAmount(getAmountByAge(age));
+      } else {
+        setTotalAmount(0);
+      }
+    }
+  }, [isBulkRegistration, participants, formData.age]);
+
+  const getPricing = () => ({
+    below12: event?.priceBelow12 ?? 1000,
+    age12To24: event?.price12To24 ?? 1800,
+    age25AndAbove: event?.price25AndAbove ?? 2600,
+  });
+  const isFreeEvent = (() => {
+    const pricing = getPricing();
+    return pricing.below12 === 0 && pricing.age12To24 === 0 && pricing.age25AndAbove === 0;
+  })();
+
+  const getAmountByAge = (age: number): number => {
+    const pricing = getPricing();
+    if (isNaN(age)) return 0;
+    if (age < 12) return pricing.below12;
+    if (age >= 12 && age < 25) return pricing.age12To24;
+    return pricing.age25AndAbove;
+  };
+
+  const handleToggleRegistrationType = () => {
+    setIsBulkRegistration(!isBulkRegistration);
+    // Reset errors when switching registration types
+    setErrors({});
+    setParticipantErrors({});
+  };
+
+  const handleAddParticipant = () => {
+    // Validate current form data before adding participant
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    
+    if (!formData.state.trim()) {
+      newErrors.state = 'State is required';
+    }
+    
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required';
+    }
+    
+    if (!formData.age.trim()) {
+      newErrors.age = 'Age is required';
+    } else if (isNaN(parseInt(formData.age)) || parseInt(formData.age) <= 0) {
+      newErrors.age = 'Please enter a valid age';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    // Calculate amount for this participant
+    const age = parseInt(formData.age);
+    const amount = getAmountByAge(age);
+    
+    // Add participant to the list
+    const newParticipant: Participant = {
+      ...formData,
+      amountPaid: amount
+    };
+    
+    setParticipants([...participants, newParticipant]);
+    
+    // Clear form for next participant
+    setFormData({
+      name: '',
+      state: '',
+      city: '',
+      age: '',
+      email: '',
+    });
+    
+    // Clear errors
+    setErrors({});
+  };
+
+  const handleRemoveParticipant = (index: number) => {
+    const updatedParticipants = [...participants];
+    updatedParticipants.splice(index, 1);
+    setParticipants(updatedParticipants);
+    
+    // Update participant errors
+    const newParticipantErrors = { ...participantErrors };
+    delete newParticipantErrors[index];
+    
+    // Reindex errors
+    const reindexedErrors: Record<number, Record<string, string>> = {};
+    Object.keys(newParticipantErrors).forEach((key) => {
+      const keyNum = parseInt(key);
+      if (keyNum > index) {
+        reindexedErrors[keyNum - 1] = newParticipantErrors[keyNum];
+      } else {
+        reindexedErrors[keyNum] = newParticipantErrors[keyNum];
+      }
+    });
+    
+    setParticipantErrors(reindexedErrors);
+  };
+
+  const handleEditParticipant = (index: number) => {
+    // Set form data to participant data for editing
+    setFormData(participants[index]);
+    
+    // Remove participant from list
+    handleRemoveParticipant(index);
+  };
+
+  const handlePrintReceipt = () => {
+    if (receiptRef.current) {
+      const printContents = receiptRef.current.innerHTML;
+      const originalContents = document.body.innerHTML;
+      
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      
+      // Reload the page to restore React state
+      window.location.reload();
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (isBulkRegistration && bulkReceiptData && bulkReceiptData.length > 0) {
+      window.open(`/api/generate-pdf-receipt?transactionNumber=${bulkReceiptData[0].transactionNumber}`, '_blank');
+    } else if (receiptData) {
+      window.open(`/api/generate-pdf-receipt?registrationId=${receiptData._id}`, '_blank');
+    }
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleSendEmail = async () => {
+    if (!email) {
+      setEmailError('Email is required');
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email');
+      return;
+    }
+    
+    setSendingEmail(true);
+    setEmailError('');
+    
+    try {
+      const response = await axios.post('/api/email-receipt', {
+        email,
+        registrationId: receiptData?._id
+      });
+      
+      if (response.data.status === 200) {
+        setEmailSent(true);
+      } else {
+        setEmailError('Failed to send email. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setEmailError('Failed to send email. Please try again.');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear the error for this field
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateForm = () => {
+    if (isBulkRegistration) {
+      // For bulk registration, validate transaction number and participants
+      const newErrors: Record<string, string> = {};
+      
+      if (!isFreeEvent && !transactionNumber.trim()) {
+        newErrors.transactionNumber = 'Transaction number is required';
+      }
+      
+      if (participants.length === 0) {
+        newErrors.participants = 'At least one participant is required';
+      }
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    } else {
+      // For individual registration
+      const newErrors: Record<string, string> = {};
+      
+      if (!formData.name.trim()) {
+        newErrors.name = 'Name is required';
+      }
+      
+      if (!formData.state.trim()) {
+        newErrors.state = 'State is required';
+      }
+      
+      if (!formData.city.trim()) {
+        newErrors.city = 'City is required';
+      }
+      
+      if (!formData.age.trim()) {
+        newErrors.age = 'Age is required';
+      } else if (isNaN(parseInt(formData.age)) || parseInt(formData.age) <= 0) {
+        newErrors.age = 'Please enter a valid age';
+      }
+      
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!validateEmail(formData.email)) {
+        newErrors.email = 'Please enter a valid email';
+      }
+      
+      if (!isFreeEvent && !transactionNumber.trim()) {
+        newErrors.transactionNumber = 'Transaction number is required';
+      }
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    
+    try {
+      if (isBulkRegistration) {
+        // Bulk registration
+        const response = await axios.post('/api/event-registrations', {
+          eventId: params.id,
+          eventTitle: event?.title,
+          transactionNumber,
+          totalAmountPaid: totalAmount,
+          participants: participants.map(p => ({
+            ...p,
+            age: parseInt(p.age)
+          }))
+        });
+        
+        if (response.data.status === 201) {
+          setSuccessMessage('Bulk registration successful! Thank you for registering for the event.');
+          // Store registration data for receipt
+          setBulkReceiptData(response.data.data);
+          setShowReceipt(true);
+          
+          // Send receipt to email of each participant
+          for (const participant of response.data.data) {
+            try {
+              await axios.post('/api/email-receipt', {
+                email: participant.email,
+                registrationId: participant._id
+              });
+            } catch (error) {
+              console.error('Error sending email receipt:', error);
+            }
+          }
+          
+          // Clear form
+          setFormData({
+            name: '',
+            state: '',
+            city: '',
+            age: '',
+            email: '',
+          });
+          setParticipants([]);
+          setTransactionNumber('');
+        } else {
+          setErrorMessage('Failed to register. Please try again.');
+        }
+      } else {
+        // Individual registration
+        const response = await axios.post('/api/event-registrations', {
+          eventId: params.id,
+          eventTitle: event?.title,
+          name: formData.name,
+          state: formData.state,
+          city: formData.city,
+          age: parseInt(formData.age),
+          email: formData.email,
+          transactionNumber: isFreeEvent ? '' : transactionNumber,
+          amountPaid: totalAmount
+        });
+        
+        if (response.data.status === 201) {
+          setSuccessMessage('Registration successful! Thank you for registering for the event.');
+          // Store registration data for receipt
+          setReceiptData(response.data.data);
+          setShowReceipt(true);
+          
+          // Automatically send receipt to email
+          try {
+            await axios.post('/api/email-receipt', {
+              email: formData.email,
+              registrationId: response.data.data._id
+            });
+            setEmailSent(true);
+            setEmail(formData.email);
+          } catch (error) {
+            console.error('Error sending email receipt:', error);
+          }
+          
+          // Clear form
+          setFormData({
+            name: '',
+            state: '',
+            city: '',
+            age: '',
+            email: '',
+          });
+          setTransactionNumber('');
+        } else {
+          setErrorMessage('Failed to register. Please try again.');
+        }
+      }
+    } catch (error: any) {
+      console.error('Error submitting registration:', error);
+      setErrorMessage(error.response?.data?.message || 'An error occurred while submitting your registration. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
+
+  if (!event) {
+    return (
+      <div className="container mx-auto px-4 py-10 text-center">
+        <h1 className="text-2xl font-bold text-red-600">Event not found</h1>
+        <p className="mt-4">The event you are looking for does not exist or has been removed.</p>
+        <Link href="/" className="mt-6 inline-block bg-[#8A1457] text-white px-6 py-2 rounded-md">
+          Return to Home
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_65%,transparent),_transparent_32%),linear-gradient(180deg,_color-mix(in_srgb,var(--bg)_92%,white_8%),_var(--bg))]">
+      <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 lg:px-8">
+        <div className="mb-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--primary)] transition-colors hover:text-[color:var(--primary-600)]"
+          >
+            <FiArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to Home
+          </Link>
+        </div>
+
+        <section className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-soft">
+          <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative min-h-[320px] overflow-hidden bg-[linear-gradient(160deg,_rgba(241,226,206,0.95),_rgba(246,241,234,0.85),_rgba(255,255,255,0.92))]">
+              {event.image ? (
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  width={1200}
+                  height={900}
+                  className="h-full w-full object-cover"
+                  unoptimized
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/85 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+                    Sahaja Yoga Event
+                  </div>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent lg:hidden" />
+            </div>
+
+            <div className="p-6 md:p-8 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Event registration</p>
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-4xl">{event.title}</h1>
+              <p className="mt-4 text-sm leading-7 text-[color:var(--muted)] md:text-base">{event.description}</p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <InfoPill icon={<FiCalendar className="h-4 w-4" />} label={getEventDateLabel(event.date, event.endDate)} />
+                <InfoPill icon={<FiClock className="h-4 w-4" />} label={event.time} />
+                <InfoPill icon={<FiMapPin className="h-4 w-4" />} label={event.location} className="sm:col-span-2" />
+                {event.contactDetails ? (
+                  <InfoPill icon={<FiPhone className="h-4 w-4" />} label={event.contactDetails} className="sm:col-span-2" />
+                ) : null}
+              </div>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                {event.googleMapLink ? (
+                  <a
+                    href={event.googleMapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                  >
+                    Open in Google Maps
+                    <FiExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+                  </a>
+                ) : null}
+                <a
+                  href="#registration-form"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
+                >
+                  Register Now
+                </a>
+              </div>
+
+              {(event.googleMapLink || event.contactDetails) ? (
+                <div className="mt-8 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
+                  <h2 className="text-lg font-semibold text-[color:var(--ink)]">Helpful details</h2>
+                  <div className="mt-3 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
+                    {event.googleMapLink ? <p>Use the map link for exact venue navigation before you travel.</p> : null}
+                    {event.contactDetails ? <p>{event.contactDetails}</p> : null}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
+
+        <div id="registration-form" className="mt-8 overflow-hidden rounded-[28px] bg-[color:var(--surface)] shadow-soft">
+        <div className="p-6">
+          <h2 className="mb-6 text-center text-2xl font-bold text-[color:var(--ink)]">Register for the Event</h2>
+          
+          {successMessage && !showReceipt && (
+            <div className="mb-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 px-4 py-3 text-[color:var(--primary)]">
+              {successMessage}
+            </div>
+          )}
+          
+          {errorMessage && (
+            <div className="mb-4 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-600 dark:text-red-300">
+              {errorMessage}
+            </div>
+          )}
+          
+          {showReceipt && (receiptData || bulkReceiptData) ? (
+            <div className="mb-8">
+              <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-6 text-[color:var(--primary)]">
+                <h3 className="mb-4 text-center text-xl font-bold text-[color:var(--primary)]">Registration Successful!</h3>
+                <p className="mb-6 text-center text-[color:var(--muted)]">Your registration has been confirmed. Please keep this receipt for your records.</p>
+                
+                <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6" ref={receiptRef}>
+                  <div className="flex justify-between items-center mb-6">
+                    <div>
+                      <h4 className="text-xl font-bold text-[color:var(--ink)]">Sahaja Yoga Telangana</h4>
+                      <p className="text-base text-[color:var(--muted)]">Event Registration Receipt</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-base text-[color:var(--muted)]">Receipt #: {
+                        bulkReceiptData 
+                          ? bulkReceiptData[0]?._id.substring(0, 8) 
+                          : receiptData?._id.substring(0, 8)
+                      }</p>
+                      <p className="text-base text-[color:var(--muted)]">Date: {
+                        // Safely format the date with a fallback
+                        bulkReceiptData 
+                          ? (bulkReceiptData[0]?.createdAt 
+                            ? format(new Date(bulkReceiptData[0].createdAt), 'dd MMM yyyy') 
+                            : new Date().toLocaleDateString())
+                          : (receiptData?.createdAt 
+                            ? format(new Date(receiptData.createdAt), 'dd MMM yyyy') 
+                            : new Date().toLocaleDateString())
+                      }</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4 border-y border-[color:var(--border)] py-4">
+                    <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Event Details</h5>
+                    <p className="font-medium text-[color:var(--ink)]">{
+                      bulkReceiptData ? bulkReceiptData[0]?.eventTitle : receiptData?.eventTitle
+                    }</p>
+                    <p className="text-[color:var(--muted)]">{event?.location}</p>
+                    <p className="text-[color:var(--muted)]">{getEventDateLabel(event?.date || '', event?.endDate)}</p>
+                  </div>
+                  
+                  {/* Participant Information - Single Registration */}
+                  {receiptData && !bulkReceiptData && (
+                    <div className="mb-4">
+                      <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Participant Information</h5>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                        <div>
+                          <p className="text-base text-[color:var(--muted)]">Name:</p>
+                          <p className="font-medium text-[color:var(--ink)]">{receiptData.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-base text-[color:var(--muted)]">Age:</p>
+                          <p className="font-medium text-[color:var(--ink)]">{receiptData.age} years</p>
+                        </div>
+                        <div>
+                          <p className="text-base text-[color:var(--muted)]">Location:</p>
+                          <p className="font-medium text-[color:var(--ink)]">{receiptData.city}, {receiptData.state}</p>
+                        </div>
+                        <div>
+                          <p className="text-base text-[color:var(--muted)]">Registration ID:</p>
+                          <p className="font-medium text-[color:var(--ink)]">{receiptData._id}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Participant Information - Bulk Registration */}
+                  {bulkReceiptData && (
+                    <div className="mb-4">
+                      <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Participants Information</h5>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-[color:var(--border)]">
+                          <thead className="bg-[color:var(--surface-2)]/80">
+                            <tr>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Name</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Age</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Location</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-[color:var(--border)] bg-[color:var(--surface)]">
+                            {bulkReceiptData.map((registration, index) => (
+                              <tr key={index}>
+                                <td className="px-3 py-2 whitespace-nowrap text-base font-medium text-[color:var(--ink)]">
+                                  {registration.name}
+                                </td>
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
+                                  {registration.age} years
+                                </td>
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
+                                  {registration.city}, {registration.state}
+                                </td>
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
+                                  ₹{registration.amountPaid.toLocaleString()}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="mb-4">
+                    {isFreeEvent ? (
+                      <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+                        <h5 className="mb-2 font-semibold text-[color:var(--ink)]">Free Entry</h5>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                          <div>
+                            <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
+                            <p className="font-medium text-[color:var(--ink)]">₹0</p>
+                          </div>
+                          <div>
+                            <p className="text-base text-[color:var(--muted)]">Registration Type:</p>
+                            <p className="font-medium text-[color:var(--primary)]">No payment required</p>
+                          </div>
+                          {bulkReceiptData && (
+                            <div>
+                              <p className="text-base text-[color:var(--muted)]">Participants:</p>
+                              <p className="font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Payment Information</h5>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                          <div>
+                            <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
+                            <p className="font-medium text-[color:var(--ink)]">₹{
+                              bulkReceiptData 
+                                ? bulkReceiptData.reduce((sum, reg) => sum + reg.amountPaid, 0).toLocaleString() 
+                                : receiptData?.amountPaid.toLocaleString()
+                            }</p>
+                          </div>
+                          <div>
+                            <p className="text-base text-[color:var(--muted)]">Transaction ID:</p>
+                            <p className="font-medium text-[color:var(--ink)]">{
+                              bulkReceiptData ? bulkReceiptData[0]?.transactionNumber : receiptData?.transactionNumber
+                            }</p>
+                          </div>
+                          <div>
+                            <p className="text-base text-[color:var(--muted)]">Payment Status:</p>
+                            <p className="font-medium text-[color:var(--primary)]">Confirmed</p>
+                          </div>
+                          {bulkReceiptData && (
+                            <div>
+                              <p className="text-base text-[color:var(--muted)]">Participants:</p>
+                              <p className="font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  
+                  <div className="mt-8 text-center text-base text-[color:var(--muted)]">
+                    <p>Thank you for registering for the event!</p>
+                    <p>For any inquiries, please contact us at info@sahajayogatelangana.org</p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col md:flex-row gap-4 justify-center">
+                  <button 
+                    onClick={handlePrintReceipt} 
+                    className="flex items-center justify-center rounded-full bg-[color:var(--primary)] px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Print Receipt
+                  </button>
+                  
+                  <button 
+                    onClick={handleDownloadPDF} 
+                    className="flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 font-bold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                  </button>
+                  
+                  <div className="flex-1">
+                    <div className="flex">
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setEmailError('');
+                        }}
+                        className={`flex-1 rounded-l-xl border bg-[color:var(--surface)] p-2 text-[color:var(--ink)] ${emailError ? 'border-red-500' : 'border-[color:var(--border)]'}`}
+                      />
+                      <button
+                        onClick={handleSendEmail}
+                        disabled={sendingEmail || emailSent}
+                        className="whitespace-nowrap rounded-r-xl bg-[color:var(--primary)] px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400"
+                      >
+                        {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
+                      </button>
+                    </div>
+                    {emailError && <p className="text-red-500 text-base mt-1">{emailError}</p>}
+                    {emailSent && <p className="mt-1 text-base text-[color:var(--primary)]">Receipt has been sent to your email!</p>}
+                  </div>
+                </div>
+                
+                <div className="text-center mt-6">
+                  <Link href="/" className="text-[color:var(--primary)] hover:underline">
+                    Return to Home
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="mb-8 flex justify-center">
+                <div className="inline-flex rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-1">
+                <button
+                  type="button"
+                  onClick={() => setIsBulkRegistration(false)}
+                  className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${!isBulkRegistration 
+                    ? 'bg-[color:var(--primary)] text-white shadow-sm' 
+                    : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]'}`}
+                >
+                  Individual Registration
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsBulkRegistration(true)}
+                  className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${isBulkRegistration 
+                    ? 'bg-[color:var(--primary)] text-white shadow-sm' 
+                    : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]'}`}
+                >
+                  Bulk Registration
+                </button>
+                </div>
+              </div>
+              
+              <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr]">
+                <div>
+                  <form onSubmit={handleSubmit}>
+                    {isBulkRegistration && (
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 p-5">
+                        <h3 className="font-medium text-[color:var(--primary)]">Bulk Registration</h3>
+                        <p className="mt-2 text-base text-[color:var(--muted)]">
+                          Register multiple participants with a single payment. Add all participants before submitting.
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="mb-5">
+                      <label htmlFor="name" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">
+                        {isBulkRegistration ? 'Participant Name *' : 'Name *'}
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className={`admin-input ${errors.name ? 'border-red-500' : ''}`}
+                        placeholder="Enter full name"
+                      />
+                      {errors.name && <p className="text-red-500 text-base mt-1">{errors.name}</p>}
+                    </div>
+                    
+                    <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <div>
+                        <label htmlFor="state" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">State *</label>
+                        <input
+                          type="text"
+                          id="state"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                          className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                          placeholder="Your state"
+                        />
+                        {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="city" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">City *</label>
+                        <input
+                          type="text"
+                          id="city"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                          placeholder="Your city"
+                        />
+                        {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                      </div>
+                    </div>
+                    
+                    <div className="mb-5">
+                      <label htmlFor="age" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Age *</label>
+                      <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleInputChange}
+                        className={`admin-input ${errors.age ? 'border-red-500' : ''}`}
+                        placeholder="Age"
+                        min="1"
+                      />
+                      {errors.age && <p className="text-red-500 text-base mt-1">{errors.age}</p>}
+                    </div>
+                    
+                    <div className="mb-5">
+                      <label htmlFor="email" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Email *</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                        placeholder="Enter your email"
+                      />
+                      {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                    </div>
+                    
+                    {isBulkRegistration && (
+                      <div className="mb-5">
+                        <button
+                          type="button"
+                          onClick={handleAddParticipant}
+                          className="inline-flex items-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                          Add Participant
+                        </button>
+                      </div>
+                    )}
+                    
+                    {isBulkRegistration && participants.length > 0 && (
+                      <div className="mb-6">
+                        <h3 className="mb-3 text-base font-semibold text-[color:var(--ink)]">Added Participants</h3>
+                        <div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]">
+                          <table className="min-w-full divide-y divide-[color:var(--border)]">
+                            <thead className="bg-[color:var(--surface-2)]/80">
+                              <tr>
+                                <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Name</th>
+                                <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Age</th>
+                                <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Amount</th>
+                                <th scope="col" className="px-3 py-3 text-right text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[color:var(--border)] bg-[color:var(--surface)]">
+                              {participants.map((participant, index) => (
+                                <tr key={index}>
+                                  <td className="px-3 py-2 whitespace-nowrap text-base">
+                                    <div className="font-medium text-[color:var(--ink)]">{participant.name}</div>
+                                    <div className="text-xs text-[color:var(--muted)]">{participant.city}, {participant.state}</div>
+                                  </td>
+                                  <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">{participant.age}</td>
+                                  <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">₹{participant.amountPaid.toLocaleString()}</td>
+                                  <td className="px-3 py-2 whitespace-nowrap text-right text-base font-medium">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleEditParticipant(index)}
+                                      className="mr-3 text-[color:var(--primary)] hover:text-[color:var(--primary-600)]"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveParticipant(index)}
+                                      className="text-red-600 hover:text-red-800"
+                                    >
+                                      Remove
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        {errors.participants && (
+                          <p className="text-red-500 text-base mt-1">{errors.participants}</p>
+                        )}
+                      </div>
+                    )}
+                    
+                    {totalAmount > 0 && (
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-5">
+                        <p className="font-medium text-[color:var(--primary)]">
+                          {isBulkRegistration 
+                            ? `Total Registration Fee: ₹${totalAmount.toLocaleString()}`
+                            : `Registration Fee: ₹${totalAmount.toLocaleString()}`
+                          }
+                        </p>
+                        <p className="mt-1 text-base text-[color:var(--muted)]">
+                          Amount is based on age:
+                          <br />
+                          - Below 12 years: ₹{getPricing().below12.toLocaleString()}
+                          <br />
+                          - 12 to 24 years: ₹{getPricing().age12To24.toLocaleString()}
+                          <br />
+                          - 25 years and above: ₹{getPricing().age25AndAbove.toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {!isFreeEvent ? (
+                      <div className="mb-5">
+                        <label htmlFor="transactionNumber" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">
+                          Transaction ID / UPI Transaction ID *
+                        </label>
+                        <input
+                          type="text"
+                          id="transactionNumber"
+                          name="transactionNumber"
+                          value={transactionNumber}
+                          onChange={(e) => {
+                            setTransactionNumber(e.target.value);
+                            if (errors.transactionNumber) {
+                              setErrors(prev => {
+                                const newErrors = { ...prev };
+                                delete newErrors.transactionNumber;
+                                return newErrors;
+                              });
+                            }
+                          }}
+                          className={`admin-input ${errors.transactionNumber ? 'border-red-500' : ''}`}
+                          placeholder="Enter payment transaction ID"
+                        />
+                        {errors.transactionNumber && (
+                          <p className="text-red-500 text-base mt-1">{errors.transactionNumber}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 p-5">
+                        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[color:var(--muted)]">Free Event</p>
+                        <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">
+                          Registration is free for all categories. No payment reference is required.
+                        </p>
+                      </div>
+                    )}
+                    
+                    <button
+                      type="submit"
+                      className="w-full rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400"
+                      disabled={submitting || (isBulkRegistration && participants.length === 0)}
+                    >
+                      {submitting ? 'Registering...' : 'Register for Event'}
+                    </button>
+                  </form>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] p-5 shadow-sm">
+                    <h3 className="text-xl font-semibold text-[color:var(--ink)]">Registration price chart</h3>
+                    <div className="mt-4 space-y-3">
+                      <PricingRow label="Below 12 years" value={getPricing().below12} />
+                      <PricingRow label="12 to 24 years" value={getPricing().age12To24} />
+                      <PricingRow label="25 years and above" value={getPricing().age25AndAbove} />
+                    </div>
+                    <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
+                      {isFreeEvent
+                        ? 'This event is free across all categories.'
+                        : 'The final amount is calculated automatically based on the age entered for each participant.'}
+                    </p>
+                  </div>
+
+                  {!isFreeEvent ? <PaymentInfoCard isBulkRegistration={isBulkRegistration} /> : null}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InfoPill({
+  icon,
+  label,
+  className = '',
+}: {
+  icon: React.ReactNode;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <div className={`flex items-start gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 px-4 py-3 ${className}`}>
+      <span className="mt-0.5 text-[color:var(--primary)]">{icon}</span>
+      <span className="text-sm leading-6 text-[color:var(--ink)]">{label}</span>
+    </div>
+  );
+}
+
+function PricingRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/78 px-4 py-3">
+      <span className="text-sm font-medium text-[color:var(--ink)]">{label}</span>
+      <span className="text-sm font-semibold text-[color:var(--primary)]">₹{value.toLocaleString()}</span>
+    </div>
+  );
+}

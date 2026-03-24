@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" fill="none">
+  <rect width="1200" height="360" rx="26" fill="#F6F1EA"/>
+  <path d="M120 250c120-90 250-136 390-136 140 0 271 46 390 136" stroke="#D9B98F" stroke-width="10" stroke-linecap="round"/>
+  <path d="M140 120c122 84 249 126 382 126s260-42 382-126" stroke="#6C5A4A" stroke-opacity=".65" stroke-width="10" stroke-linecap="round"/>
+  <path d="M600 54v252" stroke="#6C5A4A" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="600" cy="82" r="22" fill="#6C5A4A"/>
+  <circle cx="600" cy="145" r="18" fill="#D9B98F"/>
+  <circle cx="600" cy="198" r="16" fill="#6C5A4A" fill-opacity=".75"/>
+  <circle cx="600" cy="244" r="14" fill="#D9B98F" fill-opacity=".9"/>
+  <text x="184" y="68" fill="#6C6A66" font-family="Arial, sans-serif" font-size="28">Left Channel (Past)</text>
+  <text x="842" y="68" fill="#6C6A66" font-family="Arial, sans-serif" font-size="28">Right Channel (Future)</text>
+  <text x="548" y="330" fill="#6C6A66" font-family="Arial, sans-serif" font-size="24">Present</text>
+</svg>
