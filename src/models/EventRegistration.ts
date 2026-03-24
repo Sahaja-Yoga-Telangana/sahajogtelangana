@@ -46,6 +46,12 @@ const eventRegistrationSchema = new Schema({
     type: Schema.Types.Number,
     required: [true, "Amount paid is required."],
   },
+  bulkGroupId: {
+    type: Schema.Types.String,
+    required: false,
+    default: "",
+    trim: true,
+  },
   registeredAt: {
     type: Schema.Types.Date,
     default: Date.now,

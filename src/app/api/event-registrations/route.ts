@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
 import { EventRegistration } from "@/models/EventRegistration";
 import { Event } from "@/models/Event";
+import mongoose from "mongoose";
 
 // Connect to MongoDB
 connect();
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Check if this is a bulk registration or single registration
     if (body.participants && Array.isArray(body.participants)) {
       // Bulk registration
-      const { eventId, eventTitle, transactionNumber, participants } = body;
+      const { eventId, eventTitle, transactionNumber, participants, sharedDetails } = body;
       const event = await Event.findById(eventId);
 
       if (!event) {
@@ -36,10 +37,10 @@ export async function POST(request: NextRequest) {
         pricing.age25AndAbove === 0;
       
       // Validate base required fields
-      if (!eventId || !eventTitle || !participants.length || (!isFreeEvent && !transactionNumber)) {
+      if (!eventId || !eventTitle || !participants.length || !sharedDetails?.state || !sharedDetails?.city || !sharedDetails?.email || (!isFreeEvent && !transactionNumber)) {
         return NextResponse.json({
           status: 400,
-          message: "Event ID, event title, and at least one participant are required. Transaction number is required for paid events.",
+          message: "Event ID, event title, shared state/city/email, and at least one participant are required. Transaction number is required for paid events.",
         }, { status: 400 });
       }
       
@@ -60,7 +61,16 @@ export async function POST(request: NextRequest) {
       // Validate each participant and calculate total amount
       let totalExpectedAmount = 0;
       const registrations = [];
-      const participantRequiredFields = ['name', 'state', 'city', 'age', 'email'];
+      const participantRequiredFields = ['name', 'age'];
+      const bulkGroupId = new mongoose.Types.ObjectId().toString();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(sharedDetails.email)) {
+        return NextResponse.json({
+          status: 400,
+          message: "Invalid email format for shared contact email",
+        }, { status: 400 });
+      }
       
       // Check for duplicate names within this event
       for (const participant of participants) {
@@ -87,15 +97,6 @@ export async function POST(request: NextRequest) {
         //   }, { status: 400 });
         // }
         
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(participant.email)) {
-          return NextResponse.json({
-            status: 400,
-            message: `Invalid email format for participant: ${participant.name}`,
-          }, { status: 400 });
-        }
-        
         // Calculate expected amount based on age
         const age = parseInt(participant.age);
         let expectedAmount = 0;
@@ -115,12 +116,13 @@ export async function POST(request: NextRequest) {
           eventId,
           eventTitle,
           name: participant.name,
-          state: participant.state,
-          city: participant.city,
+          state: sharedDetails.state,
+          city: sharedDetails.city,
           age,
-          email: participant.email,
+          email: sharedDetails.email,
           transactionNumber: isFreeEvent ? '' : transactionNumber,
-          amountPaid: expectedAmount
+          amountPaid: expectedAmount,
+          bulkGroupId,
         });
       }
       

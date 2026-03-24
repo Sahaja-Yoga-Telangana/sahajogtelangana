@@ -29,11 +29,8 @@ type EventDetails = {
 
 type Participant = {
   name: string;
-  state: string;
-  city: string;
   age: string;
   amountPaid: number;
-  email: string;
 };
 
 type RegistrationResponse = {
@@ -174,12 +171,12 @@ export default function EventRegistration({ params }: { params: { id: string } }
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
-    if (!formData.state.trim()) {
+
+    if (!participants.length && !formData.state.trim()) {
       newErrors.state = 'State is required';
     }
-    
-    if (!formData.city.trim()) {
+
+    if (!participants.length && !formData.city.trim()) {
       newErrors.city = 'City is required';
     }
     
@@ -189,9 +186,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
       newErrors.age = 'Please enter a valid age';
     }
     
-    if (!formData.email.trim()) {
+    if (!participants.length && !formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
+    } else if (!participants.length && !validateEmail(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
     
@@ -206,20 +203,19 @@ export default function EventRegistration({ params }: { params: { id: string } }
     
     // Add participant to the list
     const newParticipant: Participant = {
-      ...formData,
+      name: formData.name,
+      age: formData.age,
       amountPaid: amount
     };
     
     setParticipants([...participants, newParticipant]);
     
-    // Clear form for next participant
-    setFormData({
+    // Keep shared details and clear only per-participant fields for the next entry.
+    setFormData((prev) => ({
+      ...prev,
       name: '',
-      state: '',
-      city: '',
       age: '',
-      email: '',
-    });
+    }));
     
     // Clear errors
     setErrors({});
@@ -250,7 +246,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
 
   const handleEditParticipant = (index: number) => {
     // Set form data to participant data for editing
-    setFormData(participants[index]);
+    setFormData((prev) => ({
+      ...prev,
+      name: participants[index].name,
+      age: participants[index].age,
+    }));
     
     // Remove participant from list
     handleRemoveParticipant(index);
@@ -272,9 +272,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
 
   const handleDownloadPDF = () => {
     if (isBulkRegistration && bulkReceiptData && bulkReceiptData.length > 0) {
-      window.open(`/api/generate-pdf-receipt?transactionNumber=${bulkReceiptData[0].transactionNumber}`, '_blank');
+      const firstRegistration = bulkReceiptData[0];
+      const query = firstRegistration.transactionNumber
+        ? `transactionNumber=${encodeURIComponent(firstRegistration.transactionNumber)}`
+        : `registrationId=${encodeURIComponent(firstRegistration._id)}`;
+      window.open(`/api/generate-pdf-receipt?${query}`, '_blank');
     } else if (receiptData) {
-      window.open(`/api/generate-pdf-receipt?registrationId=${receiptData._id}`, '_blank');
+      window.open(`/api/generate-pdf-receipt?registrationId=${encodeURIComponent(receiptData._id)}`, '_blank');
     }
   };
 
@@ -342,6 +346,20 @@ export default function EventRegistration({ params }: { params: { id: string } }
       if (participants.length === 0) {
         newErrors.participants = 'At least one participant is required';
       }
+
+      if (!formData.state.trim()) {
+        newErrors.state = 'State is required';
+      }
+
+      if (!formData.city.trim()) {
+        newErrors.city = 'City is required';
+      }
+
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!validateEmail(formData.email)) {
+        newErrors.email = 'Please enter a valid email';
+      }
       
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
@@ -401,8 +419,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
           eventTitle: event?.title,
           transactionNumber,
           totalAmountPaid: totalAmount,
+          sharedDetails: {
+            state: formData.state,
+            city: formData.city,
+            email: formData.email,
+          },
           participants: participants.map(p => ({
-            ...p,
+            name: p.name,
             age: parseInt(p.age)
           }))
         });
@@ -856,11 +879,64 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 p-5">
                         <h3 className="font-medium text-[color:var(--primary)]">Bulk Registration</h3>
                         <p className="mt-2 text-base text-[color:var(--muted)]">
-                          Register multiple participants with a single payment. Add all participants before submitting.
+                          Register multiple participants with a single payment. Shared contact details entered once below will be used for every participant.
                         </p>
                       </div>
                     )}
                     
+                    {isBulkRegistration ? (
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 p-5">
+                        <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Shared details</h3>
+                        <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
+                          These details apply to all entries in this bulk registration.
+                        </p>
+
+                        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                          <div>
+                            <label htmlFor="state" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">State *</label>
+                            <input
+                              type="text"
+                              id="state"
+                              name="state"
+                              value={formData.state}
+                              onChange={handleInputChange}
+                              className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                              placeholder="Your state"
+                            />
+                            {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                          </div>
+                          
+                          <div>
+                            <label htmlFor="city" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">City *</label>
+                            <input
+                              type="text"
+                              id="city"
+                              name="city"
+                              value={formData.city}
+                              onChange={handleInputChange}
+                              className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                              placeholder="Your city"
+                            />
+                            {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <label htmlFor="email" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Email *</label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                            placeholder="Enter your email"
+                          />
+                          {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                        </div>
+                      </div>
+                    ) : null}
+
                     <div className="mb-5">
                       <label htmlFor="name" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">
                         {isBulkRegistration ? 'Participant Name *' : 'Name *'}
@@ -877,35 +953,37 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       {errors.name && <p className="text-red-500 text-base mt-1">{errors.name}</p>}
                     </div>
                     
-                    <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
-                      <div>
-                        <label htmlFor="state" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">State *</label>
-                        <input
-                          type="text"
-                          id="state"
-                          name="state"
-                          value={formData.state}
-                          onChange={handleInputChange}
-                          className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
-                          placeholder="Your state"
-                        />
-                        {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                    {!isBulkRegistration ? (
+                      <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div>
+                          <label htmlFor="state" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">State *</label>
+                          <input
+                            type="text"
+                            id="state"
+                            name="state"
+                            value={formData.state}
+                            onChange={handleInputChange}
+                            className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                            placeholder="Your state"
+                          />
+                          {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="city" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">City *</label>
+                          <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                            placeholder="Your city"
+                          />
+                          {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                        </div>
                       </div>
-                      
-                      <div>
-                        <label htmlFor="city" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">City *</label>
-                        <input
-                          type="text"
-                          id="city"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleInputChange}
-                          className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
-                          placeholder="Your city"
-                        />
-                        {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
-                      </div>
-                    </div>
+                    ) : null}
                     
                     <div className="mb-5">
                       <label htmlFor="age" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Age *</label>
@@ -922,19 +1000,21 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       {errors.age && <p className="text-red-500 text-base mt-1">{errors.age}</p>}
                     </div>
                     
-                    <div className="mb-5">
-                      <label htmlFor="email" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Email *</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
-                        placeholder="Enter your email"
-                      />
-                      {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
-                    </div>
+                    {!isBulkRegistration ? (
+                      <div className="mb-5">
+                        <label htmlFor="email" className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Email *</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                          placeholder="Enter your email"
+                        />
+                        {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                      </div>
+                    ) : null}
                     
                     {isBulkRegistration && (
                       <div className="mb-5">
@@ -969,7 +1049,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                                 <tr key={index}>
                                   <td className="px-3 py-2 whitespace-nowrap text-base">
                                     <div className="font-medium text-[color:var(--ink)]">{participant.name}</div>
-                                    <div className="text-xs text-[color:var(--muted)]">{participant.city}, {participant.state}</div>
+                                    <div className="text-xs text-[color:var(--muted)]">{formData.city}, {formData.state}</div>
                                   </td>
                                   <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">{participant.age}</td>
                                   <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">₹{participant.amountPaid.toLocaleString()}</td>
@@ -1067,19 +1147,19 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 </div>
                 
                 <div className="space-y-6">
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] p-5 shadow-sm">
-                    <h3 className="text-xl font-semibold text-[color:var(--ink)]">Registration price chart</h3>
-                    <div className="mt-4 space-y-3">
-                      <PricingRow label="Below 12 years" value={getPricing().below12} />
-                      <PricingRow label="12 to 24 years" value={getPricing().age12To24} />
-                      <PricingRow label="25 years and above" value={getPricing().age25AndAbove} />
+                  {!isFreeEvent ? (
+                    <div className="rounded-[24px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] p-5 shadow-sm">
+                      <h3 className="text-xl font-semibold text-[color:var(--ink)]">Registration price chart</h3>
+                      <div className="mt-4 space-y-3">
+                        <PricingRow label="Below 12 years" value={getPricing().below12} />
+                        <PricingRow label="12 to 24 years" value={getPricing().age12To24} />
+                        <PricingRow label="25 years and above" value={getPricing().age25AndAbove} />
+                      </div>
+                      <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
+                        The final amount is calculated automatically based on the age entered for each participant.
+                      </p>
                     </div>
-                    <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-                      {isFreeEvent
-                        ? 'This event is free across all categories.'
-                        : 'The final amount is calculated automatically based on the age entered for each participant.'}
-                    </p>
-                  </div>
+                  ) : null}
 
                   {!isFreeEvent ? <PaymentInfoCard isBulkRegistration={isBulkRegistration} qrImage={event?.qrImage} /> : null}
                 </div>

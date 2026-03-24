@@ -336,7 +336,7 @@ export default function DownloadReceipt() {
                   
                   <div className="text-center mt-8 text-base text-gray-600">
                     <p>Thank you for registering for the event!</p>
-                    <p>For any inquiries, please contact us at info@sahajayogaodisha.org</p>
+                    <p>For any inquiries, please contact us at sahajogtelangana@gmail.com</p>
                   </div>
                 </div>
                 
