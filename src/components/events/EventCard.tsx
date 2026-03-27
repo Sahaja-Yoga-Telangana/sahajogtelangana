@@ -41,11 +41,11 @@ export default function EventCard({
             </div>
           </div>
         )}
-        {isFreeEntry ? (
+        {/* {isFreeEntry ? (
           <div className="absolute left-4 top-4 z-10 inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/96 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm">
             Free Entry
           </div>
-        ) : null}
+        ) : null} */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[color:var(--surface)]/35 to-transparent" />
       </div>
 
