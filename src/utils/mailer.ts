@@ -1,14 +1,5 @@
-import nodemailer from 'nodemailer';
 import { format } from 'date-fns';
-
-// Create reusable transporter object using SMTP transport
-const transporter = nodemailer.createTransport({
-  service: 'gmail',  // Using Gmail as the email service
-  auth: {
-    user: process.env.EMAIL_USER,     // Your Gmail address
-    pass: process.env.EMAIL_PASSWORD,  // Your Gmail app password
-  },
-});
+import { sendEmail } from '@/config/mail';
 
 interface RegistrationEmailData {
   name: string;
@@ -87,13 +78,11 @@ export async function sendRegistrationEmail(data: RegistrationEmailData) {
     </html>
   `;
 
-  // Send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: `"Sahaja Yoga Telangana" <${process.env.EMAIL_USER}>`,
-    to: data.email,
-    subject: `Registration Confirmation - ${data.eventTitle}`,
-    html: htmlContent,
-  });
+  const messageId = await sendEmail(
+    data.email,
+    `Registration Confirmation - ${data.eventTitle}`,
+    htmlContent
+  );
 
-  return info;
-} 
+  return { messageId };
+}
