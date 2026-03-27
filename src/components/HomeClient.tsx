@@ -6,8 +6,23 @@ import IntroButton from "@/components/IntroButton";
 import VirtualTour from "@/components/VirtualTour";
 import ContactUs from "@/components/ContactUs";
 import LocalSeoSection from "@/components/LocalSeoSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
-export default function HomeClient() {
+type TestimonialCard = {
+  _id: string;
+  name: string;
+  city?: string;
+  yearsInSahajaYoga?: string;
+  experience: string;
+};
+
+export default function HomeClient({
+  testimonials,
+  isLoggedIn,
+}: {
+  testimonials: TestimonialCard[];
+  isLoggedIn: boolean;
+}) {
   return (
     <div className="bg-[color:var(--bg)]">
       <Hero />
@@ -16,6 +31,7 @@ export default function HomeClient() {
       {/* <AboutUs /> */}
       <VirtualTour />
       <IntroButton />
+      <TestimonialsSection testimonials={testimonials} isLoggedIn={isLoggedIn} />
       <Camp />
       <Guide />
       <Features />

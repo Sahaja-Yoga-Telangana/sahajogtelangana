@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface Message {
   _id: string;
@@ -22,6 +23,7 @@ const statusStyles: Record<Message['status'], string> = {
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/auth/admin/messages', { cache: 'no-store' })
@@ -29,6 +31,29 @@ export default function MessagesPage() {
       .then(setMessages)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this message?')) return;
+
+    try {
+      setDeletingId(id);
+      const response = await fetch(`/api/auth/admin/messages/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete message.');
+      }
+
+      setMessages((prev) => prev.filter((message) => message._id !== id));
+      toast.success(data.msg || 'Message deleted successfully.');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete message.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (loading) {
     return <div className="p-6 text-sm text-[color:var(--muted)]">Loading messages...</div>;
@@ -55,7 +80,17 @@ export default function MessagesPage() {
                     {new Date(msg.createdAt).toLocaleString()}
                   </p>
                 </div>
-                <span className={`admin-badge ${statusStyles[msg.status]}`}>{msg.status}</span>
+                <div className="flex items-center gap-3 self-start">
+                  <span className={`admin-badge ${statusStyles[msg.status]}`}>{msg.status}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(msg._id)}
+                    disabled={deletingId === msg._id}
+                    className="inline-flex items-center justify-center rounded-full border border-red-300/70 px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:text-red-300"
+                  >
+                    {deletingId === msg._id ? 'Deleting...' : 'Delete'}
+                  </button>
+                </div>
               </div>
 
               <div className="mt-5 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4 text-sm leading-7 text-[color:var(--ink)] whitespace-pre-wrap">

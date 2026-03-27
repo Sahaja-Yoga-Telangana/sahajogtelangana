@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import EventCard from '@/components/events/EventCard';
 import { AppEvent } from '@/lib/events';
+import EventSubscriptionForm from '@/components/EventSubscriptionForm';
 
 export default function EventsPage() {
   const { status } = useSession();
@@ -64,6 +65,8 @@ export default function EventsPage() {
             Explore upcoming events, public meditation programs, and collective gatherings. Each listing is designed to make the next step clear and easy.
           </p>
         </div>
+
+        <EventSubscriptionForm />
 
         {events.length === 0 ? (
           <div className="mt-10 rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-10 text-center text-sm text-[color:var(--muted)] shadow-soft">

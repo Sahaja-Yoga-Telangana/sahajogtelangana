@@ -4,6 +4,8 @@ import { Center } from "@/models/Center";
 import { centerSchema } from "@/validator/authValidationSchema";
 import vine, { errors } from "@vinejs/vine";
 import ErrorReporter from "@/validator/ErrorReporter";
+import { getServerSession } from "next-auth";
+import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/options";
 
 interface CenterFormPayload {
   address: string;
@@ -15,6 +17,11 @@ interface CenterFormPayload {
 
 export async function POST(request: NextRequest) {
   await connect();
+
+  const session = (await getServerSession(authOptions)) as CustomSession | null;
+  if (!session || session.user?.role !== "Admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
 
   try {
     const body: CenterFormPayload = await request.json();
@@ -45,6 +52,11 @@ export const revalidate = 60;
 
 export async function GET() {
   await connect();
+
+  const session = (await getServerSession(authOptions)) as CustomSession | null;
+  if (!session || session.user?.role !== "Admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
 
   try {
     const centers = await Center.find({}).sort({ createdAt: -1 });

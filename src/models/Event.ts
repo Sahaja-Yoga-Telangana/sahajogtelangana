@@ -68,6 +68,10 @@ const eventSchema = new Schema({
     type: Schema.Types.Boolean,
     default: true,
   },
+  subscriberNotificationSentAt: {
+    type: Schema.Types.Date,
+    required: false,
+  },
   createdAt: {
     type: Schema.Types.Date,
     default: Date.now,
@@ -87,6 +91,7 @@ if (existingEventModel) {
     price12To24: { type: Schema.Types.Number, required: false, default: 1800 },
     price25AndAbove: { type: Schema.Types.Number, required: false, default: 2600 },
     qrImage: { type: Schema.Types.String, required: false, trim: true },
+    subscriberNotificationSentAt: { type: Schema.Types.Date, required: false },
   });
 }
 

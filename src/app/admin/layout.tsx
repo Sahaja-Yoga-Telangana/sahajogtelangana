@@ -22,8 +22,9 @@ const menuItems = [
   { name: 'Program Requests', icon: <MdEvent size={22} />, href: '/admin/program-requests' },
   { name: 'Seekers', icon: <MdPeople size={22} />, href: '/admin/seekers' },
   { name: 'Events', icon: <MdCalendarToday size={22} />, href: '/admin/events' },
+  { name: 'Testimonials', icon: <MdMessage size={22} />, href: '/admin/testimonials' },
   { name: 'Event Registrations', icon: <MdHowToReg size={22} />, href: '/admin/event-registrations' },
-  { name: 'Add New Center', icon: <MdAddLocation size={22} />, href: '/admin/add-center' },
+  { name: 'Manage Centers', icon: <MdAddLocation size={22} />, href: '/admin/add-center' },
   { name: 'All Users', icon: <MdSupervisorAccount size={22} />, href: '/admin/all-users' },
 ];
 

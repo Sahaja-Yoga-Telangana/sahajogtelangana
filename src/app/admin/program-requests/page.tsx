@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 type ProgramType = 'Corporate' | 'School';
 
@@ -26,6 +27,7 @@ interface ProgramRequest {
 export default function ProgramRequestsPage() {
   const [requests, setRequests] = useState<ProgramRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingKey, setDeletingKey] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -61,6 +63,33 @@ export default function ProgramRequestsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleDelete = async (request: ProgramRequest) => {
+    if (!confirm(`Delete this ${request.type.toLowerCase()} request?`)) return;
+
+    const key = `${request.type}-${request._id}`;
+    const endpoint =
+      request.type === 'Corporate'
+        ? `/api/auth/admin/corporate-requests/${request._id}`
+        : `/api/auth/admin/school-programs/${request._id}`;
+
+    try {
+      setDeletingKey(key);
+      const response = await fetch(endpoint, { method: 'DELETE' });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete request.');
+      }
+
+      setRequests((prev) => prev.filter((item) => !(item.type === request.type && item._id === request._id)));
+      toast.success(data.msg || 'Request deleted successfully.');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete request.');
+    } finally {
+      setDeletingKey(null);
+    }
+  };
+
   if (loading) {
     return <div className="p-6 text-sm text-[color:var(--muted)]">Loading requests...</div>;
   }
@@ -74,7 +103,7 @@ export default function ProgramRequestsPage() {
 
       <div className="space-y-6">
         {requests.map((req) => (
-          <article key={req._id} className="admin-card p-5 md:p-6">
+          <article key={`${req.type}-${req._id}`} className="admin-card p-5 md:p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
                 <span className={`admin-badge ${req.type === 'Corporate' ? 'admin-badge-blue' : 'admin-badge-green'}`}>
@@ -85,6 +114,14 @@ export default function ProgramRequestsPage() {
                   Submitted on {new Date(req.createdAt).toLocaleDateString()}
                 </p>
               </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(req)}
+                disabled={deletingKey === `${req.type}-${req._id}`}
+                className="inline-flex items-center justify-center rounded-full border border-red-300/70 px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:text-red-300"
+              >
+                {deletingKey === `${req.type}-${req._id}` ? 'Deleting...' : 'Delete'}
+              </button>
             </div>
 
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

@@ -26,6 +26,11 @@ const centerSchema = new Schema({
     required: [true, "Contact numbers field is required."],
     trim: true,
   },
+  link: {
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
   createdAt: {
     type: Schema.Types.Date,
     default: Date.now,

@@ -6,6 +6,8 @@ import type { Metadata } from 'next';
 import { pageMetadata, absoluteUrl } from '@/lib/seo';
 import SeoJsonLd from '@/components/SeoJsonLd';
 import { FOOTER_CONTACT_INFO } from "../../constants";
+import { connect } from "@/database/mongo.config";
+import { Testimonial } from "@/models/Testimonial";
 
 export const metadata: Metadata = pageMetadata({
   title: 'Sahaja Yoga Meditation in Hyderabad, Telangana — Free Meditation Classes',
@@ -25,6 +27,34 @@ export const metadata: Metadata = pageMetadata({
 export default async function Home() {
   const session = await getServerSession(authOptions);
   const showEventBanner = !!session;
+  let testimonials: Array<{
+    _id: string;
+    name: string;
+    city?: string;
+    yearsInSahajaYoga?: string;
+    experience: string;
+  }> = [];
+
+  try {
+    await connect();
+    const result = await Testimonial.aggregate([
+      { $match: { isApproved: true } },
+      { $sample: { size: 4 } },
+      {
+        $project: {
+          _id: { $toString: "$_id" },
+          name: 1,
+          city: 1,
+          yearsInSahajaYoga: 1,
+          experience: 1,
+        },
+      },
+    ]);
+    testimonials = result;
+  } catch (error) {
+    console.error("Error loading testimonials:", error);
+  }
+
   const phone = FOOTER_CONTACT_INFO.links.find((l) => l.label === 'Call Us')?.value || '';
   const email = FOOTER_CONTACT_INFO.links.find((l) => l.label === 'Email')?.value || '';
   return (
@@ -113,7 +143,7 @@ export default async function Home() {
         ]}
       />
       <EventBannerGate show={showEventBanner} />
-      <HomeClient />
+      <HomeClient testimonials={testimonials} isLoggedIn={!!session} />
     </>
   );
 }

@@ -638,13 +638,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 <h3 className="mb-4 text-center text-xl font-bold text-[color:var(--primary)]">Registration Successful!</h3>
                 <p className="mb-6 text-center text-[color:var(--muted)]">Your registration has been confirmed. Please keep this receipt for your records.</p>
                 
-                <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6" ref={receiptRef}>
-                  <div className="flex justify-between items-center mb-6">
-                    <div>
+                <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-4 sm:p-6" ref={receiptRef}>
+                  <div className="mb-6 flex flex-col gap-4 border-b border-[color:var(--border)] pb-5 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
                       <h4 className="text-xl font-bold text-[color:var(--ink)]">Sahaja Yoga Telangana</h4>
                       <p className="text-base text-[color:var(--muted)]">Event Registration Receipt</p>
                     </div>
-                    <div className="text-right">
+                    <div className="rounded-[20px] bg-[color:var(--surface-2)]/80 px-4 py-3 text-left sm:text-right">
                       <p className="text-base text-[color:var(--muted)]">Receipt #: {
                         bulkReceiptData 
                           ? bulkReceiptData[0]?._id.substring(0, 8) 
@@ -676,7 +676,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   {receiptData && !bulkReceiptData && (
                     <div className="mb-4">
                       <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Participant Information</h5>
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <p className="text-base text-[color:var(--muted)]">Name:</p>
                           <p className="font-medium text-[color:var(--ink)]">{receiptData.name}</p>
@@ -701,7 +701,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   {bulkReceiptData && (
                     <div className="mb-4">
                       <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Participants Information</h5>
-                      <div className="overflow-x-auto">
+                      <div className="hidden overflow-x-auto sm:block">
                         <table className="min-w-full divide-y divide-[color:var(--border)]">
                           <thead className="bg-[color:var(--surface-2)]/80">
                             <tr>
@@ -731,6 +731,21 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           </tbody>
                         </table>
                       </div>
+                      <div className="space-y-3 sm:hidden">
+                        {bulkReceiptData.map((registration, index) => (
+                          <div key={index} className="rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                            <p className="font-semibold text-[color:var(--ink)]">{registration.name}</p>
+                            <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                              <p className="text-[color:var(--muted)]">Age</p>
+                              <p className="text-right font-medium text-[color:var(--ink)]">{registration.age} years</p>
+                              <p className="text-[color:var(--muted)]">Location</p>
+                              <p className="text-right font-medium text-[color:var(--ink)]">{registration.city}, {registration.state}</p>
+                              <p className="text-[color:var(--muted)]">Amount</p>
+                              <p className="text-right font-medium text-[color:var(--ink)]">₹{registration.amountPaid.toLocaleString()}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                   
@@ -738,7 +753,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     {isFreeEvent ? (
                       <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
                         <h5 className="mb-2 font-semibold text-[color:var(--ink)]">Free Entry</h5>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
                             <p className="font-medium text-[color:var(--ink)]">₹0</p>
@@ -758,7 +773,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     ) : (
                       <>
                         <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Payment Information</h5>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
                             <p className="font-medium text-[color:var(--ink)]">₹{
@@ -794,10 +809,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   </div>
                 </div>
                 
-                <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-center">
                   <button 
                     onClick={handlePrintReceipt} 
-                    className="flex items-center justify-center rounded-full bg-[color:var(--primary)] px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                    className="flex min-h-[48px] items-center justify-center rounded-full bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -807,7 +822,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   
                   <button 
                     onClick={handleDownloadPDF} 
-                    className="flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 font-bold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
+                    className="flex min-h-[48px] items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 font-bold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -815,8 +830,8 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     Download PDF
                   </button>
                   
-                  <div className="flex-1">
-                    <div className="flex">
+                  <div className="w-full lg:max-w-md">
+                    <div className="flex flex-col sm:flex-row">
                       <input
                         type="email"
                         placeholder="Enter your email"
@@ -825,12 +840,12 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           setEmail(e.target.value);
                           setEmailError('');
                         }}
-                        className={`flex-1 rounded-l-xl border bg-[color:var(--surface)] p-2 text-[color:var(--ink)] ${emailError ? 'border-red-500' : 'border-[color:var(--border)]'}`}
+                        className={`min-h-[48px] flex-1 rounded-t-xl border bg-[color:var(--surface)] p-3 text-[color:var(--ink)] sm:rounded-l-xl sm:rounded-tr-none ${emailError ? 'border-red-500' : 'border-[color:var(--border)]'}`}
                       />
                       <button
                         onClick={handleSendEmail}
                         disabled={sendingEmail || emailSent}
-                        className="whitespace-nowrap rounded-r-xl bg-[color:var(--primary)] px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400"
+                        className="min-h-[48px] whitespace-nowrap rounded-b-xl bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400 sm:rounded-b-none sm:rounded-r-xl"
                       >
                         {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                       </button>

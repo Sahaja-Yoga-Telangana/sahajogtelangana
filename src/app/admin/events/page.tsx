@@ -72,7 +72,32 @@ export default function AdminEvents() {
         ? await axios.put(`/api/events/${editingId}`, payload)
         : await axios.post('/api/events', payload);
       if (res.data.status === 200 || res.data.status === 201) {
-        setSuccessMessage(editingId ? 'Event updated successfully.' : 'Event created successfully.');
+        if (editingId) {
+          setSuccessMessage('Event updated successfully.');
+        } else {
+          const createdEvent = res.data.data;
+          const createdEventDate = new Date(createdEvent.date);
+
+          if (!Number.isNaN(createdEventDate.getTime()) && createdEventDate >= new Date()) {
+            setSuccessMessage('Event created successfully. Subscriber notifications are being processed.');
+            void axios
+              .post(`/api/events/${createdEvent._id}/notify`)
+              .then((notifyRes) => {
+                setSuccessMessage(
+                  notifyRes.data.message || 'Event created successfully and subscribers notified.'
+                );
+              })
+              .catch((notifyError: any) => {
+                setSuccessMessage(
+                  notifyError.response?.data?.message ||
+                    'Event created successfully, but subscriber notifications could not be completed.'
+                );
+              });
+          } else {
+            setSuccessMessage('Event created successfully.');
+          }
+        }
+
         setFormOpen(false);
         setEditingId(null);
         setFormData(initialFormData);
