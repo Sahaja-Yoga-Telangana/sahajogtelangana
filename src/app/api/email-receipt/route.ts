@@ -30,11 +30,40 @@ export async function POST(request: NextRequest) {
 
     // Send email with registration details
     try {
-      await sendRegistrationEmail({
-        ...registration.toObject(),
-        email,
-        registrationId: registration._id.toString()
-      });
+      const receiptNumber = registration._id.toString().substring(0, 8);
+      const registrationObject = registration.toObject();
+
+      if (registration.bulkGroupId) {
+        const groupedRegistrations = await EventRegistration.find({
+          bulkGroupId: registration.bulkGroupId,
+        }).sort({ registeredAt: 1 });
+
+        if (groupedRegistrations.length > 1) {
+          await sendRegistrationEmail({
+            ...registrationObject,
+            email,
+            receiptNumber,
+            registrations: groupedRegistrations.map((item) => ({
+              ...item.toObject(),
+              _id: item._id.toString(),
+            })),
+          });
+        } else {
+          await sendRegistrationEmail({
+            ...registrationObject,
+            email,
+            receiptNumber,
+            _id: registration._id.toString(),
+          });
+        }
+      } else {
+        await sendRegistrationEmail({
+          ...registrationObject,
+          email,
+          receiptNumber,
+          _id: registration._id.toString(),
+        });
+      }
 
       return NextResponse.json(
         { 

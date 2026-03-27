@@ -302,9 +302,14 @@ export default function EventRegistration({ params }: { params: { id: string } }
     setEmailError('');
     
     try {
+      const anchorRegistrationId =
+        isBulkRegistration && bulkReceiptData && bulkReceiptData.length > 0
+          ? bulkReceiptData[0]._id
+          : receiptData?._id;
+
       const response = await axios.post('/api/email-receipt', {
         email,
-        registrationId: receiptData?._id
+        registrationId: anchorRegistrationId
       });
       
       if (response.data.status === 200) {
@@ -436,16 +441,14 @@ export default function EventRegistration({ params }: { params: { id: string } }
           setBulkReceiptData(response.data.data);
           setShowReceipt(true);
           
-          // Send receipt to email of each participant
-          for (const participant of response.data.data) {
-            try {
-              await axios.post('/api/email-receipt', {
-                email: participant.email,
-                registrationId: participant._id
-              });
-            } catch (error) {
-              console.error('Error sending email receipt:', error);
-            }
+          // Send one grouped receipt email for the full bulk registration
+          try {
+            await axios.post('/api/email-receipt', {
+              email: formData.email,
+              registrationId: response.data.data[0]._id
+            });
+          } catch (error) {
+            console.error('Error sending email receipt:', error);
           }
           
           // Clear form
@@ -690,8 +693,8 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           <p className="font-medium text-[color:var(--ink)]">{receiptData.city}, {receiptData.state}</p>
                         </div>
                         <div>
-                          <p className="text-base text-[color:var(--muted)]">Registration ID:</p>
-                          <p className="font-medium text-[color:var(--ink)]">{receiptData._id}</p>
+                          <p className="text-base text-[color:var(--muted)]">Receipt Number:</p>
+                          <p className="font-medium text-[color:var(--ink)]">{receiptData._id.substring(0, 8)}</p>
                         </div>
                       </div>
                     </div>

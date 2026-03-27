@@ -202,7 +202,7 @@ function generatePDF(registrations: any[]) {
         ['Age', `${firstRegistration.age} years`],
         ['Location', `${firstRegistration.city}, ${firstRegistration.state}`],
         ['Email', firstRegistration.email],
-        ['Registration ID', firstRegistration._id.toString()],
+          ['Receipt Number', firstRegistration._id.toString().substring(0, 8)],
       ],
       startY: currentY,
       theme: 'grid',

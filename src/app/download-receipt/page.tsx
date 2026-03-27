@@ -120,14 +120,11 @@ export default function DownloadReceipt() {
     setEmailError('');
     
     try {
-      // For bulk registrations, send separate emails for each registration
       if (registrations && registrations.length > 1) {
-        for (const registration of registrations) {
-          await axios.post('/api/email-receipt', {
-            email,
-            registrationId: registration._id
-          });
-        }
+        await axios.post('/api/email-receipt', {
+          email,
+          registrationId: registrations[0]._id
+        });
       } else if (registrations && registrations.length === 1) {
         // For single registration
         await axios.post('/api/email-receipt', {
@@ -264,8 +261,8 @@ export default function DownloadReceipt() {
                           <p className="font-medium">{registrations[0].email}</p>
                         </div>
                         <div>
-                          <p className="text-base text-gray-600">Registration ID:</p>
-                          <p className="font-medium">{registrations[0]._id}</p>
+                          <p className="text-base text-gray-600">Receipt Number:</p>
+                          <p className="font-medium">{registrations[0]._id.substring(0, 8)}</p>
                         </div>
                       </div>
                     </div>
