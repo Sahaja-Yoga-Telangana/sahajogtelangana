@@ -394,9 +394,9 @@ export default function MeditatePage() {
               </div>
               <h3 className="mt-5 text-2xl font-semibold text-[color:var(--ink)]">When the mind feels overactive</h3>
               <ul className="mt-5 space-y-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">
-                <li>Hold the right hand toward a candle with the palm facing upward.</li>
-                <li>Bend the left arm with fingers pointing upward and the palm facing backward.</li>
-                <li>Use this when you feel tense, over-planned, rushed, aggressive, or caught in future thinking.</li>
+                <li>• Hold the right hand toward a candle with the palm facing upward.</li>
+                <li>• Bend the left arm with fingers pointing upward and the palm facing backward.</li>
+                <li>• Use this when you feel tense, over-planned, rushed, aggressive, or caught in future thinking.</li>
               </ul>
             </article>
           </div>
