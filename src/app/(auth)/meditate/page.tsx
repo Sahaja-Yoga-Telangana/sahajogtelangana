@@ -232,7 +232,7 @@ export default function MeditatePage() {
               A calm daily meditation practice that fits into 10 minutes.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--muted)] md:text-lg">
-              Start with a simple Sahaja Yoga routine, stay grounded with balancing guidance, and deepen your experience with guided sessions and the 21-day meditation path.
+              Start with a simple Sahaja Yoga meditation routine, stay grounded with balancing guidance, and deepen your experience with guided sessions and the 21-day meditation path.
             </p>
 
             <div className="mt-8 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2">
@@ -373,9 +373,9 @@ export default function MeditatePage() {
               </div>
               <h3 className="mt-5 text-2xl font-semibold text-[color:var(--ink)]">When emotions feel heavy</h3>
               <ul className="mt-5 space-y-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">
-                <li>Hold the left hand toward a candle with the palm facing upward.</li>
-                <li>Place the right hand naturally toward the earth.</li>
-                <li>Use this when you feel lethargic, nostalgic, lonely, or over-focused on the past.</li>
+                <li>• Hold the left hand toward a candle with the palm facing upward.</li>
+                <li>• Place the right hand naturally toward the earth.</li>
+                <li>• Use this when you feel lethargic, nostalgic, lonely, or over-focused on the past.</li>
               </ul>
             </article>
 

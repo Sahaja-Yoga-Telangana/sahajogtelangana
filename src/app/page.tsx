@@ -8,6 +8,8 @@ import SeoJsonLd from '@/components/SeoJsonLd';
 import { FOOTER_CONTACT_INFO } from "../../constants";
 import { connect } from "@/database/mongo.config";
 import { Testimonial } from "@/models/Testimonial";
+import { Event } from "@/models/Event";
+import { AppEvent } from "@/lib/events";
 
 export const metadata: Metadata = pageMetadata({
   title: 'Sahaja Yoga Meditation in Hyderabad, Telangana — Free Meditation Classes',
@@ -27,6 +29,7 @@ export const metadata: Metadata = pageMetadata({
 export default async function Home() {
   const session = await getServerSession(authOptions);
   const showEventBanner = !!session;
+  let bannerEvents: AppEvent[] = [];
   let testimonials: Array<{
     _id: string;
     name: string;
@@ -37,6 +40,48 @@ export default async function Home() {
 
   try {
     await connect();
+  } catch (error) {
+    console.error("Error connecting while loading home page data:", error);
+  }
+
+  if (showEventBanner) {
+    try {
+      const currentDate = new Date();
+      const events = await Event.find({
+        isActive: true,
+        $or: [
+          { endDate: { $gte: currentDate } },
+          { endDate: { $exists: false }, date: { $gte: currentDate } },
+          { endDate: null, date: { $gte: currentDate } },
+        ],
+      })
+        .sort({ date: 1 })
+        .limit(8)
+        .lean();
+
+      bannerEvents = events.map((event: any) => ({
+        _id: event._id.toString(),
+        title: event.title,
+        description: event.description,
+        date: event.date,
+        endDate: event.endDate ?? null,
+        time: event.time,
+        location: event.location,
+        googleMapLink: event.googleMapLink ?? '',
+        contactDetails: event.contactDetails ?? '',
+        priceBelow12: event.priceBelow12 ?? 1000,
+        price12To24: event.price12To24 ?? 1800,
+        price25AndAbove: event.price25AndAbove ?? 2600,
+        image: event.image ?? '',
+        qrImage: event.qrImage ?? '',
+        isActive: event.isActive ?? true,
+      }));
+    } catch (error) {
+      console.error("Error loading banner events:", error);
+    }
+  }
+
+  try {
     const result = await Testimonial.aggregate([
       { $match: { isApproved: true } },
       { $sample: { size: 4 } },
@@ -142,7 +187,7 @@ export default async function Home() {
           },
         ]}
       />
-      <EventBannerGate show={showEventBanner} />
+      <EventBannerGate show={showEventBanner} initialEvents={bannerEvents} />
       <HomeClient testimonials={testimonials} isLoggedIn={!!session} />
     </>
   );

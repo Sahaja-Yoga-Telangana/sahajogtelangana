@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 type FormState = {
@@ -12,6 +13,7 @@ type FormState = {
 const EXIT_INTENT_KEY = 'exitIntentNoteShown';
 
 export default function ExitIntentNote() {
+  const pathname = usePathname();
   const [armed, setArmed] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,10 +38,29 @@ export default function ExitIntentNote() {
     if (sessionStorage.getItem(EXIT_INTENT_KEY)) return;
     if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return;
 
+    let suppressUntil = 0;
     const timer = window.setTimeout(() => setArmed(true), 12000);
+
+    const suppressForNavigation = () => {
+      suppressUntil = Date.now() + 1200;
+    };
+
+    const onPointerDown = (e: MouseEvent | PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      if (target.closest('a, button, [role="link"], [data-no-exit-intent]')) {
+        suppressForNavigation();
+      }
+    };
+
+    const onSubmitCapture = () => {
+      suppressForNavigation();
+    };
 
     const onMouseOut = (e: MouseEvent) => {
       if (!armed || open || success) return;
+      if (Date.now() < suppressUntil) return;
       if (e.relatedTarget !== null) return;
       if (e.clientY <= 0 && e.clientX >= 0 && e.clientX <= window.innerWidth) {
         setOpen(true);
@@ -49,19 +70,29 @@ export default function ExitIntentNote() {
 
     const onPopState = () => {
       if (!armed || open || success) return;
+      if (Date.now() < suppressUntil) return;
       setOpen(true);
       sessionStorage.setItem(EXIT_INTENT_KEY, '1');
     };
 
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('submit', onSubmitCapture, true);
     window.addEventListener('mouseout', onMouseOut);
     window.addEventListener('popstate', onPopState);
 
     return () => {
       window.clearTimeout(timer);
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('submit', onSubmitCapture, true);
       window.removeEventListener('mouseout', onMouseOut);
       window.removeEventListener('popstate', onPopState);
     };
   }, [armed, open, success, canUseSessionStorage]);
+
+  useEffect(() => {
+    setOpen(false);
+    setSuccess(false);
+  }, [pathname]);
 
   const close = () => {
     setOpen(false);

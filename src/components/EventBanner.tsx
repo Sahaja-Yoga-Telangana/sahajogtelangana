@@ -7,11 +7,17 @@ import Slider from 'react-slick';
 import { FiArrowRight, FiCalendar, FiClock, FiMapPin } from 'react-icons/fi';
 import { AppEvent, getEventDateLabel, getEventExcerpt } from '@/lib/events';
 
-export default function EventBanner() {
-  const [events, setEvents] = useState<AppEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function EventBanner({ initialEvents = [] }: { initialEvents?: AppEvent[] }) {
+  const [events, setEvents] = useState<AppEvent[]>(initialEvents);
+  const [loading, setLoading] = useState(initialEvents.length === 0);
 
   useEffect(() => {
+    if (initialEvents.length > 0) {
+      setEvents(initialEvents);
+      setLoading(false);
+      return;
+    }
+
     const fetchEvents = async () => {
       try {
         setLoading(true);
@@ -28,7 +34,7 @@ export default function EventBanner() {
     };
 
     fetchEvents();
-  }, []);
+  }, [initialEvents]);
 
   const sliderSettings = {
     dots: true,

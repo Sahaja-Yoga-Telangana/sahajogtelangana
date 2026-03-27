@@ -1,13 +1,15 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import EventBanner from '@/components/EventBanner';
+import { AppEvent } from '@/lib/events';
 
-const EventBanner = dynamic(() => import('@/components/EventBanner'), {
-  ssr: false,
-  loading: () => null,
-});
-
-export default function EventBannerGate({ show }: { show: boolean }) {
+export default function EventBannerGate({
+  show,
+  initialEvents = [],
+}: {
+  show: boolean;
+  initialEvents?: AppEvent[];
+}) {
   if (!show) return null;
-  return <EventBanner />;
+  return <EventBanner initialEvents={initialEvents} />;
 }

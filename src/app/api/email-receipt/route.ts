@@ -28,9 +28,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (String(email).trim().toLowerCase() !== String(registration.email).trim().toLowerCase()) {
+      return NextResponse.json(
+        {
+          message: 'Receipt can only be sent to the email used during registration.',
+          status: 403,
+        },
+        { status: 403 }
+      );
+    }
+
     // Send email with registration details
     try {
-      const receiptNumber = registration._id.toString().substring(0, 8);
       const registrationObject = registration.toObject();
 
       if (registration.bulkGroupId) {
@@ -39,6 +48,9 @@ export async function POST(request: NextRequest) {
         }).sort({ registeredAt: 1 });
 
         if (groupedRegistrations.length > 1) {
+          const groupAnchor = groupedRegistrations[0];
+          const receiptNumber = groupAnchor._id.toString().substring(0, 8);
+
           await sendRegistrationEmail({
             ...registrationObject,
             email,
@@ -49,6 +61,7 @@ export async function POST(request: NextRequest) {
             })),
           });
         } else {
+          const receiptNumber = registration._id.toString().substring(0, 8);
           await sendRegistrationEmail({
             ...registrationObject,
             email,
@@ -57,6 +70,7 @@ export async function POST(request: NextRequest) {
           });
         }
       } else {
+        const receiptNumber = registration._id.toString().substring(0, 8);
         await sendRegistrationEmail({
           ...registrationObject,
           email,
