@@ -23,6 +23,16 @@ export async function GET(request: NextRequest) {
     const includeInactive = searchParams.get('includeInactive') === 'true';
     const query: Record<string, any> = {};
 
+    if (includePast || includeInactive) {
+      const session = await getServerSession(authOptions) as CustomSession | null;
+      if (!session || session.user?.role !== "Admin") {
+        return NextResponse.json({
+          status: 403,
+          message: "Unauthorized",
+        }, { status: 403 });
+      }
+    }
+
     if (!includeInactive) {
       query.isActive = true;
     }

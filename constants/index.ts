@@ -19,6 +19,11 @@ export const NAV_LINKS = [
         label: 'What is Sahaja Yoga?',
         href: '/sahaja-yoga',
       },
+      {
+        key: 'meditation',
+        label: 'Meditation',
+        href: '/meditate',
+      },
     ],
   },
   {
@@ -114,8 +119,10 @@ export const NAV_LINKS = [
       links: [
         // { label: 'Share Experience', path: '/' },
         { label: 'Centers Near You', path: '/centers' },
+        { label: 'My Dashboard', path: '/dashboard' },
         { label: 'Add a seeker', path: '/add-seeker' },
         { label: 'Share your experience', path: '/share-your-experience' },
+        { label: 'Volunteer with us', path: '/volunteer' },
         { label: 'Admin Dashboard', path: '/admin/dashboard' },
       ],
     },

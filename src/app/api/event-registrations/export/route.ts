@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
 import { EventRegistration } from "@/models/EventRegistration";
+import { Event } from "@/models/Event";
 import * as XLSX from 'xlsx';
+import { requireAdminSession } from "@/lib/auth";
+import { groupRegistrationsByReceipt } from "@/lib/eventRegistrationGroups";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -11,32 +14,48 @@ connect();
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await requireAdminSession();
+    if (!session) {
+      return NextResponse.json({ status: 403, message: "Unauthorized" }, { status: 403 });
+    }
+
     // Get query parameters
     const { searchParams } = request.nextUrl;
     const eventId = searchParams.get('eventId');
+    const receiptNumber = searchParams.get('receiptNumber')?.trim().toLowerCase() || '';
     
     // Build query
     const query: any = {};
-    if (eventId) {
-      query.eventId = eventId;
-    }
+    const validEventIds = (await Event.find(eventId ? { _id: eventId } : {}, { _id: 1 }).lean()).map((event: any) => String(event._id));
+    query.eventId = { $in: validEventIds };
     
     // Find registrations
     const registrations = await EventRegistration.find(query)
-      .sort({ registeredAt: -1 }); // Latest first
+      .sort({ registeredAt: -1 })
+      .lean();
+
+    const grouped = groupRegistrationsByReceipt(registrations as any);
+    const filtered = receiptNumber
+      ? grouped.filter((group) => group.receiptNumber.toLowerCase().includes(receiptNumber))
+      : grouped;
     
     // Transform data for Excel
-    const worksheetData = registrations.map(reg => ({
-      'Registration ID': reg._id.toString(),
-      'Name': reg.name,
-      'Event': reg.eventTitle,
-      'State': reg.state,
-      'City': reg.city,
-      'Age': reg.age,
-      'Amount Paid': reg.amountPaid,
-      'Transaction Number': reg.transactionNumber,
-      'Registered At': new Date(reg.registeredAt).toLocaleString()
-    }));
+    const worksheetData = filtered.flatMap((group) =>
+      group.members.map((member, index) => ({
+        'Receipt Number': group.receiptNumber,
+        'Participants in Receipt': group.participantCount,
+        'Primary Email': group.email,
+        'Event': group.eventTitle,
+        'Member Name': member.name,
+        'State': member.state,
+        'City': member.city,
+        'Age': member.age,
+        'Amount Paid': member.amountPaid,
+        'Group Total': index === 0 ? group.totalAmount : '',
+        'Transaction Number': group.transactionNumber,
+        'Registered At': new Date(member.registeredAt).toLocaleString()
+      }))
+    );
     
     // Create worksheet
     const worksheet = XLSX.utils.json_to_sheet(worksheetData);

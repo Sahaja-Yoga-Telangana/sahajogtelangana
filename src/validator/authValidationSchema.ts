@@ -46,8 +46,11 @@ export const centerSchema = vine.object({
   day: vine.string().trim().minLength(3).maxLength(10),
   time: vine.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
   zone: vine.string().trim().minLength(2).maxLength(100),
+  city: vine.string().trim().minLength(2).maxLength(100).optional(),
   contactNumbers: vine.string().trim().regex(/^[\d, ]+$/),
   link: vine.string().trim().url().optional(),
+  weeklyUpdate: vine.string().trim().maxLength(500).optional(),
+  announcement: vine.string().trim().maxLength(500).optional(),
 });
 
 export const schoolRegisterSchema = vine.object({

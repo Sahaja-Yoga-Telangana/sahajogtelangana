@@ -41,6 +41,8 @@ type RegistrationResponse = {
   amountPaid: number;
   state: string;
   city: string;
+  email?: string;
+  receiptNumber?: string;
   transactionNumber: string;
   createdAt: string;
 }
@@ -309,7 +311,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
 
       const response = await axios.post('/api/email-receipt', {
         email,
-        registrationId: anchorRegistrationId
+        registrationId: anchorRegistrationId,
+        receiptNumber: isBulkRegistration
+          ? bulkReceiptData?.[0]?.receiptNumber
+          : receiptData?.receiptNumber,
+        transactionNumber: isBulkRegistration
+          ? bulkReceiptData?.[0]?.transactionNumber
+          : receiptData?.transactionNumber,
       });
       
       if (response.data.status === 200) {
@@ -445,7 +453,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
           try {
             await axios.post('/api/email-receipt', {
               email: formData.email,
-              registrationId: response.data.data[0]._id
+              registrationId: response.data.data[0]._id,
+              receiptNumber: response.data.data[0].receiptNumber,
+              transactionNumber: response.data.data[0].transactionNumber,
             });
           } catch (error) {
             console.error('Error sending email receipt:', error);
@@ -488,7 +498,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
           try {
             await axios.post('/api/email-receipt', {
               email: formData.email,
-              registrationId: response.data.data._id
+              registrationId: response.data.data._id,
+              receiptNumber: response.data.data.receiptNumber,
+              transactionNumber: response.data.data.transactionNumber,
             });
             setEmailSent(true);
             setEmail(formData.email);

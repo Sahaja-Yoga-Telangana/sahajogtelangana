@@ -3,6 +3,8 @@ import { connect } from "@/database/mongo.config";
 import { EventRegistration } from "@/models/EventRegistration";
 import { Event } from "@/models/Event";
 import mongoose from "mongoose";
+import { requireAdminSession } from "@/lib/auth";
+import { groupRegistrationsByReceipt } from "@/lib/eventRegistrationGroups";
 
 // Connect to MongoDB
 connect();
@@ -63,6 +65,7 @@ export async function POST(request: NextRequest) {
       const registrations = [];
       const participantRequiredFields = ['name', 'age'];
       const bulkGroupId = new mongoose.Types.ObjectId().toString();
+      const receiptNumber = new mongoose.Types.ObjectId().toString().substring(0, 8);
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(sharedDetails.email)) {
@@ -123,6 +126,7 @@ export async function POST(request: NextRequest) {
           transactionNumber: isFreeEvent ? '' : transactionNumber,
           amountPaid: expectedAmount,
           bulkGroupId,
+          receiptNumber,
         });
       }
       
@@ -217,6 +221,8 @@ export async function POST(request: NextRequest) {
       
       // Validate age and amount
       const age = parseInt(body.age);
+      const registrationId = new mongoose.Types.ObjectId();
+      const receiptNumber = registrationId.toString().substring(0, 8);
       let expectedAmount = 0;
       
       if (age < 12) {
@@ -237,9 +243,11 @@ export async function POST(request: NextRequest) {
       
       // Create new registration
       const newRegistration = await EventRegistration.create({
+        _id: registrationId,
         ...body,
         amountPaid: expectedAmount,
         transactionNumber: isFreeEvent ? '' : body.transactionNumber,
+        receiptNumber,
       });
       
       return NextResponse.json({
@@ -261,24 +269,47 @@ export async function POST(request: NextRequest) {
 // GET handler for fetching all registrations (admin only)
 export async function GET(request: NextRequest) {
   try {
+    const session = await requireAdminSession();
+    if (!session) {
+      return NextResponse.json({
+        status: 403,
+        message: "Unauthorized",
+      }, { status: 403 });
+    }
+
     // Get query parameters
     const { searchParams } = new URL(request.url);
     const eventId = searchParams.get('eventId');
+    const receiptNumber = searchParams.get('receiptNumber')?.trim().toLowerCase() || '';
+    const page = Math.max(parseInt(searchParams.get('page') || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(searchParams.get('pageSize') || '12', 10), 1), 50);
     
     // Build query
     const query: any = {};
-    if (eventId) {
-      query.eventId = eventId;
-    }
+    const validEventIds = (await Event.find(eventId ? { _id: eventId } : {}, { _id: 1 }).lean()).map((event: any) => String(event._id));
+    query.eventId = { $in: validEventIds };
     
     // Find registrations
     const registrations = await EventRegistration.find(query)
-      .sort({ registeredAt: -1 }); // Latest first
+      .sort({ registeredAt: -1 })
+      .lean();
+
+    const grouped = groupRegistrationsByReceipt(registrations as any);
+    const filtered = receiptNumber
+      ? grouped.filter((group) => group.receiptNumber.toLowerCase().includes(receiptNumber))
+      : grouped;
+    const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
     
     return NextResponse.json({ 
       status: 200,
       message: "Registrations fetched successfully",
-      data: registrations
+      data: paginated,
+      meta: {
+        page,
+        pageSize,
+        totalGroups: filtered.length,
+        totalPages: Math.max(Math.ceil(filtered.length / pageSize), 1),
+      },
     }, { status: 200 });
   } catch (error) {
     console.error("Error fetching registrations:", error);

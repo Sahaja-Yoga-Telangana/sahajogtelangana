@@ -20,6 +20,18 @@ const userSchema = new Schema({
     required: false,
     type: Schema.Types.String,
   },
+  city: {
+    required: false,
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
+  centerInterest: {
+    required: false,
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
   role: {
     required: true,
     type: Schema.Types.String,
@@ -41,4 +53,23 @@ const userSchema = new Schema({
   },
 });
 
-export const User = mongoose.models.User || mongoose.model("User", userSchema);
+const existingUserModel = mongoose.models.User as any;
+
+if (existingUserModel) {
+  existingUserModel.schema.add({
+    city: {
+      type: Schema.Types.String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+    centerInterest: {
+      type: Schema.Types.String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+  });
+}
+
+export const User = existingUserModel || mongoose.model("User", userSchema);

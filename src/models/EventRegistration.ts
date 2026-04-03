@@ -20,6 +20,7 @@ const eventRegistrationSchema = new Schema({
     type: Schema.Types.String,
     required: [true, "Email is required."],
     trim: true,
+    lowercase: true,
     match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"],
   },
   state: {
@@ -52,11 +53,50 @@ const eventRegistrationSchema = new Schema({
     default: "",
     trim: true,
   },
+  receiptNumber: {
+    type: Schema.Types.String,
+    required: false,
+    default: "",
+    trim: true,
+  },
   registeredAt: {
     type: Schema.Types.Date,
     default: Date.now,
   },
 });
 
-export const EventRegistration = mongoose.models.EventRegistration || 
-  mongoose.model("EventRegistration", eventRegistrationSchema); 
+eventRegistrationSchema.index({ registeredAt: -1 });
+eventRegistrationSchema.index({ eventId: 1, registeredAt: -1 });
+eventRegistrationSchema.index({ email: 1, registeredAt: -1 });
+eventRegistrationSchema.index({ receiptNumber: 1 });
+eventRegistrationSchema.index({ bulkGroupId: 1 });
+
+const existingEventRegistrationModel = mongoose.models.EventRegistration as any;
+
+if (existingEventRegistrationModel) {
+  existingEventRegistrationModel.schema.add({
+    email: {
+      type: Schema.Types.String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"],
+    },
+    bulkGroupId: {
+      type: Schema.Types.String,
+      required: false,
+      default: "",
+      trim: true,
+    },
+    receiptNumber: {
+      type: Schema.Types.String,
+      required: false,
+      default: "",
+      trim: true,
+    },
+  });
+}
+
+export const EventRegistration =
+  existingEventRegistrationModel ||
+  mongoose.model("EventRegistration", eventRegistrationSchema);

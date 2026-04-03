@@ -2,13 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import {
   MdAddLocation,
+  MdCampaign,
   MdCalendarToday,
   MdDashboard,
   MdEvent,
   MdHowToReg,
+  MdInsights,
   MdMessage,
   MdPeople,
   MdSupervisorAccount,
+  MdVolunteerActivism,
 } from 'react-icons/md';
 import { getServerSession } from 'next-auth';
 import { CustomSession, authOptions } from '@/app/api/auth/[...nextauth]/options';
@@ -51,8 +54,26 @@ const menuItems = [
     href: '/admin/event-registrations',
   },
   {
-    name: 'Add New Center',
-    description: 'Expand location data with new Sahaja Yoga centers.',
+    name: 'Outreach',
+    description: 'Segment seekers and prepare email, WhatsApp, or SMS outreach.',
+    icon: <MdCampaign size={24} />,
+    href: '/admin/outreach',
+  },
+  {
+    name: 'Volunteers',
+    description: 'Track roles, availability, assignments, and event staffing.',
+    icon: <MdVolunteerActivism size={24} />,
+    href: '/admin/volunteers',
+  },
+  {
+    name: 'Analytics',
+    description: 'Monitor registrations, seekers, conversions, and center engagement.',
+    icon: <MdInsights size={24} />,
+    href: '/admin/analytics',
+  },
+  {
+    name: 'Manage Centers',
+    description: 'Expand and maintain center details, announcements, and updates.',
     icon: <MdAddLocation size={24} />,
     href: '/admin/add-center',
   },

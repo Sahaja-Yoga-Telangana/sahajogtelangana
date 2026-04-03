@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connect } from '@/database/mongo.config';
 import { EventRegistration } from '@/models/EventRegistration';
 import { sendRegistrationEmail } from '@/utils/mailer';
+import { resolveRegistrationGroupingKey } from '@/lib/eventRegistrationGroups';
+import { getRequiredSession } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, registrationId } = await request.json();
+    const { email, registrationId, receiptNumber, transactionNumber } = await request.json();
+    const session = await getRequiredSession();
+    const isAdmin = session?.user?.role === 'Admin';
 
     // Validate inputs
     if (!email || !registrationId) {
@@ -16,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Connect to database
-    connect();
+    await connect();
 
     // Fetch registration details
     const registration = await EventRegistration.findById(registrationId);
@@ -38,39 +42,54 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!isAdmin) {
+      const normalizedReceiptNumber = String(receiptNumber || '').trim();
+      const normalizedTransactionNumber = String(transactionNumber || '').trim();
+      const registrationReceiptNumber = String(registration.receiptNumber || registration._id.toString().substring(0, 8)).trim();
+      const registrationTransactionNumber = String(registration.transactionNumber || '').trim();
+
+      const hasMatchingProof =
+        (normalizedReceiptNumber && normalizedReceiptNumber === registrationReceiptNumber) ||
+        (normalizedTransactionNumber && normalizedTransactionNumber === registrationTransactionNumber);
+
+      if (!hasMatchingProof) {
+        return NextResponse.json(
+          {
+            message: 'Receipt resend requires matching registration proof.',
+            status: 403,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // Send email with registration details
     try {
       const registrationObject = registration.toObject();
+      const grouping = resolveRegistrationGroupingKey({
+        ...registrationObject,
+        _id: registration._id.toString(),
+      });
+      const groupedRegistrations = await EventRegistration.find({
+        [grouping.field]: grouping.value,
+      }).sort({ registeredAt: 1 });
 
-      if (registration.bulkGroupId) {
-        const groupedRegistrations = await EventRegistration.find({
-          bulkGroupId: registration.bulkGroupId,
-        }).sort({ registeredAt: 1 });
+      if (groupedRegistrations.length > 1) {
+        const groupAnchor = groupedRegistrations[0];
+        const receiptNumber = groupAnchor.receiptNumber || groupAnchor._id.toString().substring(0, 8);
 
-        if (groupedRegistrations.length > 1) {
-          const groupAnchor = groupedRegistrations[0];
-          const receiptNumber = groupAnchor._id.toString().substring(0, 8);
-
-          await sendRegistrationEmail({
-            ...registrationObject,
-            email,
-            receiptNumber,
-            registrations: groupedRegistrations.map((item) => ({
-              ...item.toObject(),
-              _id: item._id.toString(),
-            })),
-          });
-        } else {
-          const receiptNumber = registration._id.toString().substring(0, 8);
-          await sendRegistrationEmail({
-            ...registrationObject,
-            email,
-            receiptNumber,
-            _id: registration._id.toString(),
-          });
-        }
+        await sendRegistrationEmail({
+          ...registrationObject,
+          email,
+          receiptNumber,
+          registrations: groupedRegistrations.map((item: any) => ({
+            ...item.toObject(),
+            _id: item._id.toString(),
+            receiptNumber: item.receiptNumber || receiptNumber,
+          })),
+        });
       } else {
-        const receiptNumber = registration._id.toString().substring(0, 8);
+        const receiptNumber = registration.receiptNumber || registration._id.toString().substring(0, 8);
         await sendRegistrationEmail({
           ...registrationObject,
           email,

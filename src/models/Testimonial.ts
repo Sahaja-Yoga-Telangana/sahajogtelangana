@@ -55,5 +55,35 @@ testimonialSchema.index({ createdAt: -1 });
 testimonialSchema.index({ email: 1 });
 testimonialSchema.index({ isApproved: 1, createdAt: -1 });
 
+const existingTestimonialModel = mongoose.models.Testimonial as any;
+
+if (existingTestimonialModel) {
+  existingTestimonialModel.schema.add({
+    city: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+    yearsInSahajaYoga: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+    isApproved: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    approvedAt: {
+      type: Schema.Types.Date,
+      required: false,
+    },
+    approvedBy: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+  });
+}
+
 export const Testimonial =
-  mongoose.models.Testimonial || mongoose.model("Testimonial", testimonialSchema);
+  existingTestimonialModel || mongoose.model("Testimonial", testimonialSchema);

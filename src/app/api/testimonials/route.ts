@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/options";
 import { connect } from "@/database/mongo.config";
+import { normalizeEmail } from "@/lib/auth";
 import { Testimonial } from "@/models/Testimonial";
 
 export async function POST(request: NextRequest) {
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
     const testimonial = await Testimonial.create({
       userId: session.user.id,
       name: session.user.name || "Sahaja Yogi",
-      email: session.user.email,
+      email: normalizeEmail(session.user.email),
       city,
       yearsInSahajaYoga,
       experience,

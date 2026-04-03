@@ -12,7 +12,11 @@ interface CenterFormPayload {
   day: string;
   time: string;
   zone: string;
+  city?: string;
   contactNumbers: string;
+  weeklyUpdate?: string;
+  announcement?: string;
+  link?: string;
 }
 
 export async function POST(request: NextRequest) {

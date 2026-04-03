@@ -3,6 +3,7 @@ import { sendEmail } from '@/config/mail';
 
 interface RegistrationRecord {
   _id?: string;
+  receiptNumber?: string;
   name: string;
   eventTitle: string;
   age: number;
@@ -23,7 +24,7 @@ interface RegistrationEmailData extends RegistrationRecord {
 export async function sendRegistrationEmail(data: RegistrationEmailData) {
   const records = data.registrations && data.registrations.length > 0 ? data.registrations : [data];
   const primaryRecord = records[0];
-  const receiptNumber = data.receiptNumber || primaryRecord._id?.substring(0, 8) || 'N/A';
+  const receiptNumber = data.receiptNumber || primaryRecord.receiptNumber || primaryRecord._id?.substring(0, 8) || 'N/A';
   const receiptDateValue = primaryRecord.createdAt || primaryRecord.registeredAt;
   const formattedDate = receiptDateValue
     ? format(new Date(receiptDateValue), 'dd MMM yyyy')

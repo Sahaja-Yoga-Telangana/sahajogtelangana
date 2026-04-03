@@ -85,6 +85,15 @@ const Navbar = () => {
               );
             })}
 
+            {session ? (
+              <Link
+                href="/dashboard"
+                className="px-3 py-2 text-[color:var(--muted)] hover:text-[color:var(--ink)] font-medium transition-colors"
+              >
+                Dashboard
+              </Link>
+            ) : null}
+
             {/* Admin */}
             {isAdmin && (
               <Link
@@ -165,6 +174,16 @@ const Navbar = () => {
                 </Link>
               );
             })}
+
+            {session ? (
+              <Link
+                href="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-2 rounded-xl text-[color:var(--muted)] hover:bg-[color:var(--surface-2)]"
+              >
+                Dashboard
+              </Link>
+            ) : null}
 
             {isAdmin && (
               <Link

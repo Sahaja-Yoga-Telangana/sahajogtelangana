@@ -6,6 +6,9 @@ import { Center } from "@/models/Center";
 import { centerSchema } from "@/validator/authValidationSchema";
 import vine, { errors } from "@vinejs/vine";
 import ErrorReporter from "@/validator/ErrorReporter";
+import { CenterConnection } from "@/models/CenterConnection";
+import { User } from "@/models/User";
+import { sendEmail } from "@/config/mail";
 
 type RouteContext = { params: { id: string } };
 
@@ -26,11 +29,45 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     vine.errorReporter = () => new ErrorReporter();
     const validator = vine.compile(centerSchema);
     const output = await validator.validate(body);
+    const previousCenter = (await Center.findById(params.id).lean()) as any;
 
     const center = await Center.findByIdAndUpdate(params.id, { $set: output }, { new: true });
 
     if (!center) {
       return NextResponse.json({ error: "Center not found" }, { status: 404 });
+    }
+
+    const hadMeaningfulCenterUpdate =
+      previousCenter &&
+      (
+        previousCenter.day !== center.day ||
+        previousCenter.time !== center.time ||
+        previousCenter.address !== center.address ||
+        previousCenter.weeklyUpdate !== center.weeklyUpdate ||
+        previousCenter.announcement !== center.announcement
+      );
+
+    if (hadMeaningfulCenterUpdate) {
+      const joinedConnections = await CenterConnection.find({ centerId: params.id, connectionType: "joined" }).lean();
+      const emails = joinedConnections.map((item: any) => item.userEmail).filter(Boolean);
+      const users = await User.find({ email: { $in: emails } }, { email: 1, name: 1 }).lean();
+
+      const notificationResults = await Promise.allSettled(
+        users
+          .filter((user: any) => user.email)
+          .map((user: any) =>
+            sendEmail(
+              user.email,
+              `Update from ${center.zone} center`,
+              `<div style="font-family:Arial,sans-serif;line-height:1.6"><p>Namaste ${user.name || ""},</p><p>There is an update from the <strong>${center.zone}</strong> center in ${center.city || "Hyderabad"}.</p>${center.weeklyUpdate ? `<p><strong>Weekly update:</strong> ${center.weeklyUpdate}</p>` : ""}${center.announcement ? `<p><strong>Announcement:</strong> ${center.announcement}</p>` : ""}<p><strong>Day:</strong> ${center.day}<br/><strong>Time:</strong> ${center.time}<br/><strong>Address:</strong> ${center.address}</p></div>`
+            )
+          )
+      );
+
+      const failedNotifications = notificationResults.filter((result) => result.status === "rejected");
+      if (failedNotifications.length > 0) {
+        console.error(`Failed to send ${failedNotifications.length} center update notification(s) for center ${params.id}.`);
+      }
     }
 
     return NextResponse.json({ msg: "Center updated successfully!", data: center }, { status: 200 });

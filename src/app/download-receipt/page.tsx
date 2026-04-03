@@ -15,6 +15,7 @@ type RegistrationResponse = {
   state: string;
   city: string;
   email: string;
+  receiptNumber?: string;
   transactionNumber: string;
   createdAt: string;
 };
@@ -123,13 +124,17 @@ export default function DownloadReceipt() {
       if (registrations && registrations.length > 1) {
         await axios.post('/api/email-receipt', {
           email,
-          registrationId: registrations[0]._id
+          registrationId: registrations[0]._id,
+          receiptNumber: registrations[0].receiptNumber,
+          transactionNumber: registrations[0].transactionNumber,
         });
       } else if (registrations && registrations.length === 1) {
         // For single registration
         await axios.post('/api/email-receipt', {
           email,
-          registrationId: registrations[0]._id
+          registrationId: registrations[0]._id,
+          receiptNumber: registrations[0].receiptNumber,
+          transactionNumber: registrations[0].transactionNumber,
         });
       }
       

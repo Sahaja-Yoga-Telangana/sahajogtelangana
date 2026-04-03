@@ -20,9 +20,20 @@ export async function POST(req: NextRequest) {
 
     // Add the user to each seeker entry
     const seekersWithUser = seekers.map((seeker: any) => ({
-      ...seeker,
+      name: seeker.name,
+      city: seeker.city,
+      phone: seeker.phone,
+      email: seeker.email || "",
+      locality: seeker.locality || "",
+      source: seeker.source || "Website",
+      eventInterest: seeker.eventInterest || "",
+      centerInterest: seeker.centerInterest || "",
+      preferredLanguage: seeker.preferredLanguage || "English",
+      followUpStatus: seeker.followUpStatus || "New",
+      assignedVolunteer: seeker.assignedVolunteer || "",
+      notes: seeker.notes || "",
       addedBy: user,
-      addedAt: new Date()
+      addedAt: new Date(),
     }));
 
     const createdSeekers = await Seeker.insertMany(seekersWithUser);

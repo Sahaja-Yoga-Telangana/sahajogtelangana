@@ -12,8 +12,11 @@ type CenterRecord = {
   day: string;
   time: string;
   zone: string;
+  city?: string;
   contactNumbers: string;
   link?: string;
+  weeklyUpdate?: string;
+  announcement?: string;
 };
 
 const emptyForm = {
@@ -21,8 +24,11 @@ const emptyForm = {
   day: '',
   time: '',
   zone: '',
+  city: 'Hyderabad',
   contactNumbers: '',
   link: '',
+  weeklyUpdate: '',
+  announcement: '',
 };
 
 const ManageCentersPage: React.FC = () => {
@@ -67,8 +73,11 @@ const ManageCentersPage: React.FC = () => {
       day: center.day,
       time: center.time,
       zone: center.zone,
+      city: center.city || 'Hyderabad',
       contactNumbers: center.contactNumbers,
       link: center.link || '',
+      weeklyUpdate: center.weeklyUpdate || '',
+      announcement: center.announcement || '',
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -163,9 +172,15 @@ const ManageCentersPage: React.FC = () => {
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
-            <Field label="Contact persons">
+            <Field label="Zone / locality">
               <input type="text" id="zone" name="zone" value={formData.zone} onChange={handleChange} required className="admin-input" />
             </Field>
+            <Field label="City">
+              <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required className="admin-input" />
+            </Field>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
             <Field label="Contact numbers">
               <input
                 type="text"
@@ -190,6 +205,15 @@ const ManageCentersPage: React.FC = () => {
               placeholder="https://maps.google.com/..."
             />
           </Field>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field label="Weekly update (optional)">
+              <textarea id="weeklyUpdate" name="weeklyUpdate" value={formData.weeklyUpdate} onChange={handleChange} className="admin-input min-h-[120px]" />
+            </Field>
+            <Field label="Announcement (optional)">
+              <textarea id="announcement" name="announcement" value={formData.announcement} onChange={handleChange} className="admin-input min-h-[120px]" />
+            </Field>
+          </div>
 
           <button type="submit" disabled={submitting} className="admin-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60">
             {submitting ? 'Saving...' : editingId ? 'Update Center' : 'Add Center'}
@@ -217,6 +241,7 @@ const ManageCentersPage: React.FC = () => {
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">{center.day}</p>
                     <h3 className="mt-2 text-xl font-semibold text-[color:var(--ink)]">{center.zone}</h3>
+                    <p className="mt-1 text-sm text-[color:var(--muted)]">{center.city || 'Hyderabad'}</p>
                   </div>
                   <div className="flex gap-2">
                     <button type="button" onClick={() => handleEdit(center)} className="admin-btn-secondary">
@@ -237,6 +262,8 @@ const ManageCentersPage: React.FC = () => {
                   <p><span className="font-semibold text-[color:var(--ink)]">Address:</span> {center.address}</p>
                   <p><span className="font-semibold text-[color:var(--ink)]">Time:</span> {center.time}</p>
                   <p><span className="font-semibold text-[color:var(--ink)]">Contact numbers:</span> {center.contactNumbers}</p>
+                  {center.weeklyUpdate ? <p><span className="font-semibold text-[color:var(--ink)]">Weekly update:</span> {center.weeklyUpdate}</p> : null}
+                  {center.announcement ? <p><span className="font-semibold text-[color:var(--ink)]">Announcement:</span> {center.announcement}</p> : null}
                   {center.link ? (
                     <p>
                       <span className="font-semibold text-[color:var(--ink)]">Map:</span>{' '}

@@ -18,8 +18,13 @@ const centerSchema = new Schema({
   },
   zone: {
     type: Schema.Types.String,
-    required: [true, "Contact persons field is required."],
+    required: [true, "Zone field is required."],
     trim: true,
+  },
+  city: {
+    type: Schema.Types.String,
+    trim: true,
+    default: "Hyderabad",
   },
   contactNumbers: {
     type: Schema.Types.String,
@@ -31,10 +36,47 @@ const centerSchema = new Schema({
     trim: true,
     default: "",
   },
+  weeklyUpdate: {
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
+  announcement: {
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
   createdAt: {
     type: Schema.Types.Date,
     default: Date.now,
   },
 });
 
-export const Center = mongoose.models.Center || mongoose.model("Center", centerSchema);
+const existingCenterModel = mongoose.models.Center as any;
+
+if (existingCenterModel) {
+  existingCenterModel.schema.add({
+    city: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "Hyderabad",
+    },
+    link: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+    weeklyUpdate: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+    announcement: {
+      type: Schema.Types.String,
+      trim: true,
+      default: "",
+    },
+  });
+}
+
+export const Center = existingCenterModel || mongoose.model("Center", centerSchema);

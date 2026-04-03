@@ -16,6 +16,7 @@ export type AppEvent = {
   image?: string;
   qrImage?: string;
   isActive?: boolean;
+  subscriberNotificationSentAt?: string | Date | null;
 };
 
 export function getEventDateLabel(date: string | Date, endDate?: string | Date | null) {
