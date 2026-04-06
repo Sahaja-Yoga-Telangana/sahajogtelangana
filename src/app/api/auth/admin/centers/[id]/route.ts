@@ -9,12 +9,57 @@ import ErrorReporter from "@/validator/ErrorReporter";
 import { CenterConnection } from "@/models/CenterConnection";
 import { User } from "@/models/User";
 import { sendEmail } from "@/config/mail";
+import mongoose from "mongoose";
 
 type RouteContext = { params: { id: string } };
 
 async function assertAdmin() {
   const session = (await getServerSession(authOptions)) as CustomSession | null;
   return !!session && session.user?.role === "Admin";
+}
+
+async function findCenterByAnyId(id: string) {
+  const center = await Center.findById(id);
+  if (center) {
+    return center;
+  }
+
+  const legacyCenter = await Center.collection.findOne({ _id: id });
+  return legacyCenter;
+}
+
+async function updateCenterByAnyId(id: string, output: Record<string, unknown>) {
+  const center = await Center.findByIdAndUpdate(id, { $set: output }, { new: true });
+  if (center) {
+    return center;
+  }
+
+  const legacyResult = await Center.collection.findOneAndUpdate(
+    { _id: id },
+    { $set: output },
+    { returnDocument: "after" }
+  );
+
+  return legacyResult?.value || null;
+}
+
+async function deleteCenterByAnyId(id: string) {
+  const center = await Center.findByIdAndDelete(id);
+  if (center) {
+    return center;
+  }
+
+  const legacyResult = await Center.collection.findOneAndDelete({ _id: id });
+  return legacyResult?.value || null;
+}
+
+function centerConnectionLookup(id: string) {
+  const ids: Array<string | mongoose.Types.ObjectId> = [id];
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    ids.push(new mongoose.Types.ObjectId(id));
+  }
+
+  return { centerId: { $in: ids }, connectionType: "joined" };
 }
 
 export async function PUT(request: NextRequest, { params }: RouteContext) {
@@ -29,9 +74,9 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     vine.errorReporter = () => new ErrorReporter();
     const validator = vine.compile(centerSchema);
     const output = await validator.validate(body);
-    const previousCenter = (await Center.findById(params.id).lean()) as any;
+    const previousCenter = await findCenterByAnyId(params.id);
 
-    const center = await Center.findByIdAndUpdate(params.id, { $set: output }, { new: true });
+    const center = await updateCenterByAnyId(params.id, output);
 
     if (!center) {
       return NextResponse.json({ error: "Center not found" }, { status: 404 });
@@ -48,7 +93,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       );
 
     if (hadMeaningfulCenterUpdate) {
-      const joinedConnections = await CenterConnection.find({ centerId: params.id, connectionType: "joined" }).lean();
+      const joinedConnections = await CenterConnection.find(centerConnectionLookup(params.id)).lean();
       const emails = joinedConnections.map((item: any) => item.userEmail).filter(Boolean);
       const users = await User.find({ email: { $in: emails } }, { email: 1, name: 1 }).lean();
 
@@ -90,7 +135,7 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const center = await Center.findByIdAndDelete(params.id);
+    const center = await deleteCenterByAnyId(params.id);
 
     if (!center) {
       return NextResponse.json({ error: "Center not found" }, { status: 404 });

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from '@/app/provider/localeProvider';
 
 type ContactErrorType = {
   name?: string;
@@ -11,6 +12,7 @@ type ContactErrorType = {
 };
 
 const ContactUs = () => {
+  const t = useTranslations();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -54,24 +56,24 @@ const ContactUs = () => {
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-semibold">Contact us</h2>
+          <h2 className="text-4xl md:text-5xl font-semibold">{t('contact.title')}</h2>
           <p className="text-[color:var(--muted)] mt-4 text-lg max-w-xl mx-auto">
-            Reach out for a tailored Sahaja Yoga session at your organization, school, or institution.
+            {t('contact.body')}
           </p>
         </div>
 
         <div className="md:flex md:space-x-8">
           {/* Left Info Panel */}
           <div className="md:w-1/2 bg-[color:var(--surface)] border border-[color:var(--border)] p-8 md:p-10 rounded-3xl shadow-soft space-y-6">
-            <h3 className="text-3xl font-semibold">Free meditation sessions</h3>
-            <p className="text-[color:var(--muted)]">We offer free meditation programs for:</p>
+            <h3 className="text-3xl font-semibold">{t('contact.free_title')}</h3>
+            <p className="text-[color:var(--muted)]">{t('contact.free_body')}</p>
             <ul className="list-disc list-inside text-[color:var(--muted)] space-y-2">
-              <li>Corporate organizations</li>
-              <li>Schools and universities</li>
-              <li>Other institutions</li>
+              <li>{t('contact.item_corporate')}</li>
+              <li>{t('contact.item_schools')}</li>
+              <li>{t('contact.item_other')}</li>
             </ul>
             <p className="text-[color:var(--muted)]">
-              Experience the transformative power of Sahaja Yoga meditation. Contact us for a free, customized session.
+              {t('contact.free_footer')}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
@@ -79,13 +81,13 @@ const ContactUs = () => {
                 href="/corporate-register"
                 className="bg-[color:var(--primary)] text-white px-6 py-3 rounded-full hover:bg-[color:var(--primary-600)] text-center transition"
               >
-                Corporate Registration
+                {t('contact.corporate_registration')}
               </Link>
               <Link
                 href="/school-programs"
                 className="border border-[color:var(--border)] text-[color:var(--ink)] px-6 py-3 rounded-full hover:bg-[color:var(--surface-2)] text-center transition"
               >
-                School Programs
+                {t('contact.school_programs')}
               </Link>
             </div>
           </div>
@@ -95,22 +97,22 @@ const ContactUs = () => {
             {success ? (
               <div className="text-center py-10">
                 <div className="text-5xl mb-4 text-[color:var(--primary)]">✓</div>
-                <h3 className="text-2xl font-semibold mb-2">Thank you</h3>
+                <h3 className="text-2xl font-semibold mb-2">{t('contact.thank_you')}</h3>
                 <p className="text-[color:var(--muted)] mb-6">
-                  Your message has been sent successfully. We'll be in touch soon.
+                  {t('contact.success')}
                 </p>
                 <button
                   onClick={() => setSuccess(false)}
                   className="bg-[color:var(--primary)] text-white px-6 py-2 rounded-full hover:bg-[color:var(--primary-600)] transition"
                 >
-                  Send Another Message
+                  {t('contact.send_another')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label htmlFor="name" className="block text-base font-medium mb-1 text-[color:var(--muted)]">
-                    Name
+                    {t('contact.name')}
                   </label>
                   <input
                     id="name"
@@ -125,7 +127,7 @@ const ContactUs = () => {
 
                 <div>
                   <label htmlFor="email" className="block text-base font-medium mb-1 text-[color:var(--muted)]">
-                    Email
+                    {t('contact.email')}
                   </label>
                   <input
                     id="email"
@@ -140,7 +142,7 @@ const ContactUs = () => {
 
                 <div>
                   <label htmlFor="phoneNumber" className="block text-base font-medium mb-1 text-[color:var(--muted)]">
-                    Phone Number
+                    {t('contact.phone')}
                   </label>
                   <input
                     id="phoneNumber"
@@ -157,7 +159,7 @@ const ContactUs = () => {
 
                 <div>
                   <label htmlFor="message" className="block text-base font-medium mb-1 text-[color:var(--muted)]">
-                    Message
+                    {t('contact.message')}
                   </label>
                   <textarea
                     id="message"
@@ -176,7 +178,7 @@ const ContactUs = () => {
                     disabled={loading}
                     className="bg-[color:var(--primary)] text-white px-6 py-2 rounded-full hover:bg-[color:var(--primary-600)] transition disabled:opacity-50"
                   >
-                    {loading ? 'Sending...' : 'Send Message'}
+                    {loading ? t('contact.sending') : t('contact.send')}
                   </button>
                 </div>
               </form>

@@ -5,9 +5,115 @@ import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Image from 'next/image';
+import { useLocale } from '@/app/provider/localeProvider';
+
+const content = {
+  en: {
+    heroTitle: 'Meditation Programs for Schools',
+    heroBody:
+      'A simple, structured meditation program that supports students’ concentration, emotional balance, and personality development, delivered in a safe, neutral, and age-appropriate manner.',
+    heroPoints: [
+      'Free of cost and non-commercial',
+      'Neutral, inclusive, and suitable for all students',
+      'Focus on attention, calmness, and positive values',
+      'Conducted during school hours or special sessions',
+    ],
+    whyTitle: 'Why Meditation Is Important for Children Today',
+    whyBody:
+      'Children today are exposed to many modern-day influences that can adversely impact their attention span, behaviour, and communication skills. Sahaja Yoga Meditation helps to gently reverse these effects and brings out innate qualities such as compassion, respectfulness, emotional balance, and the ability to focus.',
+    benefitsTitle: 'Benefits of Sahaja Yoga Meditation for Children',
+    benefitsBody:
+      'Sahaja Yoga Meditation supports children’s inner growth in a natural, effortless, and joyful way.',
+    benefits: [
+      ['Social Skills', 'Children learn respectful communication with adults and peers, gaining confidence in both group and individual interactions.'],
+      ['Self-Confidence', 'Meditation reduces fear, anxiety, and insecurity, allowing natural talents and confidence to emerge.'],
+      ['Creativity', 'A calm and balanced mind allows children’s natural creativity and curiosity to flourish.'],
+      ['Memory & Attention', 'Meditation calms the mind, helping improve attention span, memory, and cognitive clarity.'],
+    ],
+    formTitle: 'Request a School Program',
+    formBody:
+      'Share your details below and our team will connect with you to coordinate a suitable program for your students.',
+    labels: {
+      schoolName: 'School Name',
+      contactName: 'Contact Person Name',
+      role: 'Role',
+      email: 'Email Address',
+      phone: 'Phone Number',
+      preferredDate: 'Preferred Program Date',
+      address: 'School Address',
+      city: 'City',
+      state: 'State',
+      remarks: 'Additional Remarks (optional)',
+    },
+    submit: 'Submit Request',
+    submitting: 'Submitting…',
+    errors: {
+      schoolName: 'School name is required',
+      contactName: 'Contact name is required',
+      role: 'Role is required',
+      email: 'Valid email is required',
+      phone: 'Valid phone is required',
+      street: 'Street is required',
+      city: 'City is required',
+      state: 'State is required',
+    },
+  },
+  te: {
+    heroTitle: 'పాఠశాలల కోసం ధ్యాన కార్యక్రమాలు',
+    heroBody:
+      'విద్యార్థుల ఏకాగ్రత, భావోద్వేగ సమతుల్యత, వ్యక్తిత్వ వికాసానికి మద్దతు ఇచ్చే సరళమైన, క్రమబద్ధమైన ధ్యాన కార్యక్రమం. ఇది సురక్షితమైన, తటస్థమైన, వయస్సుకు తగిన విధంగా అందించబడుతుంది.',
+    heroPoints: [
+      'పూర్తిగా ఉచితం మరియు వాణిజ్యరహితం',
+      'తటస్థం, అందరికీ అనుకూలం, అన్ని విద్యార్థులకు సరిపడేది',
+      'ఏకాగ్రత, ప్రశాంతత, సానుకూల విలువలపై దృష్టి',
+      'పాఠశాల సమయాల్లో లేదా ప్రత్యేక సెషన్లలో నిర్వహించవచ్చు',
+    ],
+    whyTitle: 'ఈ రోజుల్లో పిల్లలకు ధ్యానం ఎందుకు అవసరం',
+    whyBody:
+      'ఈ రోజుల్లో పిల్లలు వారి ఏకాగ్రత, ప్రవర్తన, కమ్యూనికేషన్ నైపుణ్యాలపై ప్రభావం చూపే అనేక ఆధునిక ప్రభావాలకు గురవుతున్నారు. సహజ యోగ ధ్యానం ఈ ప్రభావాలను మృదువుగా తగ్గించి, కరుణ, గౌరవం, భావోద్వేగ సమతుల్యత, ఏకాగ్రత వంటి సహజ గుణాలను వెలికితీస్తుంది.',
+    benefitsTitle: 'పిల్లలకు సహజ యోగ ధ్యాన ప్రయోజనాలు',
+    benefitsBody:
+      'సహజ యోగ ధ్యానం పిల్లల అంతర్ముఖ వికాసాన్ని సహజంగా, సులభంగా, ఆనందంగా అభివృద్ధి చేస్తుంది.',
+    benefits: [
+      ['సామాజిక నైపుణ్యాలు', 'పిల్లలు పెద్దలతో, స్నేహితులతో గౌరవంగా మాట్లాడడం నేర్చుకుని గుంపులోను వ్యక్తిగతంగాను ఆత్మవిశ్వాసం పొందుతారు.'],
+      ['ఆత్మవిశ్వాసం', 'ధ్యానం భయం, ఆందోళన, అసురక్షిత భావాన్ని తగ్గించి సహజ ప్రతిభ, ధైర్యాన్ని వెలికి తీయగలదు.'],
+      ['సృజనాత్మకత', 'ప్రశాంతమైన, సమతుల మనస్సు పిల్లల సహజ సృజనాత్మకత, ఆసక్తిని వికసింపజేస్తుంది.'],
+      ['జ్ఞాపకశక్తి & ఏకాగ్రత', 'ధ్యానం మనస్సును ప్రశాంతపరచి ఏకాగ్రత, జ్ఞాపకశక్తి, మానసిక స్పష్టతను మెరుగుపరుస్తుంది.'],
+    ],
+    formTitle: 'పాఠశాల కార్యక్రమం కోసం అభ్యర్థించండి',
+    formBody:
+      'మీ వివరాలను క్రింద పంచుకోండి. మీ విద్యార్థులకు తగిన కార్యక్రమాన్ని సమన్వయం చేసేందుకు మా బృందం మిమ్మల్ని సంప్రదిస్తుంది.',
+    labels: {
+      schoolName: 'పాఠశాల పేరు',
+      contactName: 'సంప్రదింపు వ్యక్తి పేరు',
+      role: 'పాత్ర',
+      email: 'ఇమెయిల్ చిరునామా',
+      phone: 'ఫోన్ నంబర్',
+      preferredDate: 'అభిలషిత కార్యక్రమ తేదీ',
+      address: 'పాఠశాల చిరునామా',
+      city: 'నగరం',
+      state: 'రాష్ట్రం',
+      remarks: 'అదనపు వ్యాఖ్యలు (ఐచ్చికం)',
+    },
+    submit: 'అభ్యర్థనను పంపండి',
+    submitting: 'పంపుతోంది…',
+    errors: {
+      schoolName: 'పాఠశాల పేరు అవసరం',
+      contactName: 'సంప్రదింపు పేరు అవసరం',
+      role: 'పాత్ర అవసరం',
+      email: 'సరైన ఇమెయిల్ అవసరం',
+      phone: 'సరైన ఫోన్ నంబర్ అవసరం',
+      street: 'వీధి చిరునామా అవసరం',
+      city: 'నగరం అవసరం',
+      state: 'రాష్ట్రం అవసరం',
+    },
+  },
+} as const;
 
 export default function SchoolRegisterClient() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const copy = content[locale];
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -24,16 +130,16 @@ export default function SchoolRegisterClient() {
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRe = /^\+?[0-9]{6,15}$/;
 
-    if (!formData.schoolName || formData.schoolName.trim().length < 2) errors['schoolName'] = 'School name is required';
+    if (!formData.schoolName || formData.schoolName.trim().length < 2) errors['schoolName'] = copy.errors.schoolName;
 
-    if (!formData.contactPerson.name || formData.contactPerson.name.trim().length < 2) errors['contactPerson.name'] = 'Contact name is required';
-    if (!formData.contactPerson.role || formData.contactPerson.role.trim().length < 2) errors['contactPerson.role'] = 'Role is required';
-    if (!emailRe.test(formData.contactPerson.email)) errors['contactPerson.email'] = 'Valid email is required';
-    if (!phoneRe.test(formData.contactPerson.phone)) errors['contactPerson.phone'] = 'Valid phone is required';
+    if (!formData.contactPerson.name || formData.contactPerson.name.trim().length < 2) errors['contactPerson.name'] = copy.errors.contactName;
+    if (!formData.contactPerson.role || formData.contactPerson.role.trim().length < 2) errors['contactPerson.role'] = copy.errors.role;
+    if (!emailRe.test(formData.contactPerson.email)) errors['contactPerson.email'] = copy.errors.email;
+    if (!phoneRe.test(formData.contactPerson.phone)) errors['contactPerson.phone'] = copy.errors.phone;
 
-    if (!formData.schoolAddress.street || formData.schoolAddress.street.trim().length < 5) errors['schoolAddress.street'] = 'Street is required';
-    if (!formData.schoolAddress.city || formData.schoolAddress.city.trim().length < 2) errors['schoolAddress.city'] = 'City is required';
-    if (!formData.schoolAddress.state || formData.schoolAddress.state.trim().length < 2) errors['schoolAddress.state'] = 'State is required';
+    if (!formData.schoolAddress.street || formData.schoolAddress.street.trim().length < 5) errors['schoolAddress.street'] = copy.errors.street;
+    if (!formData.schoolAddress.city || formData.schoolAddress.city.trim().length < 2) errors['schoolAddress.city'] = copy.errors.city;
+    if (!formData.schoolAddress.state || formData.schoolAddress.state.trim().length < 2) errors['schoolAddress.state'] = copy.errors.state;
 
     return errors;
   };
@@ -73,20 +179,17 @@ export default function SchoolRegisterClient() {
       <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <h1 className="text-4xl md:text-5xl font-semibold text-[color:var(--ink)] leading-tight">
-            Meditation Programs for Schools
+            {copy.heroTitle}
           </h1>
 
           <p className="mt-6 text-lg text-[color:var(--muted)] max-w-xl">
-            A simple, structured meditation program that supports students’
-            concentration, emotional balance, and personality development —
-            delivered in a safe, neutral, and age-appropriate manner.
+            {copy.heroBody}
           </p>
 
           <ul className="mt-8 space-y-3 text-[color:var(--muted)]">
-            <li>• Free of cost and non-commercial</li>
-            <li>• Neutral, inclusive, and suitable for all students</li>
-            <li>• Focus on attention, calmness, and positive values</li>
-            <li>• Conducted during school hours or special sessions</li>
+            {copy.heroPoints.map((item) => (
+              <li key={item}>• {item}</li>
+            ))}
           </ul>
         </div>
 
@@ -106,15 +209,11 @@ export default function SchoolRegisterClient() {
       <section className="max-w-5xl mx-auto px-6 pb-20">
         <div className="bg-[color:var(--surface)] backdrop-blur rounded-2xl shadow-sm p-8 md:p-10">
           <h2 className="text-2xl text-center font-semibold text-[color:var(--ink)]">
-            Why Meditation Is Important for Children Today
+            {copy.whyTitle}
           </h2>
 
           <p className="mt-4 text-[color:var(--muted)] leading-relaxed">
-            Children today are exposed to many modern-day influences that can
-            adversely impact their attention span, behaviour, and communication
-            skills. Sahaja Yoga Meditation helps to gently reverse these effects
-            and brings out innate qualities such as compassion, respectfulness,
-            emotional balance, and the ability to focus.
+            {copy.whyBody}
           </p>
         </div>
       </section>
@@ -122,31 +221,17 @@ export default function SchoolRegisterClient() {
       {/* BENEFITS */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
         <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] text-center">
-          Benefits of Sahaja Yoga Meditation for Children
+          {copy.benefitsTitle}
         </h2>
 
         <p className="mt-3 text-[color:var(--muted)] text-center max-w-3xl mx-auto">
-          Sahaja Yoga Meditation supports children’s inner growth in a natural,
-          effortless, and joyful way.
+          {copy.benefitsBody}
         </p>
 
         <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <InfoCard
-            title="Social Skills"
-            text="Children learn respectful communication with adults and peers, gaining confidence in both group and individual interactions."
-          />
-          <InfoCard
-            title="Self-Confidence"
-            text="Meditation reduces fear, anxiety, and insecurity, allowing natural talents and confidence to emerge."
-          />
-          <InfoCard
-            title="Creativity"
-            text="A calm and balanced mind allows children’s natural creativity and curiosity to flourish."
-          />
-          <InfoCard
-            title="Memory & Attention"
-            text="Meditation calms the mind, helping improve attention span, memory, and cognitive clarity."
-          />
+          {copy.benefits.map(([title, text]) => (
+            <InfoCard key={title} title={title} text={text} />
+          ))}
         </div>
       </section>
 
@@ -154,32 +239,31 @@ export default function SchoolRegisterClient() {
       <section className="max-w-4xl mx-auto px-6 pb-28">
         <div className="bg-[color:var(--surface)] rounded-2xl shadow-md p-8 md:p-12">
           <h2 className="text-2xl text-center font-semibold text-[color:var(--ink)]">
-            Request a School Program
+            {copy.formTitle}
           </h2>
 
           <p className="mt-2 text-[color:var(--muted)] max-w-2xl">
-            Share your details below and our team will connect with you to
-            coordinate a suitable program for your students.
+            {copy.formBody}
           </p>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input label="School Name" error={errors['schoolName']} onChange={(v) => setFormData({ ...formData, schoolName: v })} />
-            <Input label="Contact Person Name" error={errors['contactPerson.name']} onChange={(v) =>
+            <Input label={copy.labels.schoolName} error={errors['schoolName']} onChange={(v) => setFormData({ ...formData, schoolName: v })} />
+            <Input label={copy.labels.contactName} error={errors['contactPerson.name']} onChange={(v) =>
               setFormData({ ...formData, contactPerson: { ...formData.contactPerson, name: v } })
             } />
-            <Input label="Role" error={errors['contactPerson.role']} onChange={(v) =>
+            <Input label={copy.labels.role} error={errors['contactPerson.role']} onChange={(v) =>
               setFormData({ ...formData, contactPerson: { ...formData.contactPerson, role: v } })
             } />
-            <Input label="Email Address" type="email" error={errors['contactPerson.email']} onChange={(v) =>
+            <Input label={copy.labels.email} type="email" error={errors['contactPerson.email']} onChange={(v) =>
               setFormData({ ...formData, contactPerson: { ...formData.contactPerson, email: v } })
             } />
-            <Input label="Phone Number" error={errors['contactPerson.phone']} onChange={(v) =>
+            <Input label={copy.labels.phone} error={errors['contactPerson.phone']} onChange={(v) =>
               setFormData({ ...formData, contactPerson: { ...formData.contactPerson, phone: v } })
             } />
 
             <div>
               <label className="block text-base font-medium text-[color:var(--muted)]">
-                Preferred Program Date
+                {copy.labels.preferredDate}
               </label>
               <DatePicker
                 selected={formData.preferredProgramDate}
@@ -192,21 +276,21 @@ export default function SchoolRegisterClient() {
             </div>
 
             
-            <Input label="School Address" className="md:col-span-2" error={errors['schoolAddress.street']} onChange={(v) =>
+            <Input label={copy.labels.address} className="md:col-span-2" error={errors['schoolAddress.street']} onChange={(v) =>
               setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, street: v } })
             } />
 
-            <Input label="City" error={errors['schoolAddress.city']} onChange={(v) =>
+            <Input label={copy.labels.city} error={errors['schoolAddress.city']} onChange={(v) =>
               setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, city: v } })
             } />
 
-            <Input label="State" error={errors['schoolAddress.state']} onChange={(v) =>
+            <Input label={copy.labels.state} error={errors['schoolAddress.state']} onChange={(v) =>
               setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, state: v } })
             } />
 
             <div className="md:col-span-2">
               <label className="block text-base font-medium text-[color:var(--muted)]">
-                Additional Remarks (optional)
+                {copy.labels.remarks}
               </label>
               <textarea
                 rows={4}
@@ -223,7 +307,7 @@ export default function SchoolRegisterClient() {
             disabled={loading}
             className="mt-10 w-full bg-[#5B2C41] hover:bg-[#4a2335] text-white py-3 rounded-md font-medium transition"
           >
-            {loading ? 'Submitting…' : 'Submit Request'}
+            {loading ? copy.submitting : copy.submit}
           </button>
         </div>
       </section>

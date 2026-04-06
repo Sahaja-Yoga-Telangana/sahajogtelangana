@@ -1,8 +1,13 @@
+'use client';
+
 import Image from 'next/image'
 import React from 'react'
 import Button from './Button'
+import { useTranslations } from '@/app/provider/localeProvider';
 
 const Guide = () => {
+  const t = useTranslations();
+
   return (
     <section className="py-20 bg-[color:var(--surface-2)]">
       <div className="container mx-auto px-6">
@@ -22,19 +27,20 @@ const Guide = () => {
           {/* Text Content */}
           <div className="lg:w-6/12 space-y-6">
             <p className="uppercase tracking-[0.3em] text-base font-semibold text-[color:var(--muted)]">
-              Our Mother
+              {t('guide.our_mother')}
             </p>
             <div className="flex items-center gap-4">
-              <h2 className="text-4xl font-semibold text-[color:var(--ink)]">Shri Mataji</h2>
+              <h2 className="text-4xl font-semibold text-[color:var(--ink)]">{t('guide.shri_mataji')}</h2>
               <Button
                 type="button"
-                title="Know More"
+                title={t('guide.know_more')}
                 icon="/play.svg"
                 variant="secondary"
+                href="/shri-mataji"
               />
             </div>
             <p className="text-[color:var(--muted)] text-lg leading-relaxed">
-              Shri Mataji Nirmala Devi was an extraordinarily charismatic and compassionate spiritual figure. Her presence radiated pure love — a divine force that saw the potential in every human soul. She addressed the seekers of truth with deep care, often transforming their confusion into clarity and silence with a single glance. Her legacy is not just in words, but in the awakening she offered to thousands around the world.
+              {t('guide.shri_mataji_body')}
             </p>
           </div>
         </div>
@@ -75,7 +81,7 @@ const Guide = () => {
               mb-3
             "
           >
-            Sahaja Yoga for Corporate
+            {t('guide.corporate_title')}
           </h2>
 
           {/* Description */}
@@ -87,20 +93,17 @@ const Guide = () => {
               mb-6
             "
           >
-            Sahaja Yoga for Corporate offers simple, practical meditation sessions
-            designed to help employees achieve mental balance, emotional well-being,
-            and sustained focus. Through self-realization and thoughtless awareness,
-            participants experience reduced stress, improved clarity, and enhanced
-            workplace harmony.
+            {t('guide.corporate_body')}
           </p>
 
           {/* CTA – moved below content on mobile */}
           <div className="mb-3 justify-center sm:justify-start">
             <Button
               type="button"
-              title="Corporate Program"
+              title={t('guide.corporate_cta')}
               variant="secondary"
               full
+              href="/corporate-register"
             />
           </div>
 
@@ -117,16 +120,16 @@ const Guide = () => {
               mb-4
             "
           >
-            Our Impact
+            {t('guide.impact')}
           </h3>
 
           {/* Impact Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
-              { label: 'Organizations Served', value: '300+' },
-              { label: 'Employees Benefited', value: '50K+' },
-              { label: 'Countries Covered', value: '25+' },
-              { label: 'Years of Experience', value: '30+' },
+              { label: t('guide.orgs'), value: '300+' },
+              { label: t('guide.employees'), value: '50K+' },
+              { label: t('guide.countries'), value: '25+' },
+              { label: t('guide.years'), value: '30+' },
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <p className="text-2xl sm:text-3xl font-semibold text-[color:var(--ink)]">

@@ -9,30 +9,21 @@ type ButtonProps = {
   icon?: string;
   variant: string;
   full?: boolean;
+  href?: string;
+  externalHref?: string;
 }
 
-const Button = ({ type, title, icon, variant, full }: ButtonProps) => {
+const Button = ({ type, title, icon, variant, full, href, externalHref }: ButtonProps) => {
   const router = useRouter();
 
   const handleClick = () => {
-    if (title === "Centers Near Me") {
-      router.push('/centers');
+    if (externalHref) {
+      window.location.href = externalHref;
+      return;
     }
 
-    else if(title === "Know More"){
-      router.push('/shri-mataji')
-    }
-    else if(title === "Read More"){
-      router.push('/sahaja-yoga')
-    }
-    else if(title === "Corporate Program"){
-      router.push('/corporate-register')
-    }
-    else if(title === "Meditate Now!"){
-      router.push('/sahaja-yoga')
-    }
-    else if(title === "Read More 🍏"){
-      window.location.href = "https://sahajakrishi.in/";
+    if (href) {
+      router.push(href);
     }
   }
 

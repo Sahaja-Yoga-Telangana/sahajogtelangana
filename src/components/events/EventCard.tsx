@@ -1,17 +1,22 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight, FiCalendar, FiMapPin } from 'react-icons/fi';
+import { useLocale, useTranslations } from '@/app/provider/localeProvider';
 import { AppEvent, getEventDateLabel, getEventExcerpt } from '@/lib/events';
 
 export default function EventCard({
   event,
-  ctaLabel = 'Register',
+  ctaLabel,
   href,
 }: {
   event: AppEvent;
   ctaLabel?: string;
   href?: string;
 }) {
+  const { locale } = useLocale();
+  const t = useTranslations();
   const targetHref = href ?? `/register-event/${event._id}`;
   const hasRemoteImage = !!event.image && /^https?:\/\//.test(event.image);
   const isFreeEntry =
@@ -37,7 +42,7 @@ export default function EventCard({
         ) : (
           <div className="flex h-full items-center justify-center">
             <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
-              Sahaja Yoga Event
+              {t('events.badge')}
             </div>
           </div>
         )}
@@ -53,7 +58,7 @@ export default function EventCard({
         <div className="flex flex-wrap items-center gap-3 text-sm text-[color:var(--muted)]">
           <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] px-3 py-1.5">
             <FiCalendar className="h-4 w-4" aria-hidden="true" />
-            {getEventDateLabel(event.date, event.endDate)}
+            {getEventDateLabel(event.date, event.endDate, locale)}
           </span>
           <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] px-3 py-1.5">
             {event.time}
@@ -70,7 +75,7 @@ export default function EventCard({
 
         <div className="mt-6 flex items-center justify-between">
           <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
-            {ctaLabel}
+            {ctaLabel || t('events.register')}
           </span>
           <FiArrowRight className="h-5 w-5 text-[color:var(--primary)] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
         </div>

@@ -100,8 +100,8 @@ export default async function Home() {
     console.error("Error loading testimonials:", error);
   }
 
-  const phone = FOOTER_CONTACT_INFO.links.find((l) => l.label === 'Call Us')?.value || '';
-  const email = FOOTER_CONTACT_INFO.links.find((l) => l.label === 'Email')?.value || '';
+  const phone = FOOTER_CONTACT_INFO.links.find((l) => l.labelKey === 'footer.call_us')?.value || '';
+  const email = FOOTER_CONTACT_INFO.links.find((l) => l.labelKey === 'footer.email')?.value || '';
   return (
     <>
       <SeoJsonLd

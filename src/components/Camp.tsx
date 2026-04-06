@@ -1,5 +1,8 @@
+'use client';
+
 import Image from "next/image";
 import Button from "./Button";
+import { useTranslations } from '@/app/provider/localeProvider';
 
 interface CampProps {
   backgroundImage: string;
@@ -31,39 +34,42 @@ const CampSite = ({ backgroundImage, title, subtitle }: CampProps) => {
 }
 
 const Camp = () => {
+  const t = useTranslations();
+
   return (
     <section className="relative py-10">
       <hr/>
       <div className="max-w-7xl mx-auto py-10 px-6 lg:px-10">
         
         <div className="mb-8">
-          <h2 className="text-3xl md:text-4xl font-semibold text-[color:var(--ink)]">Visit our meditation centers</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-[color:var(--ink)]">{t('camp.title')}</h2>
           <p className="mt-3 text-[color:var(--muted)] max-w-3xl">
-            Meditation deepens when practiced together. Explore weekly sessions across Hyderabad and Telangana, guided by experienced practitioners.
+            {t('camp.body')}
           </p>
         </div>
         <div className="hide-scrollbar flex h-[300px] w-full items-start justify-start gap-6 overflow-x-auto lg:h-[360px]">
           <CampSite
             backgroundImage="bg-bg-img-2"
-            title="Sahaja Yoga Meditation Center"
+            title={t('camp.center_title')}
             subtitle=""
           />
           <CampSite
             backgroundImage="bg-bg-img-3"
-            title="Sahaja Yoga Meditation Center"
+            title={t('camp.center_title')}
             subtitle=""
           />
           <CampSite
             backgroundImage="bg-bg-img-1"
-            title="Sahaja Yoga Meditation Center"
+            title={t('camp.center_title')}
             subtitle=""
           />
         </div>
         <div className="flex justify-center mt-10">
           <Button
             type="button"
-            title="Centers Near Me"
+            title={t('camp.cta')}
             variant="primary"
+            href="/centers"
           />
         </div>
       </div>

@@ -1,10 +1,19 @@
-// Features.tsx
+'use client';
 
 import { FEATURES } from '../../constants'
 import Image from 'next/image'
 import React from 'react'
+import { useTranslations } from '@/app/provider/localeProvider';
 
 const Features = () => {
+  const t = useTranslations();
+  const localizedFeatures = [
+    { title: t('features.free_title'), description: t('features.free_body'), icon: FEATURES[0].icon },
+    { title: t('features.transform_title'), description: t('features.transform_body'), icon: FEATURES[1].icon },
+    { title: t('features.everyone_title'), description: t('features.everyone_body'), icon: FEATURES[2].icon },
+    { title: t('features.benefits_title'), description: t('features.benefits_body'), icon: FEATURES[3].icon },
+  ];
+
   return (
     <section className="flex-col flexCenter overflow-hidden bg-[color:var(--surface)] py-20 w-full">
       <div className="max-container relative w-full flex flex-col items-center px-6 md:px-10">
@@ -16,7 +25,7 @@ const Features = () => {
         {/* Title */}
         <div className="text-center mb-14 relative z-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[color:var(--ink)] mb-4 tracking-tight">
-            Benefits of Sahaja Yoga
+            {t('features.title')}
           </h2>
           <div className="w-28 h-px bg-[color:var(--accent)] mx-auto"></div>
         </div>
@@ -43,7 +52,7 @@ const Features = () => {
           {/* Features Grid */}
           <div className="lg:w-3/5 z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {FEATURES.map((feature, index) => (
+              {localizedFeatures.map((feature, index) => (
                 <FeatureItem 
                   key={feature.title}
                   title={feature.title} 

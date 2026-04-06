@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useLocale } from "@/app/provider/localeProvider";
 
 interface Center {
   _id: string;
@@ -24,7 +25,7 @@ type Connection = {
 };
 
 const languageCopy = {
-  English: {
+  en: {
     title: "Visit Us",
     finder: "Find your nearest center",
     helper: "Search by city or locality, open the map, and stay connected with the center that feels right for you.",
@@ -38,8 +39,17 @@ const languageCopy = {
     joined: "Following",
     updates: "Center updates",
     announcements: "Announcements",
+    search: "Search by city, locality, or area",
+    sign_in: "Sign in to follow this center and receive its updates",
+    always_free: "Always free",
+    outside: "If you want to find centers apart from Telangana state, please find them",
+    here: "here",
+    loading: "Loading centers...",
+    load_error: "Failed to load centers.",
+    default_city: "Hyderabad",
+    open_map: "Open map for",
   },
-  Telugu: {
+  te: {
     title: "మాతో కలవండి",
     finder: "మీకు దగ్గరలోని కేంద్రాన్ని కనుగొనండి",
     helper: "నగరం లేదా ప్రాంతం ద్వారా వెతకండి, మ్యాప్ తెరవండి, మరియు మీకు అనుకూలమైన కేంద్రంతో అనుసంధానంగా ఉండండి.",
@@ -53,21 +63,15 @@ const languageCopy = {
     joined: "ఫాలో అవుతున్నారు",
     updates: "కేంద్ర అప్‌డేట్లు",
     announcements: "ప్రకటనలు",
-  },
-  Hindi: {
-    title: "हमसे मिलिए",
-    finder: "अपने निकटतम केंद्र को खोजें",
-    helper: "शहर या इलाके से खोजें, मैप खोलें, और जिस केंद्र से जुड़ना चाहें उससे जुड़े रहें।",
-    zone: "क्षेत्र",
-    city: "शहर",
-    address: "पता",
-    day: "दिन",
-    time: "समय",
-    contact: "संपर्क",
-    join: "केंद्र फॉलो करें",
-    joined: "फॉलो कर रहे हैं",
-    updates: "केंद्र अपडेट्स",
-    announcements: "सूचनाएँ",
+    search: "నగరం, ప్రాంతం లేదా ఏరియా ద్వారా వెతకండి",
+    sign_in: "ఈ కేంద్రాన్ని ఫాలో అవ్వడానికి మరియు అప్‌డేట్లు పొందడానికి సైన్ ఇన్ చేయండి",
+    always_free: "ఎప్పుడూ ఉచితం",
+    outside: "తెలంగాణ రాష్ట్రం వెలుపల కేంద్రాలను కనుగొనాలంటే వాటిని",
+    here: "ఇక్కడ",
+    loading: "కేంద్రాలు లోడ్ అవుతున్నాయి...",
+    load_error: "కేంద్రాలను లోడ్ చేయలేకపోయాం.",
+    default_city: "హైదరాబాద్",
+    open_map: "మ్యాప్ తెరవండి",
   },
 } as const;
 
@@ -86,16 +90,16 @@ const normalizeConnection = (item: any): Connection => ({
 
 const CentersTable: React.FC = () => {
   const { status } = useSession();
+  const { locale } = useLocale();
   const { data: centers = [], error, isLoading } = useSWR<Center[]>("/api/auth/centers", fetcher, {
     dedupingInterval: 60000,
     revalidateOnFocus: false,
   });
   const { data: connectionsResponse } = useSWR(status === "authenticated" ? "/api/center-connections" : null, fetcher);
   const [query, setQuery] = useState("");
-  const [language, setLanguage] = useState<keyof typeof languageCopy>("English");
   const [pendingKey, setPendingKey] = useState<string | null>(null);
   const connections = ((connectionsResponse?.data || []) as any[]).map(normalizeConnection);
-  const copy = languageCopy[language];
+  const copy = languageCopy[locale as keyof typeof languageCopy] || languageCopy.en;
 
   const filteredCenters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -148,8 +152,8 @@ const CentersTable: React.FC = () => {
     }
   };
 
-  if (error) return <div className="mt-4 text-center text-red-600">Failed to load centers.</div>;
-  if (isLoading) return <div className="mt-4 text-center">Loading centers...</div>;
+  if (error) return <div className="mt-4 text-center text-red-600">{copy.load_error}</div>;
+  if (isLoading) return <div className="mt-4 text-center">{copy.loading}</div>;
 
   return (
     <div className="mx-4 lg:mx-6">
@@ -160,25 +164,13 @@ const CentersTable: React.FC = () => {
             <p className="mt-3 text-lg font-medium text-[color:var(--ink)]">{copy.finder}</p>
             <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{copy.helper}</p>
           </div>
-          <div className="flex gap-2">
-            {(Object.keys(languageCopy) as Array<keyof typeof languageCopy>).map((lang) => (
-              <button
-                key={lang}
-                type="button"
-                onClick={() => setLanguage(lang)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold ${language === lang ? "bg-[color:var(--primary)] text-white" : "border border-[color:var(--border)] text-[color:var(--ink)]"}`}
-              >
-                {lang}
-              </button>
-            ))}
-          </div>
         </div>
         <div className="mt-5">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--ink)] outline-none"
-            placeholder="Search by city, locality, or area"
+            placeholder={copy.search}
           />
         </div>
       </div>
@@ -193,7 +185,7 @@ const CentersTable: React.FC = () => {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">{copy.city}</p>
                   <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{center.zone}</h2>
-                  <p className="mt-1 text-sm text-[color:var(--muted)]">{center.city || "Hyderabad"}</p>
+                  <p className="mt-1 text-sm text-[color:var(--muted)]">{center.city || copy.default_city}</p>
                 </div>
                 {status === "authenticated" ? (
                   <div className="flex items-start">
@@ -218,7 +210,7 @@ const CentersTable: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ml-2 inline-flex items-center align-middle"
-                      aria-label={`Open map for ${center.zone}`}
+                      aria-label={`${copy.open_map} ${center.zone}`}
                     >
                       <Image src="/hyperlink.svg" alt="" width={16} height={16} />
                     </a>
@@ -245,7 +237,7 @@ const CentersTable: React.FC = () => {
 
               {status !== "authenticated" ? (
                 <p className="mt-5 text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
-                  Sign in to follow this center and receive its updates
+                  {copy.sign_in}
                 </p>
               ) : null}
             </article>
@@ -254,16 +246,16 @@ const CentersTable: React.FC = () => {
       </div>
 
       <div className="mt-8 text-center">
-        <p className="mb-2 text-2xl font-semibold text-[color:var(--ink)]">Always free</p>
+        <p className="mb-2 text-2xl font-semibold text-[color:var(--ink)]">{copy.always_free}</p>
         <p className="text-lg text-[color:var(--muted)]">
-          If you want to find centers apart from Telangana state, please find them{" "}
+          {copy.outside}{" "}
           <a
             href="https://sycenters.org/centers"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[color:var(--primary)] underline "
           >
-            here
+            {copy.here}
           </a>
         </p>
       </div>

@@ -6,11 +6,17 @@ import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { NAV_LINKS } from '../../constants';
 import { CustomUser } from '@/app/api/auth/[...nextauth]/options';
+import { Locale, messages } from '@/lib/i18n';
+import { useLocale, useTranslations } from '@/app/provider/localeProvider';
+
+type MessageKey = keyof typeof messages.en;
 
 const Navbar = () => {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { locale, setLocale } = useLocale();
+  const t = useTranslations();
 
   const isAdmin = (session?.user as CustomUser)?.role === 'Admin';
 
@@ -50,7 +56,7 @@ const Navbar = () => {
                 return (
                   <div key={link.key} className="relative group">
                     <button className="px-3 py-2 text-[color:var(--muted)] hover:text-[color:var(--ink)] font-medium flex items-center gap-1 transition-colors">
-                      {link.label}
+                      {t(`nav.${link.key}` as MessageKey)}
                       <svg className="w-4 h-4 mt-[1px] text-[color:var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
@@ -65,7 +71,7 @@ const Navbar = () => {
                             href={child.href}
                             className="block px-4 py-2.5 text-base text-[color:var(--muted)] hover:text-[color:var(--ink)] hover:bg-[color:var(--surface-2)] transition-colors"
                           >
-                            {child.label}
+                            {t(`nav.${child.key}` as MessageKey)}
                           </Link>
                         ))}
                       </div>
@@ -80,7 +86,7 @@ const Navbar = () => {
                   href={link.href!}
                   className="px-3 py-2 text-[color:var(--muted)] hover:text-[color:var(--ink)] font-medium transition-colors"
                 >
-                  {link.label}
+                  {t(`nav.${link.key}` as MessageKey)}
                 </Link>
               );
             })}
@@ -90,9 +96,11 @@ const Navbar = () => {
                 href="/dashboard"
                 className="px-3 py-2 text-[color:var(--muted)] hover:text-[color:var(--ink)] font-medium transition-colors"
               >
-                Dashboard
+                {t('nav.dashboard')}
               </Link>
             ) : null}
+
+            <LanguageToggle locale={locale} setLocale={setLocale} />
 
             {/* Admin */}
             {isAdmin && (
@@ -100,7 +108,7 @@ const Navbar = () => {
                 href="/admin/dashboard"
                 className="ml-2 px-4 py-2 bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)] text-white rounded-full text-base font-medium transition"
               >
-                Admin
+                {t('nav.admin')}
               </Link>
             )}
 
@@ -110,14 +118,14 @@ const Navbar = () => {
                 onClick={() => signOut({ callbackUrl: '/' })}
                 className="ml-2 px-4 py-2 border border-[color:var(--border)] rounded-full text-base hover:bg-[color:var(--surface-2)] transition-colors"
               >
-                Sign Out
+                {t('nav.sign_out')}
               </button>
             ) : (
               <button
                 onClick={() => signIn()}
                 className="ml-2 px-4 py-2 border border-[color:var(--border)] rounded-full text-base hover:bg-[color:var(--surface-2)] transition-colors"
               >
-                Sign In
+                {t('nav.sign_in')}
               </button>
             )}
           </div>
@@ -147,7 +155,7 @@ const Navbar = () => {
                 return (
                   <div key={link.key}>
                     <p className="px-2 py-2 text-xs font-semibold text-[color:var(--muted)] uppercase tracking-widest">
-                      {link.label}
+                      {t(`nav.${link.key}` as MessageKey)}
                     </p>
                     {link.children.map((child) => (
                       <Link
@@ -156,7 +164,7 @@ const Navbar = () => {
                         onClick={() => setIsMenuOpen(false)}
                         className="block px-4 py-2 rounded-xl text-[color:var(--muted)] hover:bg-[color:var(--surface-2)]"
                       >
-                        {child.label}
+                        {t(`nav.${child.key}` as MessageKey)}
                       </Link>
                     ))}
                   </div>
@@ -170,7 +178,7 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="block px-4 py-2 rounded-xl text-[color:var(--muted)] hover:bg-[color:var(--surface-2)]"
                 >
-                  {link.label}
+                  {t(`nav.${link.key}` as MessageKey)}
                 </Link>
               );
             })}
@@ -181,9 +189,16 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-4 py-2 rounded-xl text-[color:var(--muted)] hover:bg-[color:var(--surface-2)]"
               >
-                Dashboard
+                {t('nav.dashboard')}
               </Link>
             ) : null}
+
+            <div className="px-2 pt-2">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted)]">
+                {t('nav.language')}
+              </p>
+              <LanguageToggle locale={locale} setLocale={setLocale} mobile />
+            </div>
 
             {isAdmin && (
               <Link
@@ -191,7 +206,7 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-4 py-2 text-white bg-[color:var(--primary)] rounded-full text-center"
               >
-                Admin Dashboard
+                {t('nav.admin_dashboard')}
               </Link>
             )}
 
@@ -203,7 +218,7 @@ const Navbar = () => {
                 }}
                 className="w-full px-4 py-2 border border-[color:var(--border)] rounded-full text-sm hover:bg-[color:var(--surface-2)] transition-colors"
               >
-                Sign Out
+                {t('nav.sign_out')}
               </button>
             ) : (
               <button
@@ -213,7 +228,7 @@ const Navbar = () => {
                 }}
                 className="w-full px-4 py-2 border border-[color:var(--border)] rounded-full text-sm hover:bg-[color:var(--surface-2)] transition-colors"
               >
-                Sign In
+                {t('nav.sign_in')}
               </button>
             )}
           </div>
@@ -222,5 +237,36 @@ const Navbar = () => {
     </nav>
   );
 };
+
+function LanguageToggle({
+  locale,
+  setLocale,
+  mobile = false,
+}: {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  mobile?: boolean;
+}) {
+  const t = useTranslations();
+
+  return (
+    <div className={`inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] p-1 ${mobile ? 'w-full' : ''}`}>
+      <button
+        type="button"
+        onClick={() => setLocale('en')}
+        className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${locale === 'en' ? 'bg-[color:var(--primary)] text-white' : 'text-[color:var(--muted)]'}`}
+      >
+        {t('locale.english')}
+      </button>
+      <button
+        type="button"
+        onClick={() => setLocale('te')}
+        className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${locale === 'te' ? 'bg-[color:var(--primary)] text-white' : 'text-[color:var(--muted)]'}`}
+      >
+        {t('locale.telugu')}
+      </button>
+    </div>
+  );
+}
 
 export default Navbar;

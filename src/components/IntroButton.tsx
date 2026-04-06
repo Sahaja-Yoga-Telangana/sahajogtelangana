@@ -1,8 +1,11 @@
 'use client'  // Add this line at the top of the file
 
 import React from 'react'
+import { useTranslations } from '@/app/provider/localeProvider';
 
 const IntroButton = () => {
+  const t = useTranslations();
+
   const downloadPDF = (filename: string) => {
     // Create a link element
     const link = document.createElement('a');
@@ -18,10 +21,10 @@ const IntroButton = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-semibold text-[color:var(--ink)]">
-            Download the Introduction Booklet
+            {t('intro.title')}
           </h2>
           <p className="mt-3 text-[color:var(--muted)]">
-            A gentle overview of Sahaja Yoga and how to begin your meditation practice.
+            {t('intro.body')}
           </p>
           <div className="flex flex-col mt-5 w-full gap-3 sm:flex-row items-center justify-center">
             <button

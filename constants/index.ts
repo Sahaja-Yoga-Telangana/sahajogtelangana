@@ -2,59 +2,48 @@
 export const NAV_LINKS = [
   {
     key: 'home',
-    label: 'Home',
     href: '/',
   },
   {
     key: 'about',
-    label: 'About',
     children: [
       {
         key: 'shri_mataji',
-        label: 'Our Founder',
         href: '/shri-mataji',
       },
       {
         key: 'sahaja_yoga',
-        label: 'What is Sahaja Yoga?',
         href: '/sahaja-yoga',
       },
       {
         key: 'meditation',
-        label: 'Meditation',
         href: '/meditate',
       },
     ],
   },
   {
     key: 'centers',
-    label: 'Centers',
     href: '/centers',
   },
   {
     key: 'events',
-    label: 'Events',
     href: '/events',
   },
   {
     key: 'programs',
-    label: 'Programs',
     children: [
       {
         key: 'corporate',
-        label: 'Corporate Wellness Programs',
         href: '/corporate-register',
       },
       {
         key: 'schools',
-        label: 'School Meditation Programs',
         href: '/school-programs',
       },
     ],
   },
   {
     key: 'contact',
-    label: 'Contact Us',
     href: '/contact-us',
   },
 ];
@@ -103,37 +92,35 @@ export const NAV_LINKS = [
   // FOOTER SECTION
   export const FOOTER_LINKS = [
     {
-      title: 'Quick Links',
+      titleKey: 'footer.quick_links',
       links: [
-        { label: 'Meditation in Hyderabad', path: '/meditation-hyderabad' },
-        { label: 'Shri Mataji', path: '/shri-mataji' },
-        { label: 'Sahaja Yoga', path: '/sahaja-yoga' },
-        // { label: 'Kundalini & Chakras', path: '/' },
-        { label: 'Meditation Programs for School', path: '/school-programs' },
-        { label: 'Meditation Programs for Corporates', path: '/corporate-register' },
-        { label: 'Contact Us', path: '/contact-us' },
+        { labelKey: 'footer.meditation_hyderabad', path: '/meditation-hyderabad' },
+        { labelKey: 'footer.shri_mataji', path: '/shri-mataji' },
+        { labelKey: 'footer.sahaja_yoga', path: '/sahaja-yoga' },
+        { labelKey: 'footer.school_programs', path: '/school-programs' },
+        { labelKey: 'footer.corporate_programs', path: '/corporate-register' },
+        { labelKey: 'footer.contact_us', path: '/contact-us' },
       ],
     },
     {
-      title: 'For Yogis',
+      titleKey: 'footer.for_yogis',
       links: [
-        // { label: 'Share Experience', path: '/' },
-        { label: 'Centers Near You', path: '/centers' },
-        { label: 'My Dashboard', path: '/dashboard' },
-        { label: 'Add a seeker', path: '/add-seeker' },
-        { label: 'Share your experience', path: '/share-your-experience' },
-        { label: 'Volunteer with us', path: '/volunteer' },
-        { label: 'Admin Dashboard', path: '/admin/dashboard' },
+        { labelKey: 'footer.centers_near_you', path: '/centers' },
+        { labelKey: 'footer.my_dashboard', path: '/dashboard' },
+        { labelKey: 'footer.add_seeker', path: '/add-seeker' },
+        { labelKey: 'footer.share_experience', path: '/share-your-experience' },
+        { labelKey: 'footer.volunteer', path: '/volunteer' },
+        { labelKey: 'footer.admin_dashboard', path: '/admin/dashboard' },
       ],
     },
   ];
   
   
   export const FOOTER_CONTACT_INFO = {
-    title: 'Contact Us',
+    titleKey: 'footer.contact',
     links: [
-      { label: 'Call Us', value: '+91 898 898 22 00' },
-      { label: 'Email', value: 'sahajayogatelangana@gmail.com' },
+      { labelKey: 'footer.call_us', value: '+91 898 898 22 00' },
+      { labelKey: 'footer.email', value: 'sahajayogatelangana@gmail.com' },
     ],
   };
   
