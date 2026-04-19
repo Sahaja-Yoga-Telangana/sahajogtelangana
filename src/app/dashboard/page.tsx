@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -199,6 +200,28 @@ export default function DashboardPage() {
           </div>
         </section>
 
+        <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
+          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{t('dashboard.requests_title')}</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--muted)]">
+            {t('dashboard.requests_body')}
+          </p>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <RequestActionCard
+              href="/dashboard/request-feature"
+              title={t('dashboard.request_feature')}
+              description={t('dashboard.request_feature_desc')}
+              cta={t('dashboard.open_request')}
+            />
+            <RequestActionCard
+              href="/dashboard/request-event"
+              title={t('dashboard.request_event')}
+              description={t('dashboard.request_event_desc')}
+              cta={t('dashboard.open_request')}
+            />
+          </div>
+        </section>
+
         <section>
           <Panel title={t('dashboard.following_centers')}>
             {data.joinedCenters.length === 0 ? (
@@ -250,5 +273,30 @@ function CenterCard({ center }: { center: { zone: string; city: string; day: str
       {center.weeklyUpdate ? <p className="mt-2 text-sm text-[color:var(--muted)]">{center.weeklyUpdate}</p> : null}
       {center.announcement ? <p className="mt-2 text-sm text-[color:var(--ink)]">{center.announcement}</p> : null}
     </div>
+  );
+}
+
+function RequestActionCard({
+  href,
+  title,
+  description,
+  cta,
+}: {
+  href: string;
+  title: string;
+  description: string;
+  cta: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft"
+    >
+      <h3 className="text-xl font-semibold text-[color:var(--ink)]">{title}</h3>
+      <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{description}</p>
+      <span className="mt-5 inline-flex items-center rounded-full bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-white">
+        {cta}
+      </span>
+    </Link>
   );
 }

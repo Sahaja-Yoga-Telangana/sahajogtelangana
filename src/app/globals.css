@@ -379,6 +379,15 @@ p, li {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 26%, transparent);
   }
 
+  .request-event-form .admin-input {
+    background: color-mix(in srgb, var(--surface) 94%, var(--surface-2));
+    border-color: color-mix(in srgb, var(--border) 86%, var(--surface-3));
+  }
+
+  .request-event-form .admin-input::placeholder {
+    color: color-mix(in srgb, var(--muted) 78%, transparent);
+  }
+
   .admin-table {
     width: 100%;
     border-collapse: separate;

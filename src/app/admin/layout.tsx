@@ -17,6 +17,7 @@ import {
   MdCampaign,
   MdInsights,
   MdVolunteerActivism,
+  MdLightbulb,
 } from 'react-icons/md';
 
 const menuItems = [
@@ -29,6 +30,8 @@ const menuItems = [
   { name: 'Event Registrations', icon: <MdHowToReg size={22} />, href: '/admin/event-registrations' },
   { name: 'Outreach', icon: <MdCampaign size={22} />, href: '/admin/outreach' },
   { name: 'Volunteers', icon: <MdVolunteerActivism size={22} />, href: '/admin/volunteers' },
+  { name: 'Feature Requests', icon: <MdLightbulb size={22} />, href: '/admin/feature-requests' },
+  { name: 'Event Requests', icon: <MdEvent size={22} />, href: '/admin/event-requests' },
   { name: 'Analytics', icon: <MdInsights size={22} />, href: '/admin/analytics' },
   { name: 'Manage Centers', icon: <MdAddLocation size={22} />, href: '/admin/add-center' },
   { name: 'All Users', icon: <MdSupervisorAccount size={22} />, href: '/admin/all-users' },

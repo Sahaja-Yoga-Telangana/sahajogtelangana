@@ -28,12 +28,22 @@ export default function EventForm({
   onSubmit,
   submitting,
   submitLabel = 'Create Event',
+  showSubmitButton = true,
+  pricingRequired = true,
+  pricingTitle = 'Registration pricing',
+  pricingDescription = 'These prices will be shown on the public registration page and used for final total calculation.',
+  pricingEmphasis = 'Keep prices as Rs. 0/- for realization programs.',
 }: {
   formData: EventFormValues;
   setFormData: Dispatch<SetStateAction<EventFormValues>>;
   onSubmit: (event: FormEvent) => void;
   submitting: boolean;
   submitLabel?: string;
+  showSubmitButton?: boolean;
+  pricingRequired?: boolean;
+  pricingTitle?: string;
+  pricingDescription?: string;
+  pricingEmphasis?: string;
 }) {
   const [imageUploading, setImageUploading] = useState(false);
   const [qrUploading, setQrUploading] = useState(false);
@@ -134,8 +144,12 @@ export default function EventForm({
 
           <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
             <div className="mb-4">
-              <h3 className="text-base font-semibold text-[color:var(--ink)]">Registration pricing</h3>
-              <p className="mt-1 text-sm text-[color:var(--muted)]">These prices will be shown on the public registration page and used for final total calculation. <br/><b>Keep prices as Rs. 0/- for realization programs.</b></p>
+              <h3 className="text-base font-semibold text-[color:var(--ink)]">{pricingTitle}</h3>
+              <p className="mt-1 text-sm text-[color:var(--muted)]">
+                {pricingDescription}
+                <br />
+                <b>{pricingEmphasis}</b>
+              </p>
             </div>
             <div className="grid gap-5 md:grid-cols-3">
               <Field label="Below 12 years">
@@ -145,7 +159,7 @@ export default function EventForm({
                   value={formData.priceBelow12}
                   onChange={(e) => setFormData((prev) => ({ ...prev, priceBelow12: Number(e.target.value) }))}
                   className="admin-input"
-                  required
+                  required={pricingRequired}
                 />
               </Field>
               <Field label="12 to 24 years">
@@ -155,7 +169,7 @@ export default function EventForm({
                   value={formData.price12To24}
                   onChange={(e) => setFormData((prev) => ({ ...prev, price12To24: Number(e.target.value) }))}
                   className="admin-input"
-                  required
+                  required={pricingRequired}
                 />
               </Field>
               <Field label="25 years and above">
@@ -165,7 +179,7 @@ export default function EventForm({
                   value={formData.price25AndAbove}
                   onChange={(e) => setFormData((prev) => ({ ...prev, price25AndAbove: Number(e.target.value) }))}
                   className="admin-input"
-                  required
+                  required={pricingRequired}
                 />
               </Field>
             </div>
@@ -187,11 +201,13 @@ export default function EventForm({
         </div>
       </div>
 
-      <div className="flex items-center justify-end">
-        <button type="submit" disabled={submitting || mediaUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60">
-          {mediaUploading ? 'Uploading media...' : submitting ? 'Saving...' : submitLabel}
-        </button>
-      </div>
+      {showSubmitButton ? (
+        <div className="flex items-center justify-end">
+          <button type="submit" disabled={submitting || mediaUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60">
+            {mediaUploading ? 'Uploading media...' : submitting ? 'Saving...' : submitLabel}
+          </button>
+        </div>
+      ) : null}
     </form>
   );
 }

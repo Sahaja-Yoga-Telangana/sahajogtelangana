@@ -8,6 +8,7 @@ import {
   MdEvent,
   MdHowToReg,
   MdInsights,
+  MdLightbulb,
   MdMessage,
   MdPeople,
   MdSupervisorAccount,
@@ -64,6 +65,18 @@ const menuItems = [
     description: 'Track roles, availability, assignments, and event staffing.',
     icon: <MdVolunteerActivism size={24} />,
     href: '/admin/volunteers',
+  },
+  {
+    name: 'Feature Requests',
+    description: 'Review product suggestions submitted directly by yogis.',
+    icon: <MdLightbulb size={24} />,
+    href: '/admin/feature-requests',
+  },
+  {
+    name: 'Event Requests',
+    description: 'Approve or reject requested pujas, sessions, and gatherings.',
+    icon: <MdEvent size={24} />,
+    href: '/admin/event-requests',
   },
   {
     name: 'Analytics',
