@@ -35,7 +35,7 @@ const content = {
       ['Right Channel', 'The right channel corresponds to all of our thoughts, actions and our connection with the future. By cleansing this channel we can calm down our thoughts and remove any worries about the future.'],
       ['Central Channel', 'The central channel is the path of balance and ascent. When we raise our Kundalini through this channel we are guided towards a higher awareness which facilitates our spiritual evolution and allows us to reach a blissful state which is beyond our mental understanding.'],
     ],
-    resourcesHeader: ['Practice Resources', 'Continue with guided support and home practice', 'Use these resources to keep your meditation consistent, go deeper with guided sessions, and stay connected to the practice day by day.'],
+    resourcesHeader: ['Practice Resources', 'Continue with guided meditation and home practice', 'Use these resources to keep your meditation consistent, go deeper with guided sessions, and stay connected to the practice day by day.'],
     stores: ['Download on App Store', 'Get it on Google Play'],
   },
   te: {
@@ -48,15 +48,15 @@ const content = {
     guide: 'ధ్యాన మార్గదర్శిని డౌన్‌లోడ్ చేయండి (PDF)',
     online: 'ఆన్‌లైన్ మార్గదర్శిత ధ్యానం',
     featureCards: [
-      ['ధ్యానం & బ్యాలెన్సింగ్ గైడ్ డౌన్‌లోడ్ చేయండి', 'ఇంటి వద్ద సాధన కోసం ధ్యాన దశలు, బ్యాలెన్సింగ్ పద్ధతులతో కూడిన సరళ గైడ్‌ను ఉపయోగించండి.', 'గైడ్ డౌన్‌లోడ్ చేయండి'],
-      ['ఆన్‌లైన్ మార్గదర్శిత ధ్యానంలో చేరండి', 'మార్గదర్శిత ప్రత్యక్ష మరియు రికార్డ్ చేయబడిన ధ్యానాలతో మీ సాధనను లోతుగా చేయండి.', 'మార్గదర్శిత ధ్యానం ప్రారంభించండి'],
-      ['21 రోజుల ధ్యాన మార్గం', 'We Meditate యాప్‌లో రూపొందించిన 21 రోజుల ప్రణాళిక ద్వారా మీ ధ్యానాన్ని మరింత లోతుగా అనుభవించండి.', ''],
+      ['ధ్యానం & బ్యాలెన్సింగ్ గైడ్ డౌన్‌లోడ్ చేయండి', 'ఇంటి వద్ద ధ్యానాన్ని స్థిరంగా కొనసాగించేందుకు సరళమైన మార్గదర్శిని ఉపయోగించండి.', 'గైడ్ డౌన్‌లోడ్ చేయండి'],
+      ['ఆన్‌లైన్ మార్గదర్శిత ధ్యానంలో చేరండి', 'మార్గదర్శిత ధ్యాన సెషన్లతో మీ సాధనను మరింత లోతుగా చేసుకోండి.', 'మార్గదర్శిత ధ్యానం ప్రారంభించండి'],
+      ['21 రోజుల ధ్యాన మార్గం', 'We Meditate యాప్‌తో ఇంటి సాధనను క్రమబద్ధంగా కొనసాగించండి.', ''],
     ],
     stepsHeader: ['మన నాళాల సమతుల్యత', 'మూడు మార్గదర్శిత దశలతో సూక్ష్మ వ్యవస్థను శుభ్రపరచండి', 'ధ్యానం ముందు ఎడమ, కుడి, మధ్య నాళాలను సమతుల్యం చేసేందుకు ఈ మూడు సులభమైన పద్ధతులను ఉపయోగించండి.'],
     stepsMatajiNote: 'ఈ బ్యాలెన్సింగ్ దశలను శ్రీమాతాజీ ముందు మృదువైన ధ్యాసతో, హృదయపూర్వకంగా ఆచరించండి.',
     steps: [
-      ['ఎడమ నాళం శుభ్రపరచడం', 'ఎడమ నాళాన్ని శుభ్రపరచడం వల్ల అధిక భావోద్వేగం మరియు గతంలోనే ఉండిపోవడం తగ్గుతుంది.', '/meditation-steps/2.png', 'ఎడమ చేయిని ఒడిలో ఉంచి, కుడి చేయిని భూమి వైపు ఉంచండి. ఎడమ అరపై ధ్యాస ఉంచండి.', 'ఆఫర్మేషన్: మాతాజీ, దయచేసి నా ఎడమ నాళాన్ని శుభ్రపరచి మాతృభూమి ద్వారా అన్ని ప్రతికూలతలను తొలగించండి.'],
-      ['కుడి నాళం శుభ్రపరచడం', 'కుడి వైపు శుభ్రపరచడం వల్ల అధిక ప్రణాళిక, ఒత్తిడిగల ఆలోచనలు తగ్గుతాయి.', '/meditation-steps/1.png', 'కుడి చేయిని ఒడిలో ఉంచి, ఎడమ చేయిని పైకి వంచి ఆకాశం వైపు ఉంచండి. కుడి అరపై ధ్యాస ఉంచండి.', 'ఆఫర్మేషన్: మాతాజీ, దయచేసి నా కుడి నాళాన్ని శుభ్రపరచి ఆకాశ తత్వం ద్వారా అన్ని ప్రతికూలతలను తొలగించండి.'],
+      ['ఎడమ నాళం శుభ్రపరచడం', 'ఎడమ నాళాన్ని శుభ్రపరచడం వల్ల అధిక భావోద్వేగం మరియు గతంలోనే ఉండిపోవడం తగ్గుతుంది.', '/meditation-steps/1.png', 'ఎడమ చేయిని ఒడిలో ఉంచి, కుడి చేయిని భూమి వైపు ఉంచండి. ఎడమ అరపై ధ్యాస ఉంచండి.', 'ఆఫర్మేషన్: మాతాజీ, దయచేసి నా ఎడమ నాళాన్ని శుభ్రపరచి మాతృభూమి ద్వారా అన్ని ప్రతికూలతలను తొలగించండి.'],
+      ['కుడి నాళం శుభ్రపరచడం', 'కుడి వైపు శుభ్రపరచడం వల్ల అధిక ప్రణాళిక, ఒత్తిడిగల ఆలోచనలు తగ్గుతాయి.', '/meditation-steps/2.png', 'కుడి చేయిని ఒడిలో ఉంచి, ఎడమ చేయిని పైకి వంచి ఆకాశం వైపు ఉంచండి. కుడి అరపై ధ్యాస ఉంచండి.', 'ఆఫర్మేషన్: మాతాజీ, దయచేసి నా కుడి నాళాన్ని శుభ్రపరచి ఆకాశ తత్వం ద్వారా అన్ని ప్రతికూలతలను తొలగించండి.'],
       ['మధ్య నాళం శుభ్రపరచడం', 'ఈ రెండు నాళాలు శుభ్రమైన తర్వాత ధ్యాన స్థితిలో ఉండటం మరింత సులభమవుతుంది.', '/meditation-steps/3.png', 'రెండు చేతులను ఒడిలో ఉంచి, మీ ధ్యాసను తల పైభాగమైన సహస్రారంపై ఉంచండి.', 'ఆఫర్మేషన్: మాతాజీ, దయచేసి మాకు నిర్విచార చైతన్య స్థితిని ప్రసాదించి ఆనందంలో నిలిపించండి.'],
     ],
     subtleHeader: ['సూక్ష్మ సమతుల్యత', 'సూక్ష్మ వ్యవస్థను అర్థం చేసుకోండి', 'క్రింద ఉన్న సూక్ష్మ వ్యవస్థ చిత్రం ధ్యానం, సమతుల్యత, మరియు అంతరారూఢికి మద్దతు ఇచ్చే నాళాలు మరియు చక్రాలను చూపిస్తుంది.'],
@@ -65,7 +65,7 @@ const content = {
       ['కుడి నాళం', 'కుడి నాళం మన ఆలోచనలు, చర్యలు, మరియు భవిష్యత్తుతో ఉన్న అనుబంధాన్ని సూచిస్తుంది. ఈ నాళాన్ని శుభ్రపరచడం ద్వారా ఆలోచనలను ప్రశాంతపరచి, భవిష్యత్తుపై ఉన్న ఆందోళనలను తగ్గించవచ్చు.'],
       ['మధ్య నాళం', 'మధ్య నాళం సమతుల్యత మరియు ఆరూఢి మార్గం. ఈ నాళం ద్వారా మన కుండలిని ఆరూఢి చెందినప్పుడు, అది మనల్ని ఉన్నతమైన చైతన్య స్థితికి నడిపిస్తుంది. అది ఆధ్యాత్మిక వికాసాన్ని సులభతరం చేసి, మనసుకు అతీతమైన ఆనంద స్థితికి చేరుస్తుంది.'],
     ],
-    resourcesHeader: ['సాధన వనరులు', 'మార్గదర్శిత సహాయం మరియు ఇంటి సాధనతో కొనసాగండి', 'మీ ధ్యానాన్ని నియమితంగా కొనసాగించడానికి, మార్గదర్శిత సెషన్లతో లోతుగా అనుభవించడానికి, మరియు రోజువారీ సాధనతో అనుసంధానంగా ఉండడానికి ఈ వనరులను ఉపయోగించండి.'],
+    resourcesHeader: ['సాధన వనరులు', 'మార్గదర్శిత ధ్యానం మరియు ఇంటి సాధనతో కొనసాగండి', 'మీ ధ్యానాన్ని నియమితంగా కొనసాగించడానికి, మార్గదర్శిత సెషన్లతో లోతుగా అనుభవించడానికి, మరియు రోజువారీ సాధనతో అనుసంధానంగా ఉండడానికి ఈ వనరులను ఉపయోగించండి.'],
     stores: ['యాప్ స్టోర్‌లో డౌన్‌లోడ్ చేయండి', 'గూగుల్ ప్లేలో పొందండి'],
   },
 } as const;
@@ -89,7 +89,7 @@ function SectionHeader({ eyebrow, title, description }: { eyebrow: string; title
 }
 
 function FeatureCard({ title, description, href, label, icon: Icon, stores }: { title: string; description: string; href?: string; label?: string; icon: IconType; stores?: Array<{ href: string; label: string }>; }) {
-  return <article className="group h-full rounded-[28px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_72%,transparent))] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft md:p-8"><div className="flex h-full flex-col"><div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_96%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] text-[color:var(--primary)] shadow-sm dark:text-[color:var(--accent)]"><Icon className="h-5 w-5" aria-hidden="true" /></div><h3 className="mt-6 text-xl font-semibold text-[color:var(--ink)] md:text-2xl">{title}</h3><p className="mt-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{description}</p>{stores ? <div className="mt-6 flex flex-wrap gap-3">{stores.map((store) => <a key={store.label} href={store.href} target="_blank" rel="noopener noreferrer" className={heroButtonVariants.secondary}>{store.label}</a>)}</div> : <div className="mt-6 flex flex-wrap gap-3"><a href={href} target="_blank" rel="noopener noreferrer" className={heroButtonVariants.primary}><span>{label}</span><FiArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></a></div>}</div></article>;
+  return <article className="group h-full rounded-[28px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_72%,transparent))] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft md:p-8"><div className="flex h-full flex-col"><div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_96%,transparent),_color-mix(in_srgb,var(--surface-2)_88%,transparent))] text-[color:var(--primary)] shadow-sm dark:text-[color:var(--accent)] md:h-12 md:w-12"><Icon className="h-5 w-5" aria-hidden="true" /></div><h3 className="mt-5 text-lg font-semibold leading-7 text-[color:var(--ink)] md:mt-6 md:text-2xl">{title}</h3><p className="mt-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{description}</p><div className="mt-6">{stores ? <div className="grid gap-3 sm:grid-cols-2">{stores.map((store) => <a key={store.label} href={store.href} target="_blank" rel="noopener noreferrer" className={`${heroButtonVariants.secondary} w-full px-4 text-center text-sm md:text-base`}>{store.label}</a>)}</div> : <div className="flex"><a href={href} target="_blank" rel="noopener noreferrer" className={`${heroButtonVariants.primary} w-full px-4 text-center text-sm md:text-base`}><span>{label}</span><FiArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></a></div>}</div></div></article>;
 }
 
 export default function MeditatePage() {

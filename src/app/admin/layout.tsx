@@ -50,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* ================= SIDEBAR ================= */}
       <aside
-        className={`admin-sidebar fixed md:sticky md:top-0 z-40 h-screen w-72 border-r border-white/10 text-white transform transition-transform duration-300
+        className={`admin-sidebar fixed md:sticky md:top-0 z-40 flex h-screen w-72 flex-col overflow-hidden border-r border-white/10 text-white transform transition-transform duration-300
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Header */}
@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Nav */}
-        <nav className="mt-4 space-y-1 px-3">
+        <nav className="mt-4 flex-1 space-y-1 overflow-y-auto px-3 pb-5 scroll-smooth">
           {menuItems.map((item) => {
             const active = pathname.startsWith(item.href);
 
