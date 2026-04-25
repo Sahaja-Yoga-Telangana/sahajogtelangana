@@ -40,7 +40,6 @@ const languageCopy = {
     updates: "Center updates",
     announcements: "Announcements",
     search: "Search by city, locality, or area",
-    sign_in: "Sign in to follow this center and receive its updates",
     always_free: "Always free",
     outside: "If you want to find centers apart from Telangana state, please find them",
     here: "here",
@@ -64,7 +63,6 @@ const languageCopy = {
     updates: "కేంద్ర అప్‌డేట్లు",
     announcements: "ప్రకటనలు",
     search: "నగరం, ప్రాంతం లేదా ఏరియా ద్వారా వెతకండి",
-    sign_in: "ఈ కేంద్రాన్ని ఫాలో అవ్వడానికి మరియు అప్‌డేట్లు పొందడానికి సైన్ ఇన్ చేయండి",
     always_free: "ఎప్పుడూ ఉచితం",
     outside: "తెలంగాణ రాష్ట్రం వెలుపల కేంద్రాలను కనుగొనాలంటే వాటిని",
     here: "ఇక్కడ",
@@ -282,12 +280,6 @@ const CentersTable: React.FC = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{copy.announcements}</p>
                   <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{center.announcement}</p>
                 </div>
-              ) : null}
-
-              {status !== "authenticated" ? (
-                <p className="mt-5 text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
-                  {copy.sign_in}
-                </p>
               ) : null}
             </article>
           );
