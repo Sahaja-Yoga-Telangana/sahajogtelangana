@@ -1,12 +1,21 @@
 import mongoose from "mongoose";
 
 export function connect() {
-  mongoose
+  if (mongoose.connection.readyState >= 1) {
+    return Promise.resolve(mongoose.connection);
+  }
+
+  return mongoose
     .connect(process.env.MONGO_URL!, {
       tls: true,
       ssl: true,
     })
-    .then(() => console.log("Database connected successfully"))
-    .catch((err) => console.log("The DB error is", err));
-
-  }
+    .then((connection) => {
+      console.log("Database connected successfully");
+      return connection;
+    })
+    .catch((err) => {
+      console.log("The DB error is", err);
+      throw err;
+    });
+}

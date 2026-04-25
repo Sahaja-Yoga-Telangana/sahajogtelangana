@@ -25,12 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/meditation-hyderabad`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/meditate`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/events`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${base}/centers`, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${base}/contact-us`, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${base}/sahaja-yoga`, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${base}/shri-mataji`, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${base}/school-programs`, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${base}/corporate-register`, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${base}/centers`, changeFrequency: 'yearly', priority: 0.5 },
   ];
 
   const events = await getEvents();

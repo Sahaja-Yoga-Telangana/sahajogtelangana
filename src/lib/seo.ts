@@ -1,6 +1,26 @@
 import type { Metadata } from 'next';
 import Env from '@/config/env';
 
+function getHostname(url: string) {
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+const productionHosts = new Set(['www.sahajayogatelangana.org', 'sahajayogatelangana.org']);
+const appHostname = getHostname(Env.APP_URL || 'https://www.sahajayogatelangana.org');
+
+export const shouldAllowIndexing =
+  process.env.BLOCK_ROBOTS === 'true'
+    ? false
+    : process.env.ALLOW_ROBOTS === 'true'
+      ? true
+      : process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production'
+        ? false
+        : productionHosts.has(appHostname);
+
 export const site = {
   name: 'Sahaja Yoga Telangana',
   shortName: 'Sahaja Yoga',
@@ -61,10 +81,15 @@ export function defaultMetadata(overrides?: Metadata): Metadata {
       description: site.description,
       images: [site.ogImage],
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: shouldAllowIndexing
+      ? {
+          index: true,
+          follow: true,
+        }
+      : {
+          index: false,
+          follow: false,
+        },
     icons: {
       icon: '/favicon.ico',
     },
@@ -111,6 +136,9 @@ export function pageMetadata({
       site: site.twitter,
       creator: site.twitter,
     },
-    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
+    robots:
+      noindex || !shouldAllowIndexing
+        ? { index: false, follow: false }
+        : { index: true, follow: true },
   };
 }

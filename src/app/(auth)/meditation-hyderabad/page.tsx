@@ -18,6 +18,13 @@ const content = {
       ['Guided Experience', 'Learn simple techniques for self-realization, stress relief, and inner balance with a guided meditation experience.'],
     ],
     faqTitle: 'Frequently Asked Questions',
+    exploreTitle: 'Plan your next step',
+    exploreLinks: [
+      ['Browse Hyderabad centers', '/centers'],
+      ['Learn the meditation basics', '/meditate'],
+      ['See upcoming collective events', '/events'],
+      ['Contact Sahaja Yoga Telangana', '/contact-us'],
+    ],
     faqs: [
       ['Are Sahaja Yoga classes in Hyderabad free?', 'Yes. Sahaja Yoga meditation classes are offered free of cost in Hyderabad.'],
       ['Do I need prior experience?', 'No. Sessions are beginner-friendly and guided step by step.'],
@@ -37,6 +44,13 @@ const content = {
       ['మార్గదర్శిత అనుభవం', 'స్వీయ సాక్షాత్కారం, ఒత్తిడి ఉపశమనం, అంతర సమతుల్యత కోసం సరళమైన పద్ధతులను మార్గదర్శిత ధ్యానం ద్వారా నేర్చుకోండి.'],
     ],
     faqTitle: 'తరచుగా అడిగే ప్రశ్నలు',
+    exploreTitle: 'మీ తదుపరి అడుగు ప్రణాళిక చేసుకోండి',
+    exploreLinks: [
+      ['హైదరాబాద్ కేంద్రాలను చూడండి', '/centers'],
+      ['ధ్యానపు ప్రాథమికాలు నేర్చుకోండి', '/meditate'],
+      ['రాబోయే కార్యక్రమాలు చూడండి', '/events'],
+      ['సహజ యోగ తెలంగాణను సంప్రదించండి', '/contact-us'],
+    ],
     faqs: [
       ['హైదరాబాద్‌లో సహజ యోగ తరగతులు ఉచితమేనా?', 'అవును. హైదరాబాద్‌లో సహజ యోగ ధ్యాన తరగతులు పూర్తిగా ఉచితంగా అందించబడుతున్నాయి.'],
       ['నాకు ముందస్తు అనుభవం అవసరమా?', 'లేదు. ఈ సెషన్లు ప్రారంభికులకు అనువుగా ఉండి దశలవారీగా మార్గదర్శనం చేస్తాయి.'],
@@ -58,27 +72,62 @@ export default function MeditationHyderabadPage() {
   return (
     <main className="bg-[color:var(--bg)] py-16">
       <SeoJsonLd
-        json={{
-          '@context': 'https://schema.org',
-          '@type': 'WebPage',
-          name: copy.seoName,
-          url: absoluteUrl('/meditation-hyderabad'),
-          about: {
-            '@type': 'Thing',
-            name: 'Sahaja Yoga Meditation',
-          },
-          mainEntity: {
-            '@type': 'Service',
-            serviceType: 'Meditation classes',
+        json={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
             name: copy.seoName,
-            areaServed: ['Hyderabad', 'Telangana'],
-            provider: {
-              '@type': 'Organization',
-              name: 'Sahaja Yoga Telangana',
-              url: absoluteUrl('/'),
+            url: absoluteUrl('/meditation-hyderabad'),
+            about: {
+              '@type': 'Thing',
+              name: 'Sahaja Yoga Meditation',
+            },
+            mainEntity: {
+              '@type': 'Service',
+              serviceType: 'Meditation classes',
+              name: copy.seoName,
+              areaServed: ['Hyderabad', 'Telangana'],
+              provider: {
+                '@type': 'Organization',
+                name: 'Sahaja Yoga Telangana',
+                url: absoluteUrl('/'),
+              },
             },
           },
-        }}
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: copy.faqs.map(([question, answer]) => ({
+              '@type': 'Question',
+              name: question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: answer,
+              },
+            })),
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+              { '@type': 'ListItem', position: 2, name: 'Meditation in Hyderabad', item: absoluteUrl('/meditation-hyderabad') },
+            ],
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
+            name: 'Sahaja Yoga Telangana',
+            url: absoluteUrl('/'),
+            areaServed: ['Hyderabad', 'Telangana'],
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: 'Hyderabad',
+              addressRegion: 'Telangana',
+              addressCountry: 'IN',
+            },
+          },
+        ]}
       />
 
       <section className="max-w-6xl mx-auto px-6">
@@ -121,6 +170,23 @@ export default function MeditationHyderabadPage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="max-w-5xl mx-auto px-6 mt-14">
+        <div className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
+          <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)]">{copy.exploreTitle}</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {copy.exploreLinks.map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center justify-center rounded-full border border-[color:var(--border)] px-5 py-3 text-center font-semibold text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </main>
