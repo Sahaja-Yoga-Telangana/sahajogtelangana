@@ -88,6 +88,55 @@ const normalizeConnection = (item: any): Connection => ({
   connectionType: "joined",
 });
 
+const formatSingleTime = (value: string) => {
+  const match = value.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+  if (!match) {
+    return value.trim();
+  }
+
+  const [, hourPart, minutePart = "00", meridiem] = match;
+  let hour = Number(hourPart);
+
+  if (Number.isNaN(hour) || hour > 23) {
+    return value.trim();
+  }
+
+  if (meridiem) {
+    const normalizedHour = ((hour + 11) % 12) + 1;
+    return `${normalizedHour}:${minutePart} ${meridiem.toUpperCase()}`;
+  }
+
+  const suffix = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  return `${hour}:${minutePart} ${suffix}`;
+};
+
+const formatCenterTime = (value: string) => {
+  const normalized = value.trim();
+  if (!normalized) {
+    return value;
+  }
+
+  const rangeSeparator = normalized.includes(" - ")
+    ? " - "
+    : normalized.includes("-")
+      ? "-"
+      : normalized.includes(" to ")
+        ? " to "
+        : null;
+
+  if (!rangeSeparator) {
+    return formatSingleTime(normalized);
+  }
+
+  const [start, end, ...rest] = normalized.split(rangeSeparator);
+  if (!start || !end || rest.length > 0) {
+    return normalized;
+  }
+
+  return `${formatSingleTime(start)}${rangeSeparator}${formatSingleTime(end)}`;
+};
+
 const CentersTable: React.FC = () => {
   const { status } = useSession();
   const { locale } = useLocale();
@@ -217,7 +266,7 @@ const CentersTable: React.FC = () => {
                   ) : null}
                 </p>
                 <p><span className="font-semibold text-[color:var(--ink)]">{copy.day}:</span> {center.day}</p>
-                <p><span className="font-semibold text-[color:var(--ink)]">{copy.time}:</span> {center.time}</p>
+                <p><span className="font-semibold text-[color:var(--ink)]">{copy.time}:</span> {formatCenterTime(center.time)}</p>
                 <p><span className="font-semibold text-[color:var(--ink)]">{copy.contact}:</span> {center.contactNumbers}</p>
               </div>
 
