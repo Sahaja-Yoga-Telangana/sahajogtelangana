@@ -110,7 +110,7 @@ export default function ProgramRequestsPage() {
                   {req.type} Program
                 </span>
                 <h2 className="mt-4 text-2xl font-semibold text-[color:var(--ink)]">{req.organizationName}</h2>
-                <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
+                <p className="numeric-font mt-2 text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
                   Submitted on {new Date(req.createdAt).toLocaleDateString()}
                 </p>
               </div>
@@ -127,9 +127,9 @@ export default function ProgramRequestsPage() {
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               <Detail label="Contact" value={req.contactPerson.name} />
               <Detail label="Email" value={req.contactPerson.email} />
-              <Detail label="Phone" value={req.contactPerson.phone} />
+              <Detail label="Phone" value={req.contactPerson.phone} numeric />
               <Detail label="Location" value={`${req.address.street ?? ''} ${req.address.city}, ${req.address.state}`.trim()} />
-              <Detail label="Preferred date" value={new Date(req.preferredProgramDate).toLocaleDateString()} />
+              <Detail label="Preferred date" value={new Date(req.preferredProgramDate).toLocaleDateString()} numeric />
             </div>
 
             {req.additionalRemarks && (
@@ -157,11 +157,11 @@ export default function ProgramRequestsPage() {
   );
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({ label, value, numeric = false }: { label: string; value: string; numeric?: boolean }) {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{label}</p>
-      <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{value}</p>
+      <p className={`mt-2 text-sm leading-7 text-[color:var(--ink)] ${numeric ? 'numeric-font' : ''}`}>{value}</p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
@@ -15,10 +15,15 @@ const Navbar = () => {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { locale, setLocale } = useLocale();
   const t = useTranslations();
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const isAdmin = (session?.user as CustomUser)?.role === 'Admin';
+  const displayName = session?.user?.name?.trim() || 'Profile';
+  const profileImage = session?.user?.image?.trim() || '';
+  const profileInitial = displayName.charAt(0).toUpperCase() || 'P';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +31,17 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => document.removeEventListener('mousedown', handlePointerDown);
   }, []);
 
   return (
@@ -91,35 +107,68 @@ const Navbar = () => {
               );
             })}
 
-            {session ? (
-              <Link
-                href="/dashboard"
-                className="px-3 py-2 text-[color:var(--muted)] hover:text-[color:var(--ink)] font-medium transition-colors"
-              >
-                {t('nav.dashboard')}
-              </Link>
-            ) : null}
-
             <LanguageToggle locale={locale} setLocale={setLocale} />
-
-            {/* Admin */}
-            {isAdmin && (
-              <Link
-                href="/admin/dashboard"
-                className="ml-2 px-4 py-2 bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)] text-white rounded-full text-base font-medium transition"
-              >
-                {t('nav.admin')}
-              </Link>
-            )}
 
             {/* Auth */}
             {session ? (
-              <button
-                onClick={() => signOut({ callbackUrl: '/' })}
-                className="ml-2 px-4 py-2 border border-[color:var(--border)] rounded-full text-base hover:bg-[color:var(--surface-2)] transition-colors"
-              >
-                {t('nav.sign_out')}
-              </button>
+              <div ref={profileMenuRef} className="relative ml-2">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileOpen((current) => !current)}
+                  className="flex items-center gap-3 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-2 py-1.5 transition-colors hover:bg-[color:var(--surface-2)]"
+                  aria-expanded={isProfileOpen}
+                  aria-haspopup="menu"
+                >
+                  <span className="hidden max-w-[140px] truncate text-sm font-medium text-[color:var(--ink)] lg:block">
+                    {displayName}
+                  </span>
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt={displayName}
+                      className="h-9 w-9 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-white">
+                      {profileInitial}
+                    </span>
+                  )}
+                </button>
+
+                {isProfileOpen ? (
+                  <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+                    <div className="border-b border-[color:var(--border)] px-4 py-3">
+                      <p className="truncate text-sm font-semibold text-[color:var(--ink)]">{displayName}</p>
+                      <p className="truncate text-xs text-[color:var(--muted)]">{session.user?.email}</p>
+                    </div>
+                    <div className="p-2">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="block rounded-xl px-3 py-2 text-sm text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                      >
+                        {t('nav.dashboard')}
+                      </Link>
+                      {isAdmin ? (
+                        <Link
+                          href="/admin/dashboard"
+                          onClick={() => setIsProfileOpen(false)}
+                          className="block rounded-xl px-3 py-2 text-sm text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                        >
+                          {t('nav.admin_dashboard')}
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => signOut({ callbackUrl: '/' })}
+                        className="mt-1 block w-full rounded-xl px-3 py-2 text-left text-sm text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                      >
+                        {t('nav.sign_out')}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <button
                 onClick={() => signIn()}
@@ -183,16 +232,6 @@ const Navbar = () => {
               );
             })}
 
-            {session ? (
-              <Link
-                href="/dashboard"
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 rounded-xl text-[color:var(--muted)] hover:bg-[color:var(--surface-2)]"
-              >
-                {t('nav.dashboard')}
-              </Link>
-            ) : null}
-
             <div className="px-2 pt-2">
               <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted)]">
                 {t('nav.language')}
@@ -211,15 +250,36 @@ const Navbar = () => {
             )}
 
             {session ? (
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  signOut({ callbackUrl: '/' });
-                }}
-                className="w-full px-4 py-2 border border-[color:var(--border)] rounded-full text-sm hover:bg-[color:var(--surface-2)] transition-colors"
-              >
-                {t('nav.sign_out')}
-              </button>
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-3">
+                <div className="flex items-center gap-3">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt={displayName}
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-white">
+                      {profileInitial}
+                    </span>
+                  )}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-[color:var(--ink)]">{displayName}</p>
+                    <p className="truncate text-xs text-[color:var(--muted)]">{session.user?.email}</p>
+                  </div>
+                </div>
+                <div className="mt-3 grid gap-2">
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      signOut({ callbackUrl: '/' });
+                    }}
+                    className="w-full px-4 py-2 border border-[color:var(--border)] rounded-full text-sm hover:bg-[color:var(--surface)] transition-colors"
+                  >
+                    {t('nav.sign_out')}
+                  </button>
+                </div>
+              </div>
             ) : (
               <button
                 onClick={() => {

@@ -45,7 +45,7 @@ export default function YogiEventRegistrationsContent({
             upcomingEvents.map((eventItem) => (
               <div key={eventItem._id} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
                 <p className="font-semibold text-[color:var(--ink)]">{eventItem.title}</p>
-                <p className="mt-1 text-sm text-[color:var(--muted)]">
+                <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">
                   {new Date(eventItem.date).toLocaleDateString()} • {eventItem.time}
                 </p>
                 <p className="mt-1 text-sm text-[color:var(--muted)]">{eventItem.location}</p>
@@ -61,12 +61,12 @@ export default function YogiEventRegistrationsContent({
             eventHistory.map((entry) => (
               <div key={`${entry.receiptNumber}-${entry.registeredAt}`} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
                 <p className="font-semibold text-[color:var(--ink)]">{entry.eventTitle}</p>
-                <p className="mt-1 text-sm text-[color:var(--muted)]">{t('event_regs.receipt')} #{entry.receiptNumber}</p>
-                <p className="mt-1 text-sm text-[color:var(--muted)]">
+                <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">{t('event_regs.receipt')} #{entry.receiptNumber}</p>
+                <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">
                   {new Date(entry.registeredAt).toLocaleDateString()} • ₹{entry.amountPaid.toLocaleString()}
                 </p>
                 {entry.transactionNumber ? (
-                  <p className="mt-1 text-sm text-[color:var(--muted)]">{t('event_regs.transaction')}: {entry.transactionNumber}</p>
+                  <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">{t('event_regs.transaction')}: {entry.transactionNumber}</p>
                 ) : null}
               </div>
             ))

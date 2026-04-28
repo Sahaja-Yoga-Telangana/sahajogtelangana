@@ -3,6 +3,7 @@ import { connect } from "@/database/mongo.config";
 import { getRequiredSession } from "@/lib/auth";
 import { User } from "@/models/User";
 import { EventRequest } from "@/models/EventRequest";
+import { sendEmail } from "@/config/mail";
 
 export async function POST(request: NextRequest) {
   await connect();
@@ -63,6 +64,39 @@ export async function POST(request: NextRequest) {
     qrImage,
     additionalNotes,
   });
+
+  const html = `
+    <h2>New Event Request</h2>
+    <p>An event request was submitted for admin review.</p>
+    <table style="border-collapse:collapse;">
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Name</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.name}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Email</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.email}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Event Name</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.eventName}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Description</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.description}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Start Date</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.proposedStartDate ? new Date(eventRequest.proposedStartDate).toLocaleString() : "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>End Date</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.proposedEndDate ? new Date(eventRequest.proposedEndDate).toLocaleString() : "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Time</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.time}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Location</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.location}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Google Map</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.googleMapLink || "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Contact Details</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.contactDetails || "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Price Below 12</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.priceBelow12 ?? 0}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Price 12 to 24</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.price12To24 ?? 0}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Price 25 and Above</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.price25AndAbove ?? 0}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Image</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.image || "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>QR Image</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.qrImage || "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Additional Notes</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${eventRequest.additionalNotes || "-"}</td></tr>
+    </table>
+  `;
+
+  const messageId = await sendEmail(
+    "csemanish.official@gmail.com",
+    "New Event Request",
+    html
+  );
+
+  if (!messageId) {
+    return NextResponse.json({ error: "Email failed to send" }, { status: 500 });
+  }
 
   return NextResponse.json({
     status: 201,

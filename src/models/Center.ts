@@ -52,7 +52,7 @@ const centerSchema = new Schema({
   },
 });
 
-const existingCenterModel = mongoose.models.Center as any;
+const existingCenterModel = mongoose.models?.Center as any;
 
 if (existingCenterModel) {
   existingCenterModel.schema.add({

@@ -21,17 +21,41 @@ export default function SignUp() {
   const [errors, setError] = useState<registerErrorType>({});
   const [isDhanvantariCorrect, setIsDhanvantariCorrect] = useState(false);
 
-  // Function to check if the Dhanvantari answer is correct
+  const normalizeDhanvantari = (value: string) =>
+    value
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[^a-z]/g, "");
+
   const checkDhanvantariAnswer = (answer: string) => {
-    const normalized = answer.toLowerCase().trim();
-  
-    const validSubstrings = [
-      'dhanvantari', 'dhanwantari', 'dhanwantri', 'dhnwantri', 'dhnwntri',
-      'dhanvanthari', 'dhanvantri', 'dhanvathari', 'dhanvathri', 'dhanvanthri',
-      'dhanvantree', 'dhanwanthri', 'dhanwantharee'
-    ];
-  
-    return validSubstrings.some(substring => normalized.includes(substring));
+    const normalized = normalizeDhanvantari(answer);
+
+    const validSpellings = [
+      "dhanvantari",
+      "dhanwantari",
+      "dhanvantri",
+      "dhanwantri",
+      "dhanwanthari",
+      "dhanwanthri",
+      "dhanvanthari",
+      "dhanvanthri",
+      "dhanwantree",
+      "dhanvantree",
+      "dhanwantharee",
+      "dhanvantharee",
+      "dhanvathari",
+      "dhanvathri",
+      "dhawantari",
+      "dhawantri",
+      "dhawanthari",
+      "dhawanthri",
+      "danvantari",
+      "danwantri",
+      "dhanwantari",
+      "dhanwanthary",
+    ].map(normalizeDhanvantari);
+
+    return validSpellings.some((spelling) => normalized.includes(spelling));
   };
 
   const handleDhanvantariChange = (e: React.ChangeEvent<HTMLInputElement>) => {

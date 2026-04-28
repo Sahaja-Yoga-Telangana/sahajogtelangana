@@ -3,6 +3,7 @@ import { connect } from "@/database/mongo.config";
 import { getRequiredSession } from "@/lib/auth";
 import { User } from "@/models/User";
 import { FeatureRequest } from "@/models/FeatureRequest";
+import { sendEmail } from "@/config/mail";
 
 export async function POST(request: NextRequest) {
   await connect();
@@ -33,6 +34,29 @@ export async function POST(request: NextRequest) {
     category,
     useCase,
   });
+
+  const html = `
+    <h2>New Feature Request</h2>
+    <p>A feature request was submitted for admin review.</p>
+    <table style="border-collapse:collapse;">
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Name</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.name}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Email</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.email}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Title</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.title}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Category</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.category || "-"}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Description</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.description}</td></tr>
+      <tr><td style="padding:6px 10px;border:1px solid #ddd;"><strong>Use Case</strong></td><td style="padding:6px 10px;border:1px solid #ddd;">${featureRequest.useCase || "-"}</td></tr>
+    </table>
+  `;
+
+  const messageId = await sendEmail(
+    "csemanish.official@gmail.com",
+    "New Feature Request",
+    html
+  );
+
+  if (!messageId) {
+    return NextResponse.json({ error: "Email failed to send" }, { status: 500 });
+  }
 
   return NextResponse.json({
     status: 201,

@@ -590,11 +590,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
               <p className="mt-4 text-sm leading-7 text-[color:var(--muted)] md:text-base">{event.description}</p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <InfoPill icon={<FiCalendar className="h-4 w-4" />} label={getEventDateLabel(event.date, event.endDate)} />
-                <InfoPill icon={<FiClock className="h-4 w-4" />} label={event.time} />
+                <InfoPill icon={<FiCalendar className="h-4 w-4" />} label={getEventDateLabel(event.date, event.endDate)} numeric />
+                <InfoPill icon={<FiClock className="h-4 w-4" />} label={event.time} numeric />
                 <InfoPill icon={<FiMapPin className="h-4 w-4" />} label={event.location} className="sm:col-span-2" />
                 {event.contactDetails ? (
-                  <InfoPill icon={<FiPhone className="h-4 w-4" />} label={event.contactDetails} className="sm:col-span-2" />
+                  <InfoPill icon={<FiPhone className="h-4 w-4" />} label={event.contactDetails} className="sm:col-span-2" numeric />
                 ) : null}
               </div>
 
@@ -660,12 +660,12 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       <p className="text-base text-[color:var(--muted)]">Event Registration Receipt</p>
                     </div>
                     <div className="rounded-[20px] bg-[color:var(--surface-2)]/80 px-4 py-3 text-left sm:text-right">
-                      <p className="text-base text-[color:var(--muted)]">Receipt #: {
+                      <p className="numeric-font text-base text-[color:var(--muted)]">Receipt #: {
                         bulkReceiptData 
                           ? bulkReceiptData[0]?._id.substring(0, 8) 
                           : receiptData?._id.substring(0, 8)
                       }</p>
-                      <p className="text-base text-[color:var(--muted)]">Date: {
+                      <p className="numeric-font text-base text-[color:var(--muted)]">Date: {
                         // Safely format the date with a fallback
                         bulkReceiptData 
                           ? (bulkReceiptData[0]?.createdAt 
@@ -698,7 +698,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         </div>
                         <div>
                           <p className="text-base text-[color:var(--muted)]">Age:</p>
-                          <p className="font-medium text-[color:var(--ink)]">{receiptData.age} years</p>
+                          <p className="numeric-font font-medium text-[color:var(--ink)]">{receiptData.age} years</p>
                         </div>
                         <div>
                           <p className="text-base text-[color:var(--muted)]">Location:</p>
@@ -706,7 +706,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         </div>
                         <div>
                           <p className="text-base text-[color:var(--muted)]">Receipt Number:</p>
-                          <p className="font-medium text-[color:var(--ink)]">{receiptData._id.substring(0, 8)}</p>
+                          <p className="numeric-font font-medium text-[color:var(--ink)]">{receiptData._id.substring(0, 8)}</p>
                         </div>
                       </div>
                     </div>
@@ -732,13 +732,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
                                 <td className="px-3 py-2 whitespace-nowrap text-base font-medium text-[color:var(--ink)]">
                                   {registration.name}
                                 </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
+                                <td className="numeric-font px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   {registration.age} years
                                 </td>
                                 <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   {registration.city}, {registration.state}
                                 </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
+                                <td className="numeric-font px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   ₹{registration.amountPaid.toLocaleString()}
                                 </td>
                               </tr>
@@ -752,11 +752,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             <p className="font-semibold text-[color:var(--ink)]">{registration.name}</p>
                             <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                               <p className="text-[color:var(--muted)]">Age</p>
-                              <p className="text-right font-medium text-[color:var(--ink)]">{registration.age} years</p>
+                              <p className="numeric-font text-right font-medium text-[color:var(--ink)]">{registration.age} years</p>
                               <p className="text-[color:var(--muted)]">Location</p>
                               <p className="text-right font-medium text-[color:var(--ink)]">{registration.city}, {registration.state}</p>
                               <p className="text-[color:var(--muted)]">Amount</p>
-                              <p className="text-right font-medium text-[color:var(--ink)]">₹{registration.amountPaid.toLocaleString()}</p>
+                              <p className="numeric-font text-right font-medium text-[color:var(--ink)]">₹{registration.amountPaid.toLocaleString()}</p>
                             </div>
                           </div>
                         ))}
@@ -771,7 +771,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
-                            <p className="font-medium text-[color:var(--ink)]">₹0</p>
+                            <p className="numeric-font font-medium text-[color:var(--ink)]">₹0</p>
                           </div>
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Registration Type:</p>
@@ -780,7 +780,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           {bulkReceiptData && (
                             <div>
                               <p className="text-base text-[color:var(--muted)]">Participants:</p>
-                              <p className="font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
+                              <p className="numeric-font font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
                             </div>
                           )}
                         </div>
@@ -791,7 +791,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
-                            <p className="font-medium text-[color:var(--ink)]">₹{
+                            <p className="numeric-font font-medium text-[color:var(--ink)]">₹{
                               bulkReceiptData 
                                 ? bulkReceiptData.reduce((sum, reg) => sum + reg.amountPaid, 0).toLocaleString() 
                                 : receiptData?.amountPaid.toLocaleString()
@@ -799,7 +799,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           </div>
                           <div>
                             <p className="text-base text-[color:var(--muted)]">Transaction ID:</p>
-                            <p className="font-medium text-[color:var(--ink)]">{
+                            <p className="numeric-font font-medium text-[color:var(--ink)]">{
                               bulkReceiptData ? bulkReceiptData[0]?.transactionNumber : receiptData?.transactionNumber
                             }</p>
                           </div>
@@ -810,7 +810,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           {bulkReceiptData && (
                             <div>
                               <p className="text-base text-[color:var(--muted)]">Participants:</p>
-                              <p className="font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
+                              <p className="numeric-font font-medium text-[color:var(--ink)]">{bulkReceiptData.length}</p>
                             </div>
                           )}
                         </div>
@@ -1207,15 +1207,17 @@ function InfoPill({
   icon,
   label,
   className = '',
+  numeric = false,
 }: {
   icon: React.ReactNode;
   label: string;
   className?: string;
+  numeric?: boolean;
 }) {
   return (
     <div className={`flex items-start gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 px-4 py-3 ${className}`}>
       <span className="mt-0.5 text-[color:var(--primary)]">{icon}</span>
-      <span className="text-sm leading-6 text-[color:var(--ink)]">{label}</span>
+      <span className={`text-sm leading-6 text-[color:var(--ink)] ${numeric ? 'numeric-font' : ''}`}>{label}</span>
     </div>
   );
 }
@@ -1224,7 +1226,7 @@ function PricingRow({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/78 px-4 py-3">
       <span className="text-sm font-medium text-[color:var(--ink)]">{label}</span>
-      <span className="text-sm font-semibold text-[color:var(--primary)]">₹{value.toLocaleString()}</span>
+      <span className="numeric-font text-sm font-semibold text-[color:var(--primary)]">₹{value.toLocaleString()}</span>
     </div>
   );
 }

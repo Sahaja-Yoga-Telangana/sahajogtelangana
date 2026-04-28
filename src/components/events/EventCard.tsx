@@ -58,9 +58,9 @@ export default function EventCard({
         <div className="flex flex-wrap items-center gap-3 text-sm text-[color:var(--muted)]">
           <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] px-3 py-1.5">
             <FiCalendar className="h-4 w-4" aria-hidden="true" />
-            {getEventDateLabel(event.date, event.endDate, locale)}
+            <span className="numeric-font">{getEventDateLabel(event.date, event.endDate, locale)}</span>
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] px-3 py-1.5">
+          <span className="numeric-font inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] px-3 py-1.5">
             {event.time}
           </span>
         </div>
