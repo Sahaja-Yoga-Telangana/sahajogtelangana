@@ -116,13 +116,15 @@ export const NAV_LINKS = [
   ];
   
   
-  export const FOOTER_CONTACT_INFO = {
-    titleKey: 'footer.contact',
-    links: [
-      { labelKey: 'footer.call_us', value: '+91 898 898 22 00' },
-      { labelKey: 'footer.email', value: 'sahajayogatelangana@gmail.com' },
-    ],
-  };
+export const FOOTER_CONTACT_INFO = {
+  titleKey: 'footer.contact',
+  links: [
+    { labelKey: 'footer.call_us', value: '+91 898 898 22 00' },
+    { labelKey: 'footer.email', value: 'sahajayogatelangana@gmail.com' },
+  ],
+};
+
+export const JOURNEY_WHATSAPP_BOT_NUMBER = '917989128851';
   
   export const SOCIALS = {
     title: 'Social',

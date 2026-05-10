@@ -32,6 +32,22 @@ const userSchema = new Schema({
     trim: true,
     default: "",
   },
+  meditationExperienceLevel: {
+    required: false,
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
+  preferredMode: {
+    required: false,
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
+  journeyCompletedAt: {
+    required: false,
+    type: Schema.Types.Date,
+  },
   role: {
     required: true,
     type: Schema.Types.String,
@@ -68,6 +84,22 @@ if (existingUserModel) {
       required: false,
       trim: true,
       default: "",
+    },
+    meditationExperienceLevel: {
+      type: Schema.Types.String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+    preferredMode: {
+      type: Schema.Types.String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+    journeyCompletedAt: {
+      type: Schema.Types.Date,
+      required: false,
     },
   });
 }

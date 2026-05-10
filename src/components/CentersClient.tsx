@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useLocale } from "@/app/provider/localeProvider";
 import type { PublicCenter } from "@/lib/centers";
 import { centerSlug, formatCenterTime } from "@/lib/centers";
+import CentersWidgetEmbed from "@/components/CentersWidgetEmbed";
 
 type Connection = {
   centerId: string;
@@ -28,7 +29,7 @@ const languageCopy = {
     joined: "Following",
     updates: "Center updates",
     announcements: "Announcements",
-    search: "Search by city, locality, or area",
+    search: "Search for centers in Hyderabad",
     always_free: "Always free",
     outside: "If you want to find centers apart from Telangana state, please find them",
     here: "here",
@@ -92,8 +93,18 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
   const { data: connectionsResponse } = useSWR(status === "authenticated" ? "/api/center-connections" : null, fetcher);
   const [query, setQuery] = useState("");
   const [pendingKey, setPendingKey] = useState<string | null>(null);
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const journeyCity = searchParams?.get("city") || "";
+  const journeyLatitude = searchParams?.get("lat") || "";
+  const journeyLongitude = searchParams?.get("lng") || "";
   const connections = ((connectionsResponse?.data || []) as any[]).map(normalizeConnection);
   const copy = languageCopy[locale as keyof typeof languageCopy] || languageCopy.en;
+
+  React.useEffect(() => {
+    if (journeyCity && !query) {
+      setQuery(journeyCity);
+    }
+  }, [journeyCity, query]);
 
   const filteredCenters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -157,7 +168,17 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
             <h1 className="text-4xl font-semibold text-[color:var(--ink)]">{copy.title}</h1>
             <p className="mt-3 text-lg font-medium text-[color:var(--ink)]">{copy.finder}</p>
             <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{copy.helper}</p>
+            {journeyCity || (journeyLatitude && journeyLongitude) ? (
+              <p className="mt-3 rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 px-4 py-3 text-sm leading-7 text-[color:var(--muted)]">
+                {journeyCity
+                  ? `Journey context applied for ${journeyCity}. Use the live center finder below to explore nearby options on the map.`
+                  : "Journey location detected. Use the live center finder below to explore nearby options on the map."}
+              </p>
+            ) : null}
           </div>
+        </div>
+        <div className="mt-6 rounded-[26px] border border-[color:var(--border)] bg-[color:var(--surface)] p-4 shadow-sm">
+          <CentersWidgetEmbed className="min-h-[520px]" />
         </div>
         <div className="mt-5">
           <input
@@ -167,6 +188,12 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
             placeholder={copy.search}
           />
         </div>
+      </div>
+
+      <div className="mx-auto mb-6 max-w-5xl">
+        <p className="text-sm leading-7 text-[color:var(--muted)]">
+          Prefer a curated local view as well? Browse the center cards below for local follow actions, center details, and announcements from this website.
+        </p>
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">

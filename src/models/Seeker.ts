@@ -68,6 +68,20 @@ const seekerSchema = new Schema({
     trim: true,
     default: "",
   },
+  journeySessionId: {
+    type: Schema.Types.ObjectId,
+    ref: "JourneySession",
+    required: false,
+  },
+  journeySource: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+  recommendationAccepted: {
+    type: Boolean,
+    default: false,
+  },
   addedAt: { type: Date, default: Date.now }
 });
 
@@ -128,6 +142,20 @@ if (existingSeekerModel) {
       type: String,
       trim: true,
       default: "",
+    },
+    journeySessionId: {
+      type: Schema.Types.ObjectId,
+      ref: "JourneySession",
+      required: false,
+    },
+    journeySource: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    recommendationAccepted: {
+      type: Boolean,
+      default: false,
     },
   });
 }

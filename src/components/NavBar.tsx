@@ -16,9 +16,11 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
   const { locale, setLocale } = useLocale();
   const t = useTranslations();
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const mobileProfileRef = useRef<HTMLDivElement | null>(null);
 
   const isAdmin = (session?.user as CustomUser)?.role === 'Admin';
   const displayName = session?.user?.name?.trim() || 'Profile';
@@ -34,14 +36,18 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const handlePointerDown = (event: MouseEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileOpen(false);
       }
+
+      if (mobileProfileRef.current && !mobileProfileRef.current.contains(event.target as Node)) {
+        setIsMobileProfileOpen(false);
+      }
     };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    return () => document.removeEventListener('mousedown', handlePointerDown);
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, []);
 
   return (
@@ -179,25 +185,112 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Toggle */}
-          <button
-            className="md:hidden p-2 rounded-full hover:bg-[color:var(--surface-2)]"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            {session ? (
+              <div ref={mobileProfileRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsMobileProfileOpen((current) => !current);
+                  }}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] transition-colors hover:bg-[color:var(--surface-2)]"
+                  aria-expanded={isMobileProfileOpen}
+                  aria-haspopup="menu"
+                  aria-label="Open profile menu"
+                >
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt={displayName}
+                      className="h-9 w-9 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-white">
+                      {profileInitial}
+                    </span>
+                  )}
+                </button>
+
+                {isMobileProfileOpen ? (
+                  <div className="absolute right-0 mt-3 w-[min(20rem,calc(100vw-2.5rem))] overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+                    <div className="border-b border-[color:var(--border)] px-4 py-4">
+                      <div className="flex items-center gap-3">
+                        {profileImage ? (
+                          <img
+                            src={profileImage}
+                            alt={displayName}
+                            className="h-11 w-11 rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-white">
+                            {profileInitial}
+                          </span>
+                        )}
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-[color:var(--ink)]">{displayName}</p>
+                          <p className="truncate text-xs text-[color:var(--muted)]">{session.user?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-2">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsMobileProfileOpen(false)}
+                        className="block rounded-xl px-3 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                      >
+                        {t('nav.dashboard')}
+                      </Link>
+                      {isAdmin ? (
+                        <Link
+                          href="/admin/dashboard"
+                          onClick={() => setIsMobileProfileOpen(false)}
+                          className="block rounded-xl px-3 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                        >
+                          {t('nav.admin_dashboard')}
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMobileProfileOpen(false);
+                          signOut({ callbackUrl: '/' });
+                        }}
+                        className="mt-1 block w-full rounded-xl px-3 py-3 text-left text-sm font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
+                      >
+                        {t('nav.sign_out')}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <button
+              className="p-2 rounded-full hover:bg-[color:var(--surface-2)]"
+              onClick={() => {
+                setIsMobileProfileOpen(false);
+                setIsMenuOpen((current) => !current);
+              }}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-site-menu"
+              aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-[color:var(--surface)] border-t border-[color:var(--border)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+        <div id="mobile-site-menu" className="md:hidden bg-[color:var(--surface)] border-t border-[color:var(--border)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
           <div className="px-5 py-4 space-y-2 max-h-[calc(100vh-72px)] overflow-y-auto">
             {NAV_LINKS.map((link) => {
               if (link.children) {
@@ -239,48 +332,7 @@ const Navbar = () => {
               <LanguageToggle locale={locale} setLocale={setLocale} mobile />
             </div>
 
-            {isAdmin && (
-              <Link
-                href="/admin/dashboard"
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 text-white bg-[color:var(--primary)] rounded-full text-center"
-              >
-                {t('nav.admin_dashboard')}
-              </Link>
-            )}
-
-            {session ? (
-              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-3">
-                <div className="flex items-center gap-3">
-                  {profileImage ? (
-                    <img
-                      src={profileImage}
-                      alt={displayName}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-white">
-                      {profileInitial}
-                    </span>
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[color:var(--ink)]">{displayName}</p>
-                    <p className="truncate text-xs text-[color:var(--muted)]">{session.user?.email}</p>
-                  </div>
-                </div>
-                <div className="mt-3 grid gap-2">
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      signOut({ callbackUrl: '/' });
-                    }}
-                    className="w-full px-4 py-2 border border-[color:var(--border)] rounded-full text-sm hover:bg-[color:var(--surface)] transition-colors"
-                  >
-                    {t('nav.sign_out')}
-                  </button>
-                </div>
-              </div>
-            ) : (
+            {session ? null : (
               <button
                 onClick={() => {
                   setIsMenuOpen(false);

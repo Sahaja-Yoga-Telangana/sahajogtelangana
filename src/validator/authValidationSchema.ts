@@ -41,6 +41,27 @@ export const seekerSchema = vine.object({
   phoneNumber: vine.string().trim().regex(/^\+?[\d\s]{10,15}$/),
 })
 
+export const journeyRecommendationSchema = vine.object({
+  isNewToMeditation: vine.boolean(),
+  preferredMode: vine.enum(["in_person", "online"] as const),
+  city: vine.string().trim().minLength(2).maxLength(80).optional(),
+  sessionKey: vine.string().trim().maxLength(120).optional(),
+  sourcePage: vine.string().trim().maxLength(120).optional(),
+  latitude: vine.number().min(-90).max(90).optional(),
+  longitude: vine.number().min(-180).max(180).optional(),
+})
+
+export const journeySupportSchema = vine.object({
+  name: vine.string().trim().minLength(2).maxLength(50),
+  email: vine.string().email(),
+  phoneNumber: vine.string().trim().regex(/^\+?[\d\s]{10,15}$/),
+  city: vine.string().trim().minLength(2).maxLength(80).optional(),
+  isNewToMeditation: vine.boolean(),
+  preferredMode: vine.enum(["in_person", "online"] as const),
+  sessionKey: vine.string().trim().maxLength(120).optional(),
+  notes: vine.string().trim().maxLength(500).optional(),
+})
+
 export const centerSchema = vine.object({
   address: vine.string().trim().minLength(5).maxLength(200),
   day: vine.string().trim().minLength(3).maxLength(10),
