@@ -29,12 +29,6 @@ export async function POST(request: NextRequest) {
     const validator = vine.compile(journeyRecommendationSchema);
     const payload = await validator.validate(body);
     const hasCoordinates = typeof payload.latitude === "number" && typeof payload.longitude === "number";
-    if (payload.preferredMode === "in_person" && !payload.city && !hasCoordinates) {
-      return NextResponse.json({
-        status: 400,
-        message: "Please share your area, city, or enable location to continue.",
-      }, { status: 400 });
-    }
     const recommendations = await buildJourneyRecommendations(payload);
     const session = await getRequiredSession();
     const normalizedEmail = normalizeEmail(session?.user?.email);

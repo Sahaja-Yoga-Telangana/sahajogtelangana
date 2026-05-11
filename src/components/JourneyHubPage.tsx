@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { getEventDateLabel } from "@/lib/events";
 
 type JourneyMode = "in_person" | "online";
@@ -45,20 +45,6 @@ type JourneyRecommendations = {
   }>;
   citySuggestions: string[];
   fallbackReason?: string;
-};
-
-type LocationSuggestion = {
-  label: string;
-  city: string;
-  area: string;
-  source: "local" | "sycenters";
-};
-
-type LocationPreview = {
-  resolvedCity: string;
-  distanceLabel: string;
-  center: JourneyRecommendations["center"];
-  liveMatchingEnabled?: boolean;
 };
 
 type JourneyDraft = {
@@ -117,27 +103,34 @@ function getCentersMapHref(draft: JourneyDraft) {
   return query ? `/centers?${query}` : "/centers";
 }
 
-export default function JourneyHubPage({ citySuggestions }: { citySuggestions: string[] }) {
+export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { citySuggestions: string[] }) {
   const searchParams = useSearchParams();
   const sourcePage = searchParams.get("source") || "website";
   const [draft, setDraft] = useState<JourneyDraft>(() => buildInitialDraft(sourcePage));
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [supportLoading, setSupportLoading] = useState(false);
-  const [locationLoading, setLocationLoading] = useState(false);
-  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
-  const [previewLoading, setPreviewLoading] = useState(false);
   const [error, setError] = useState("");
   const [supportMessage, setSupportMessage] = useState("");
-  const [locationSuggestions, setLocationSuggestions] = useState<LocationSuggestion[]>([]);
-  const [locationPreview, setLocationPreview] = useState<LocationPreview | null>(null);
-  const [liveSearchEnabled, setLiveSearchEnabled] = useState(true);
   const [supportForm, setSupportForm] = useState({
     name: "",
     email: "",
     phoneNumber: "",
     notes: "",
   });
+
+  const resetJourney = () => {
+    setDraft(buildInitialDraft(sourcePage));
+    setStep(1);
+    setError("");
+    setSupportMessage("");
+    setSupportForm({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      notes: "",
+    });
+  };
 
   useEffect(() => {
     try {
@@ -154,8 +147,6 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
       }));
 
       if (parsed.recommendations) {
-        setStep(4);
-      } else if (parsed.city) {
         setStep(3);
       } else if (parsed.preferredMode) {
         setStep(2);
@@ -173,62 +164,8 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
     }
   }, [draft]);
 
-  const allCities = useMemo(() => {
-    const merged = new Set([...(draft.recommendations?.citySuggestions || []), ...citySuggestions]);
-    return Array.from(merged).sort((a, b) => a.localeCompare(b));
-  }, [citySuggestions, draft.recommendations?.citySuggestions]);
-
-  const readyForRecommendations =
-    typeof draft.isNewToMeditation === "boolean"
-    && !!draft.preferredMode
-    && (
-      draft.preferredMode === "online"
-      || draft.city.trim().length >= 2
-      || (typeof draft.latitude === "number" && typeof draft.longitude === "number")
-    );
-
-  useEffect(() => {
-    if (step !== 3) {
-      return;
-    }
-
-    const query = draft.city.trim();
-    if (query.length < 2) {
-      setLocationSuggestions([]);
-      setSuggestionsLoading(false);
-      return;
-    }
-
-    const controller = new AbortController();
-    setSuggestionsLoading(true);
-    const timeoutId = window.setTimeout(async () => {
-      try {
-        const response = await fetch(`/api/journey/location-suggestions?q=${encodeURIComponent(query)}`, {
-          signal: controller.signal,
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result?.message || "Unable to fetch suggestions right now.");
-        }
-        setLocationSuggestions(result?.data?.suggestions || []);
-        setLiveSearchEnabled(result?.data?.liveSearchEnabled !== false);
-      } catch (suggestionError: any) {
-        if (suggestionError?.name !== "AbortError") {
-          console.error("Failed to fetch journey location suggestions:", suggestionError);
-        }
-      } finally {
-        setSuggestionsLoading(false);
-      }
-    }, 220);
-
-    return () => {
-      controller.abort();
-      window.clearTimeout(timeoutId);
-    };
-  }, [draft.city, step]);
-
-  const getRecommendations = async () => {
-    if (!readyForRecommendations) {
+  const getRecommendations = async (preferredMode = draft.preferredMode) => {
+    if (typeof draft.isNewToMeditation !== "boolean" || !preferredMode) {
       return;
     }
 
@@ -242,12 +179,9 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
         body: JSON.stringify({
           sessionKey: draft.sessionKey,
           sourcePage: draft.sourcePage,
-            isNewToMeditation: draft.isNewToMeditation,
-            preferredMode: draft.preferredMode,
-            city: draft.city.trim() || undefined,
-            latitude: draft.latitude,
-            longitude: draft.longitude,
-          }),
+          isNewToMeditation: draft.isNewToMeditation,
+          preferredMode,
+        }),
       });
       const result = await response.json();
 
@@ -258,76 +192,16 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
       setDraft((current) => ({
         ...current,
         sessionKey: result.data.sessionKey || current.sessionKey,
-        city: current.city || result.data.resolvedCity || result.data.recommendations?.center?.city || "",
+        preferredMode,
         recommendations: result.data.recommendations,
       }));
-      setStep(4);
+      setStep(3);
     } catch (requestError: any) {
       console.error("Failed to fetch journey recommendations:", requestError);
       setError(requestError?.message || "Unable to build your journey right now.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchLocationPreview = async (latitude: number, longitude: number) => {
-    setPreviewLoading(true);
-
-    try {
-      const response = await fetch(`/api/journey/location-preview?lat=${latitude}&lng=${longitude}`);
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Unable to preview nearby centers right now.");
-      }
-
-      const preview = result?.data as LocationPreview;
-      setLocationPreview(preview || null);
-
-      if (preview?.resolvedCity) {
-        setDraft((current) => ({
-          ...current,
-          city: current.city.trim() ? current.city : preview.resolvedCity,
-        }));
-      }
-    } catch (previewError: any) {
-      console.error("Failed to fetch journey location preview:", previewError);
-    } finally {
-      setPreviewLoading(false);
-    }
-  };
-
-  const useCurrentLocation = () => {
-    if (!("geolocation" in navigator)) {
-      setError("Location is not available in this browser. You can still enter your city manually.");
-      return;
-    }
-
-    setLocationLoading(true);
-    setError("");
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        setDraft((current) => ({
-          ...current,
-          latitude,
-          longitude,
-        }));
-        setLocationLoading(false);
-        void fetchLocationPreview(latitude, longitude);
-      },
-      () => {
-        setError("We could not access your location. You can still continue by entering your city.");
-        setLocationLoading(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 1000 * 60 * 15,
-      }
-    );
   };
 
   const handleSupportSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -366,33 +240,33 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
 
   return (
     <div className="bg-[color:var(--bg)]">
-      <section className="mx-auto max-w-6xl px-6 py-10 lg:px-8 lg:py-14">
-        <div className="rounded-[36px] border border-[color:var(--border)] bg-[linear-gradient(145deg,_color-mix(in_srgb,var(--surface)_95%,transparent),_color-mix(in_srgb,var(--accent-200)_42%,transparent))] p-6 shadow-soft md:p-10">
+      <section className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
+        <div className="rounded-[28px] border border-[color:var(--border)] bg-[linear-gradient(145deg,_color-mix(in_srgb,var(--surface)_95%,transparent),_color-mix(in_srgb,var(--accent-200)_42%,transparent))] p-5 shadow-soft sm:rounded-[36px] sm:p-6 md:p-10">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted)]">Seeker Journey Hub</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[color:var(--ink)] md:text-5xl">
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--ink)] sm:text-4xl md:text-5xl">
               We will help you find the gentlest way to begin.
             </h1>
-            <p className="mt-4 text-lg leading-8 text-[color:var(--muted)]">
+            <p className="mt-4 text-base leading-7 text-[color:var(--muted)] sm:text-lg sm:leading-8">
               Share a little about where you are right now, and we will suggest a calm starting page, a nearby center when available, and the most relevant upcoming events.
             </p>
           </div>
 
-          <div className="mt-8 flex items-center gap-3">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="flex items-center gap-3">
-                <div className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${item <= step ? "bg-[color:var(--primary)] text-white" : "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--muted)]"}`}>
+          <div className="mt-7 flex flex-wrap items-center gap-2.5 sm:mt-8 sm:gap-3">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="flex items-center gap-2.5 sm:gap-3">
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold sm:h-11 sm:w-11 ${item <= step ? "bg-[color:var(--primary)] text-white" : "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--muted)]"}`}>
                   {item}
                 </div>
-                {item < 4 ? <div className={`h-px w-8 ${item < step ? "bg-[color:var(--primary)]" : "bg-[color:var(--border)]"}`} /> : null}
+                {item < 3 ? <div className={`h-px w-5 sm:w-8 ${item < step ? "bg-[color:var(--primary)]" : "bg-[color:var(--border)]"}`} /> : null}
               </div>
             ))}
           </div>
 
-          <div className="mt-4 text-sm text-[color:var(--muted)]">Step {step} of 4</div>
+          <div className="mt-4 text-sm text-[color:var(--muted)]">Step {step} of 3</div>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-            <div className="rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)]/94 p-6 shadow-sm">
+          <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/94 p-5 shadow-sm sm:rounded-[30px] sm:p-6">
               {step === 1 ? (
                 <QuestionPanel
                   eyebrow="Step 1"
@@ -435,7 +309,7 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                       body="I would like to meet the collective and meditate near me."
                       onClick={() => {
                         setDraft((current) => ({ ...current, preferredMode: "in_person" }));
-                        setStep(3);
+                        void getRecommendations("in_person");
                       }}
                     />
                     <ChoiceButton
@@ -444,10 +318,11 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                       body="I would prefer to begin from home with guided support."
                       onClick={() => {
                         setDraft((current) => ({ ...current, preferredMode: "online" }));
-                        setStep(3);
+                        void getRecommendations("online");
                       }}
                     />
                   </div>
+                  {loading ? <p className="mt-5 text-sm text-[color:var(--muted)]">Building your path...</p> : null}
                   <button
                     type="button"
                     onClick={() => setStep(1)}
@@ -458,127 +333,7 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                 </QuestionPanel>
               ) : null}
 
-              {step === 3 ? (
-                <QuestionPanel
-                  eyebrow="Step 3"
-                  title={draft.preferredMode === "in_person" ? "Where would you like to meditate from?" : "Would you like local events near you as well?"}
-                  body={draft.preferredMode === "in_person"
-                    ? "Share your area, city, or current location so we can suggest the closest center and nearby events."
-                    : "This is optional for online seekers. If you share your area or city, we can also suggest nearby events and local support."}
-                >
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-[color:var(--ink)]">
-                      {draft.preferredMode === "in_person" ? "Area or city" : "Area or city (optional)"}
-                    </span>
-                    <input
-                      value={draft.city}
-                      onChange={(event) => setDraft((current) => ({ ...current, city: event.target.value }))}
-                      placeholder={draft.preferredMode === "in_person" ? "Kondapur, Miyapur, Cuttack, Hyderabad..." : "Hyderabad, Bhubaneswar, or your locality"}
-                      className="w-full rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-base text-[color:var(--ink)] outline-none transition-colors focus:border-[color:var(--focus)]"
-                    />
-                  </label>
-                  {draft.city.trim().length >= 2 ? (
-                    <div className="mt-3 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Suggestions</p>
-                        {suggestionsLoading ? <p className="text-xs text-[color:var(--muted)]">Searching live locations...</p> : null}
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {(locationSuggestions.length ? locationSuggestions : allCities
-                          .filter((city) => city.toLowerCase().includes(draft.city.trim().toLowerCase()))
-                          .slice(0, 6)
-                          .map((city) => ({ label: city, city, area: city, source: "local" as const })))
-                          .map((suggestion) => (
-                            <button
-                              key={`${suggestion.source}-${suggestion.label}`}
-                              type="button"
-                              onClick={() => {
-                                setDraft((current) => ({
-                                  ...current,
-                                  city: suggestion.area || suggestion.city,
-                                }));
-                                setLocationSuggestions([]);
-                              }}
-                              className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-sm text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface)]/80"
-                            >
-                              {suggestion.label}
-                            </button>
-                          ))}
-                      </div>
-                      {!suggestionsLoading && locationSuggestions.length === 0 && !allCities
-                        .filter((city) => city.toLowerCase().includes(draft.city.trim().toLowerCase()))
-                        .length ? (
-                        <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
-                          {liveSearchEnabled
-                            ? `No quick suggestions found for "${draft.city.trim()}". You can still continue with that area or city and we will try to match the nearest center.`
-                            : `Live SYCenters location suggestions are not active yet in this environment. You can still continue with "${draft.city.trim()}" and we will use it once API access is configured.`}
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                    <button
-                      type="button"
-                      onClick={getRecommendations}
-                      disabled={!readyForRecommendations || loading}
-                      className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:opacity-60"
-                    >
-                      {loading
-                        ? "Building your path..."
-                        : draft.preferredMode === "online"
-                          ? (draft.city.trim() || (typeof draft.latitude === "number" && typeof draft.longitude === "number")
-                            ? "Show my online path and local options"
-                            : "Show my online path")
-                          : "See my recommendations"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={useCurrentLocation}
-                      disabled={locationLoading}
-                      className="inline-flex items-center justify-center rounded-full border border-[color:var(--border)] px-6 py-3 text-sm font-semibold text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)] disabled:opacity-60"
-                    >
-                      {locationLoading ? "Finding your location..." : "Use my location"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setStep(2)}
-                      className="inline-flex items-center justify-center rounded-full border border-[color:var(--border)] px-6 py-3 text-sm font-semibold text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface-2)]"
-                    >
-                      Back
-                    </button>
-                  </div>
-                  {typeof draft.latitude === "number" && typeof draft.longitude === "number" ? (
-                    <div className="mt-4 rounded-[22px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 p-4">
-                      <p className="text-sm text-[color:var(--muted)]">
-                        Location captured. We will use it to improve the nearest-center match.
-                      </p>
-                      {previewLoading ? (
-                        <p className="mt-2 text-sm text-[color:var(--muted)]">Finding the nearest center now...</p>
-                      ) : locationPreview?.center ? (
-                        <div className="mt-3">
-                          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Nearest center preview</p>
-                          <h3 className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{locationPreview.center.zone}</h3>
-                          <p className="mt-1 text-sm text-[color:var(--muted)]">
-                            {locationPreview.center.city}
-                            {locationPreview.distanceLabel ? ` • ${locationPreview.distanceLabel}` : ""}
-                          </p>
-                          {locationPreview.center.address ? (
-                            <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{locationPreview.center.address}</p>
-                          ) : null}
-                        </div>
-                      ) : (
-                        <p className="mt-2 text-sm text-[color:var(--muted)]">
-                          {locationPreview?.liveMatchingEnabled === false
-                            ? "We have your location, but live SYCenters nearest-center matching is not active in this environment yet. Once the API credentials are added, this step will show the closest center automatically."
-                            : "We have your location. We will use it to improve the nearest-center recommendation."}
-                        </p>
-                      )}
-                    </div>
-                  ) : null}
-                </QuestionPanel>
-              ) : null}
-
-              {step === 4 && draft.recommendations ? (
+              {step === 3 && draft.recommendations ? (
                 <QuestionPanel
                   eyebrow="Your Path"
                   title="Here is a calm place to begin."
@@ -625,8 +380,8 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                   ) : null}
                   <button
                     type="button"
-                    onClick={() => setStep(1)}
-                    className="mt-5 text-sm font-semibold text-[color:var(--primary)]"
+                    onClick={resetJourney}
+                    className="mt-5 inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)] px-4 py-2 text-sm font-semibold text-[color:var(--ink)] transition-colors hover:bg-[color:var(--surface)]"
                   >
                     Start over
                   </button>
@@ -642,7 +397,7 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
 
             <div className="space-y-5">
               {draft.recommendations?.center ? (
-                <div className="rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-sm">
+                <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">Nearest Center</p>
                   <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{draft.recommendations.center.zone}</h2>
                   <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{draft.recommendations.center.city}</p>
@@ -669,7 +424,7 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                 </div>
               ) : null}
 
-              <div className="rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-sm">
+              <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">Upcoming Events</p>
                 {draft.recommendations?.events?.length ? (
                   <div className="mt-4 space-y-4">
@@ -703,7 +458,7 @@ export default function JourneyHubPage({ citySuggestions }: { citySuggestions: s
                 )}
               </div>
 
-              <div className="rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-sm">
+              <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">Guided Support</p>
                 <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">Would you like someone to help you personally?</h2>
                 <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">

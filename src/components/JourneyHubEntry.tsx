@@ -95,22 +95,17 @@ export default function JourneyHubEntry({
       </div>
 
       {open ? (
-        <div className="fixed inset-0 z-[70] flex items-end bg-[rgba(23,20,18,0.46)] p-4 sm:items-center sm:justify-center">
-          <div className="w-full max-w-xl overflow-hidden rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_28px_80px_rgba(0,0,0,0.18)]">
-            <div className="border-b border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_94%,transparent),_color-mix(in_srgb,var(--accent-200)_35%,transparent))] px-6 py-5">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[rgba(23,20,18,0.42)] p-3 sm:p-4">
+          <div className="w-full max-w-lg overflow-hidden rounded-[26px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_24px_72px_rgba(0,0,0,0.16)]">
+            <div className="border-b border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_94%,transparent),_color-mix(in_srgb,var(--accent-200)_30%,transparent))] px-5 py-4 sm:px-6 sm:py-5">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted)]">A calmer way to begin</p>
-              <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">We will help you find the right first step.</h3>
+              <h3 className="mt-2 text-2xl font-semibold leading-tight text-[color:var(--ink)] sm:text-[2rem]">We will help you find the right first step.</h3>
             </div>
-            <div className="px-6 py-6">
-              <p className="text-base leading-7 text-[color:var(--muted)]">
-                This takes less than a minute. We will ask whether you are new to meditation, whether you prefer in-person or online guidance, and which city you are in.
+            <div className="px-5 py-5 sm:px-6 sm:py-6">
+              <p className="text-base leading-7 text-[color:var(--muted)] sm:text-lg sm:leading-8">
+                A few gentle questions, and we will help you begin.
               </p>
-              <div className="mt-5 grid gap-3 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4 text-sm text-[color:var(--muted)]">
-                <p>1. Beginner-friendly guidance tailored to your comfort level</p>
-                <p>2. A nearby Sahaja Yoga center when it fits</p>
-                <p>3. Upcoming events and a gentle support handoff if you want help</p>
-              </div>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row">
                 <Link
                   href={`/start-your-journey?source=${encodeURIComponent(sourcePage)}`}
                   className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)]"

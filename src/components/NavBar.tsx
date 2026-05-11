@@ -213,7 +213,7 @@ const Navbar = () => {
                 </button>
 
                 {isMobileProfileOpen ? (
-                  <div className="absolute right-0 mt-3 w-[min(20rem,calc(100vw-2.5rem))] overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+                  <div className="absolute right-0 mt-3 w-[min(17rem,calc(100vw-1.25rem))] max-w-[calc(100vw-1.25rem)] overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
                     <div className="border-b border-[color:var(--border)] px-4 py-4">
                       <div className="flex items-center gap-3">
                         {profileImage ? (
