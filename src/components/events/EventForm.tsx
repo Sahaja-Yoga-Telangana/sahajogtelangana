@@ -5,10 +5,12 @@ import type { Dispatch, FormEvent, ReactNode, SetStateAction } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ImageUpload from './ImageUpload';
+import { EVENT_TYPES, EVENT_TYPE_LABELS, EventType, isEventType } from '@/lib/eventTypes';
 
 export type EventFormValues = {
   title: string;
   description: string;
+  eventType: EventType;
   date: Date;
   endDate: Date | null;
   time: string;
@@ -49,6 +51,14 @@ export default function EventForm({
   const [qrUploading, setQrUploading] = useState(false);
   const mediaUploading = imageUploading || qrUploading;
 
+  const handleEventTypeChange = (value: string) => {
+    if (!isEventType(value)) {
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, eventType: value }));
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -72,6 +82,21 @@ export default function EventForm({
               placeholder="A short, inviting summary of the event."
               required
             />
+          </Field>
+
+          <Field label="Event type">
+            <select
+              value={formData.eventType}
+              onChange={(e) => handleEventTypeChange(e.target.value)}
+              className="admin-input"
+              required
+            >
+              {EVENT_TYPES.map((eventType) => (
+                <option key={eventType} value={eventType}>
+                  {EVENT_TYPE_LABELS[eventType]}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <div className="grid gap-5 md:grid-cols-2">
@@ -192,12 +217,17 @@ export default function EventForm({
             onChange={(image) => setFormData((prev) => ({ ...prev, image }))}
             onUploadStateChange={setImageUploading}
           />
-          <ImageUpload
-            value={formData.qrImage}
-            onChange={(qrImage) => setFormData((prev) => ({ ...prev, qrImage }))}
-            label="Payment QR image"
-            onUploadStateChange={setQrUploading}
-          />
+          <div className="space-y-3">
+            <ImageUpload
+              value={formData.qrImage}
+              onChange={(qrImage) => setFormData((prev) => ({ ...prev, qrImage }))}
+              label="Payment QR image"
+              onUploadStateChange={setQrUploading}
+            />
+            <p className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm leading-6 text-[color:var(--muted)]">
+              If you do not upload a QR image, the Sahaja Yoga Telangana QR will be used by default.
+            </p>
+          </div>
         </div>
       </div>
 

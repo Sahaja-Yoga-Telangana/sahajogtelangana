@@ -1,4 +1,13 @@
 import mongoose, { Schema } from "mongoose";
+import { EVENT_TYPES } from "@/lib/eventTypes";
+
+const eventTypeField: any = {
+  type: Schema.Types.String,
+  enum: EVENT_TYPES,
+  required: [true, "Event type field is required."],
+  default: "public_program",
+  trim: true,
+};
 
 const eventSchema = new Schema({
   title: {
@@ -11,6 +20,7 @@ const eventSchema = new Schema({
     required: [true, "Description field is required."],
     trim: true,
   },
+  eventType: eventTypeField,
   date: {
     type: Schema.Types.Date,
     required: [true, "Date field is required."],
@@ -81,9 +91,8 @@ const eventSchema = new Schema({
 const existingEventModel = mongoose.models.Event as any;
 
 if (existingEventModel) {
-  // In Next.js dev, Mongoose can keep an older compiled schema in memory.
-  // Ensure newly added fields are present on the cached model too.
   existingEventModel.schema.add({
+    eventType: eventTypeField,
     endDate: { type: Schema.Types.Date, required: false },
     googleMapLink: { type: Schema.Types.String, required: false, trim: true },
     contactDetails: { type: Schema.Types.String, required: false, trim: true },
@@ -95,4 +104,4 @@ if (existingEventModel) {
   });
 }
 
-export const Event: any = existingEventModel || mongoose.model("Event", eventSchema); 
+export const Event: any = existingEventModel || mongoose.model("Event", eventSchema);

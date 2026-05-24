@@ -1,9 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
 import EventCard from '@/components/events/EventCard';
 import { AppEvent } from '@/lib/events';
 import EventSubscriptionForm from '@/components/EventSubscriptionForm';
@@ -11,22 +9,12 @@ import { useTranslations } from '@/app/provider/localeProvider';
 
 export default function EventsPage() {
   const { status } = useSession();
-  const router = useRouter();
   const t = useTranslations();
   const [events, setEvents] = useState<AppEvent[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      toast.error(t('events.login_required'));
-      setTimeout(() => {
-        router.push('/login');
-      }, 1500);
-    }
-  }, [status, router, t]);
-
-  useEffect(() => {
-    if (status !== 'authenticated') return;
+    if (status === 'loading') return;
 
     const fetchEvents = async () => {
       try {
@@ -45,16 +33,12 @@ export default function EventsPage() {
     fetchEvents();
   }, [status]);
 
-  if (status === 'loading' || (status === 'authenticated' && loadingEvents)) {
+  if (status === 'loading' || loadingEvents) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
         <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-[color:var(--primary)]" />
       </div>
     );
-  }
-
-  if (status === 'unauthenticated') {
-    return null;
   }
 
   return (

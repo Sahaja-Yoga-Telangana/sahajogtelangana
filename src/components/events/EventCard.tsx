@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight, FiCalendar, FiMapPin } from 'react-icons/fi';
 import { useLocale, useTranslations } from '@/app/provider/localeProvider';
-import { AppEvent, getEventDateLabel, getEventExcerpt } from '@/lib/events';
+import { AppEvent, getEventDateLabel, getEventExcerpt, getEventTypeLabel } from '@/lib/events';
 
 export default function EventCard({
   event,
@@ -23,6 +23,7 @@ export default function EventCard({
     (event.priceBelow12 ?? 1000) === 0 &&
     (event.price12To24 ?? 1800) === 0 &&
     (event.price25AndAbove ?? 2600) === 0;
+  const eventTypeLabel = getEventTypeLabel(event.eventType);
 
   return (
     <Link
@@ -46,16 +47,16 @@ export default function EventCard({
             </div>
           </div>
         )}
-        {/* {isFreeEntry ? (
-          <div className="absolute left-4 top-4 z-10 inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/96 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-            Free Entry
-          </div>
-        ) : null} */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[color:var(--surface)]/35 to-transparent" />
       </div>
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex flex-wrap items-center gap-3 text-sm text-[color:var(--muted)]">
+          {eventTypeLabel ? (
+            <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--primary)]">
+              {eventTypeLabel}
+            </span>
+          ) : null}
           <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--surface-2)] px-3 py-1.5">
             <FiCalendar className="h-4 w-4" aria-hidden="true" />
             <span className="numeric-font">{getEventDateLabel(event.date, event.endDate, locale)}</span>

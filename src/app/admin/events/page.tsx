@@ -9,6 +9,7 @@ import { AppEvent } from '@/lib/events';
 const initialFormData: EventFormValues = {
   title: '',
   description: '',
+  eventType: 'public_program',
   date: new Date(),
   endDate: null,
   time: '',
@@ -56,7 +57,7 @@ export default function AdminEvents() {
     setFormError(null);
     setSuccessMessage(null);
 
-    if (!formData.title || !formData.description || !formData.time || !formData.location) {
+    if (!formData.title || !formData.description || !formData.eventType || !formData.time || !formData.location) {
       setFormError('Please fill all required fields.');
       return;
     }
@@ -117,6 +118,7 @@ export default function AdminEvents() {
     setFormData({
       title: event.title,
       description: event.description,
+      eventType: event.eventType ?? 'public_program',
       date: new Date(event.date),
       endDate: event.endDate ? new Date(event.endDate) : null,
       time: event.time,

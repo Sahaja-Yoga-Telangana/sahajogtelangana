@@ -1,10 +1,12 @@
 import { format, isSameDay } from 'date-fns';
 import { Locale } from '@/lib/i18n';
+import { EVENT_TYPE_LABELS, EventType } from '@/lib/eventTypes';
 
 export type AppEvent = {
   _id: string;
   title: string;
   description: string;
+  eventType: EventType;
   date: string | Date;
   endDate?: string | Date | null;
   time: string;
@@ -77,4 +79,12 @@ export function normalizeEventPayload<T extends { date: string | Date; endDate?:
   }
 
   return normalized;
+}
+
+export function getEventTypeLabel(eventType?: EventType | null) {
+  if (!eventType) {
+    return undefined;
+  }
+
+  return EVENT_TYPE_LABELS[eventType];
 }

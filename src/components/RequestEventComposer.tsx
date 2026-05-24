@@ -6,6 +6,7 @@ import EventForm, { EventFormValues } from '@/components/events/EventForm';
 const initialFormData: EventFormValues = {
   title: '',
   description: '',
+  eventType: 'public_program',
   date: new Date(),
   endDate: null,
   time: '',
@@ -51,6 +52,7 @@ export default function RequestEventComposer({
         body: JSON.stringify({
           eventName: formData.title,
           description: formData.description,
+          eventType: formData.eventType,
           proposedStartDate: formData.date.toISOString(),
           proposedEndDate: formData.endDate ? formData.endDate.toISOString() : null,
           time: formData.time,
