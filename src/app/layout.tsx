@@ -7,7 +7,7 @@ import Navbar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import { Toaster } from 'react-hot-toast'
 import { defaultMetadata } from '@/lib/seo'
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 import ClientExitIntentNote from '@/components/ClientExitIntentNote'
 import { getRequestLocale } from '@/lib/serverLocale'
 

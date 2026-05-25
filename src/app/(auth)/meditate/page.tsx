@@ -78,6 +78,8 @@ const heroButtonVariants = {
   tertiary: `${heroButtonBase} border border-[color:var(--focus)] bg-[color:var(--surface-2)]/72 text-[color:var(--ink)] hover:-translate-y-0.5 hover:bg-[color:var(--surface)]/92 hover:shadow-soft`,
 };
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = pageMetadata({
   title: 'Simple Daily Sahaja Yoga Meditation',
   description: 'A beginner-friendly 10-minute Sahaja Yoga meditation routine with daily steps, balancing techniques, and guided online resources.',

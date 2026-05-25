@@ -6,8 +6,10 @@ import Link from 'next/link';
 import Slider from 'react-slick';
 import { FiArrowRight, FiCalendar, FiClock, FiMapPin } from 'react-icons/fi';
 import { AppEvent, getEventDateLabel, getEventExcerpt } from '@/lib/events';
+import { useTranslations } from '@/app/provider/localeProvider';
 
 export default function EventBanner({ initialEvents = [] }: { initialEvents?: AppEvent[] }) {
+  const t = useTranslations();
   const [events, setEvents] = useState<AppEvent[]>(initialEvents);
   const [loading, setLoading] = useState(initialEvents.length === 0);
 
@@ -61,8 +63,8 @@ export default function EventBanner({ initialEvents = [] }: { initialEvents?: Ap
     return (
       <div id="events" className="bg-[color:var(--surface-2)] py-10">
         <div className="mx-auto max-w-6xl px-6 text-center">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Upcoming events</h2>
-          <p className="mt-2 text-[color:var(--muted)]">Stay tuned for new meditation programs and collective sessions.</p>
+          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{t('event_banner.upcoming_events')}</h2>
+          <p className="mt-2 text-[color:var(--muted)]">{t('event_banner.no_events_desc')}</p>
         </div>
       </div>
     );
@@ -72,11 +74,11 @@ export default function EventBanner({ initialEvents = [] }: { initialEvents?: Ap
     <section id="events" className="bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_92%,transparent),_color-mix(in_srgb,var(--bg)_92%,transparent))] py-12">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-8 flex flex-col gap-3 text-center md:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Sahaja Yoga Telangana</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('event_banner.eyebrow')}</p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <h2 className="text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-4xl">Upcoming events</h2>
+            <h2 className="text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-4xl">{t('event_banner.upcoming_events')}</h2>
             <p className="max-w-2xl text-sm leading-7 text-[color:var(--muted)] md:text-base">
-              Join collective meditations, musical events, and public programs presented with a cleaner, more visual event experience.
+              {t('event_banner.desc')}
             </p>
           </div>
         </div>
@@ -94,6 +96,7 @@ export default function EventBanner({ initialEvents = [] }: { initialEvents?: Ap
 }
 
 function HomeEventCard({ event }: { event: AppEvent }) {
+  const t = useTranslations();
   const hasRemoteImage = !!event.image && /^https?:\/\//.test(event.image);
   const isFreeEntry =
     (event.priceBelow12 ?? 1000) === 0 &&
@@ -119,7 +122,7 @@ function HomeEventCard({ event }: { event: AppEvent }) {
           ) : (
             <div className="flex h-full items-center justify-center p-8">
               <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/84 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
-                Sahaja Yoga Event
+                {t('event_banner.default_badge')}
               </div>
             </div>
           )}
@@ -157,7 +160,7 @@ function HomeEventCard({ event }: { event: AppEvent }) {
 
           <div className="mt-8 flex items-center justify-between">
             <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
-              Register Now
+              {t('event_banner.register_now')}
             </span>
             <FiArrowRight className="h-5 w-5 text-[color:var(--primary)] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
           </div>
