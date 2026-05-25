@@ -116,13 +116,15 @@ export default function SignInOne({ error }: { error?: string }) {
             <div>
               <h2 className="text-2xl sm:text-3xl font-semibold text-[color:var(--ink)]">Login</h2>
             </div>
-            <form action="#" method="POST" className="space-y-5">
+            <form onSubmit={(e) => { e.preventDefault(); submitForm(); }} className="space-y-5">
               {/* Email Input */}
               <div>
                 <label className="text-base font-medium text-[color:var(--muted)]">Email address</label>
                 <input
                   type="email"
                   placeholder="Email"
+                  autoComplete="username"
+                  value={authData.email}
                   className="mt-2 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:ring-2 focus:ring-[color:var(--focus)] focus:outline-none"
                   onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
                 />
@@ -135,6 +137,8 @@ export default function SignInOne({ error }: { error?: string }) {
                 <input
                   type="password"
                   placeholder="Password"
+                  autoComplete="current-password"
+                  value={authData.password}
                   className="mt-2 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:ring-2 focus:ring-[color:var(--focus)] focus:outline-none"
                   onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
                 />
@@ -147,8 +151,7 @@ export default function SignInOne({ error }: { error?: string }) {
               {/* Submit Button */}
               <div>
                 <button
-                  type="button"
-                  onClick={submitForm}
+                  type="submit"
                   className={`w-full rounded-full px-4 py-2 text-white font-semibold transition ${
                     loading ? "bg-[color:var(--border)]" : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
                   }`}

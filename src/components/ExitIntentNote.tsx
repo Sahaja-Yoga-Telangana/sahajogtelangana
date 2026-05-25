@@ -58,16 +58,6 @@ export default function ExitIntentNote() {
       suppressForNavigation();
     };
 
-    const onMouseOut = (e: MouseEvent) => {
-      if (!armed || open || success) return;
-      if (Date.now() < suppressUntil) return;
-      if (e.relatedTarget !== null) return;
-      if (e.clientY <= 0 && e.clientX >= 0 && e.clientX <= window.innerWidth) {
-        setOpen(true);
-        sessionStorage.setItem(EXIT_INTENT_KEY, '1');
-      }
-    };
-
     const onPopState = () => {
       if (!armed || open || success) return;
       if (Date.now() < suppressUntil) return;
@@ -77,14 +67,12 @@ export default function ExitIntentNote() {
 
     document.addEventListener('pointerdown', onPointerDown, true);
     document.addEventListener('submit', onSubmitCapture, true);
-    window.addEventListener('mouseout', onMouseOut);
     window.addEventListener('popstate', onPopState);
 
     return () => {
       window.clearTimeout(timer);
       document.removeEventListener('pointerdown', onPointerDown, true);
       document.removeEventListener('submit', onSubmitCapture, true);
-      window.removeEventListener('mouseout', onMouseOut);
       window.removeEventListener('popstate', onPopState);
     };
   }, [armed, open, success, canUseSessionStorage]);

@@ -126,11 +126,11 @@ export const FOOTER_CONTACT_INFO = {
 
 export const JOURNEY_WHATSAPP_BOT_NUMBER = '917989128851';
   
-  export const SOCIALS = {
-    title: 'Social',
-    links: [
-      '/facebook.svg',
-      '/instagram.svg',
-      '/youtube.svg',
-    ],
-  };
+export const SOCIALS = {
+  title: 'Social',
+  links: [
+    { platform: 'facebook', url: 'https://www.facebook.com/sahajayogatelangana/' },
+    { platform: 'instagram', url: 'https://www.instagram.com/sahajayogatelangana/' },
+    { platform: 'youtube', url: 'https://www.youtube.com/c/SahajaYogaTelangana' },
+  ],
+};

@@ -6,8 +6,22 @@ import Link from 'next/link'
 import React from 'react'
 import { useTranslations } from '@/app/provider/localeProvider';
 import { messages } from '@/lib/i18n';
+import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
 
 type MessageKey = keyof typeof messages.en;
+
+const getSocialIcon = (platform: string) => {
+  switch (platform) {
+    case 'facebook':
+      return <FaFacebookF className="h-5 w-5" />;
+    case 'instagram':
+      return <FaInstagram className="h-5 w-5" />;
+    case 'youtube':
+      return <FaYoutube className="h-5 w-5" />;
+    default:
+      return null;
+  }
+};
 
 const Footer = () => {
   const t = useTranslations();
@@ -27,11 +41,18 @@ const Footer = () => {
             </p>
             <div className="mt-6">
               <h4 className="text-[color:var(--ink)] font-semibold mb-3">{t('footer.connect')}</h4>
-              <ul className="flex gap-4">
+              <ul className="flex gap-3">
                 {SOCIALS.links.map((link, index) => (
-                  <Link href="/" key={index} className="text-[color:var(--muted)] hover:text-[color:var(--ink)] transition-colors">
-                    <Image src={link} alt="social" width={24} height={24} />
-                  </Link>
+                  <a
+                    href={link.url}
+                    key={index}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[color:var(--muted)] hover:text-[color:var(--primary)] border border-[color:var(--border)] hover:bg-[color:var(--surface-2)] p-2 rounded-full transition-colors flex items-center justify-center"
+                    aria-label={link.platform}
+                  >
+                    {getSocialIcon(link.platform)}
+                  </a>
                 ))}
               </ul>
             </div>
