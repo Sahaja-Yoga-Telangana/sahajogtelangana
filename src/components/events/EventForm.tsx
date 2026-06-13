@@ -50,13 +50,25 @@ export default function EventForm({
   const [imageUploading, setImageUploading] = useState(false);
   const [qrUploading, setQrUploading] = useState(false);
   const mediaUploading = imageUploading || qrUploading;
+  const isPublicProgram = formData.eventType === 'public_program';
 
   const handleEventTypeChange = (value: string) => {
     if (!isEventType(value)) {
       return;
     }
 
-    setFormData((prev) => ({ ...prev, eventType: value }));
+    setFormData((prev) => ({
+      ...prev,
+      eventType: value,
+      ...(value === 'public_program'
+        ? {
+            priceBelow12: 0,
+            price12To24: 0,
+            price25AndAbove: 0,
+            qrImage: '',
+          }
+        : {}),
+    }));
   };
 
   return (
@@ -167,48 +179,50 @@ export default function EventForm({
             </Field>
           </div>
 
-          <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
-            <div className="mb-4">
-              <h3 className="text-base font-semibold text-[color:var(--ink)]">{pricingTitle}</h3>
-              <p className="mt-1 text-sm text-[color:var(--muted)]">
-                {pricingDescription}
-                <br />
-                <b>{pricingEmphasis}</b>
-              </p>
+          {!isPublicProgram ? (
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
+              <div className="mb-4">
+                <h3 className="text-base font-semibold text-[color:var(--ink)]">{pricingTitle}</h3>
+                <p className="mt-1 text-sm text-[color:var(--muted)]">
+                  {pricingDescription}
+                  <br />
+                  <b>{pricingEmphasis}</b>
+                </p>
+              </div>
+              <div className="grid gap-5 md:grid-cols-3">
+                <Field label="Below 12 years">
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.priceBelow12}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, priceBelow12: Number(e.target.value) }))}
+                    className="admin-input"
+                    required={pricingRequired}
+                  />
+                </Field>
+                <Field label="12 to 24 years">
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.price12To24}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, price12To24: Number(e.target.value) }))}
+                    className="admin-input"
+                    required={pricingRequired}
+                  />
+                </Field>
+                <Field label="25 years and above">
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.price25AndAbove}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, price25AndAbove: Number(e.target.value) }))}
+                    className="admin-input"
+                    required={pricingRequired}
+                  />
+                </Field>
+              </div>
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
-              <Field label="Below 12 years">
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.priceBelow12}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, priceBelow12: Number(e.target.value) }))}
-                  className="admin-input"
-                  required={pricingRequired}
-                />
-              </Field>
-              <Field label="12 to 24 years">
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.price12To24}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, price12To24: Number(e.target.value) }))}
-                  className="admin-input"
-                  required={pricingRequired}
-                />
-              </Field>
-              <Field label="25 years and above">
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.price25AndAbove}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, price25AndAbove: Number(e.target.value) }))}
-                  className="admin-input"
-                  required={pricingRequired}
-                />
-              </Field>
-            </div>
-          </div>
+          ) : null}
         </div>
 
         <div className="space-y-6">
@@ -217,17 +231,19 @@ export default function EventForm({
             onChange={(image) => setFormData((prev) => ({ ...prev, image }))}
             onUploadStateChange={setImageUploading}
           />
-          <div className="space-y-3">
-            <ImageUpload
-              value={formData.qrImage}
-              onChange={(qrImage) => setFormData((prev) => ({ ...prev, qrImage }))}
-              label="Payment QR image"
-              onUploadStateChange={setQrUploading}
-            />
-            <p className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm leading-6 text-[color:var(--muted)]">
-              If you do not upload a QR image, the Sahaja Yoga Telangana QR will be used by default.
-            </p>
-          </div>
+          {!isPublicProgram ? (
+            <div className="space-y-3">
+              <ImageUpload
+                value={formData.qrImage}
+                onChange={(qrImage) => setFormData((prev) => ({ ...prev, qrImage }))}
+                label="Payment QR image"
+                onUploadStateChange={setQrUploading}
+              />
+              <p className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm leading-6 text-[color:var(--muted)]">
+                If you do not upload a QR image, the Sahaja Yoga Telangana QR will be used by default.
+              </p>
+            </div>
+          ) : null}
         </div>
       </div>
 

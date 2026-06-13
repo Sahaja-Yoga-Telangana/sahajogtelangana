@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import EventCard from '@/components/events/EventCard';
+import SeekerRegistrationDownloads from '@/components/events/SeekerRegistrationDownloads';
 import { AppEvent } from '@/lib/events';
 import EventSubscriptionForm from '@/components/EventSubscriptionForm';
 import { useTranslations } from '@/app/provider/localeProvider';
@@ -61,7 +62,12 @@ export default function EventsPage() {
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {events.map((event) => (
-              <EventCard key={event._id} event={event} />
+              <div key={event._id} className="flex h-full flex-col gap-3">
+                <EventCard event={event} />
+                <div className="flex flex-col gap-2 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-3 shadow-soft">
+                  <SeekerRegistrationDownloads event={event} />
+                </div>
+              </div>
             ))}
           </div>
         )}
