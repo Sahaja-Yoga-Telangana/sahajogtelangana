@@ -140,6 +140,9 @@ export default function SeekersPage() {
                   </p>
                   <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{seeker.phone}</p>
                   {seeker.email ? <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{seeker.email}</p> : null}
+                  <p className="mt-2 text-sm leading-6 text-[color:var(--muted)]">
+                    Assigned to: <span className="font-medium text-[color:var(--ink)]">{seeker.assignedVolunteer || 'Unassigned'}</span>
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -241,9 +244,9 @@ export default function SeekersPage() {
                 </Field>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-4 text-xs uppercase tracking-[0.16em] text-[color:var(--muted)]">
+              <div className="mt-5 flex flex-wrap gap-4 text-[11px] leading-5 text-[color:var(--muted)]">
                 <p>Added by: {seeker.addedBy}</p>
-                <p>Added on: {new Date(seeker.addedAt).toLocaleDateString()}</p>
+                <p>Added on: {new Date(seeker.addedAt).toLocaleDateString('en-IN')}</p>
                 {savingId === seeker._id ? <p>Saving...</p> : null}
               </div>
             </article>

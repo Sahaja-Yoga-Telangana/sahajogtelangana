@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import {
   MdDashboard,
   MdEventNote,
+  MdGroups,
   MdPersonAddAlt1,
   MdRateReview,
   MdVolunteerActivism,
@@ -34,6 +35,13 @@ const navItems: NavItem[] = [
     href: '/add-seeker',
     description: 'Capture seeker follow-up details for the collective.',
     icon: <MdPersonAddAlt1 size={20} />,
+  },
+  {
+    key: 'seeker-followups',
+    name: 'Seeker follow-up',
+    href: '/dashboard/seeker-followups',
+    description: 'Claim a small batch and update seeker follow-up notes.',
+    icon: <MdGroups size={20} />,
   },
   {
     key: 'event-registrations',
@@ -113,6 +121,10 @@ function getActiveKey(pathname: string, hash = '') {
 
   if (pathname === '/add-seeker') {
     return 'add-seeker';
+  }
+
+  if (pathname === '/dashboard/seeker-followups') {
+    return 'seeker-followups';
   }
 
   if (pathname === '/share-your-experience') {
@@ -209,6 +221,8 @@ function getNavLabel(t: ReturnType<typeof useTranslations>, key: string) {
       return t('dashboard.add_seeker');
     case 'event-registrations':
       return t('dashboard.event_registrations');
+    case 'seeker-followups':
+      return 'Seeker follow-up';
     case 'share-your-experience':
       return t('dashboard.share_experience');
     case 'volunteer':
@@ -224,6 +238,8 @@ function getNavDescription(t: ReturnType<typeof useTranslations>, key: string) {
       return t('dashboard.add_seeker_desc');
     case 'event-registrations':
       return t('dashboard.event_registrations_desc');
+    case 'seeker-followups':
+      return 'Claim a batch and record follow-up details.';
     case 'share-your-experience':
       return t('dashboard.share_experience_desc');
     case 'volunteer':

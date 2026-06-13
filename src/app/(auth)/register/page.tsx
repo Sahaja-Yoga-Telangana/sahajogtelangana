@@ -15,53 +15,87 @@ export default function SignUp() {
     password: "",
     name: "",
     password_confirmation: "",
-    dhanvantari: "", // New field for the Dhanvantari question
+    homePractice: "",
   });
 
   const [errors, setError] = useState<registerErrorType>({});
-  const [isDhanvantariCorrect, setIsDhanvantariCorrect] = useState(false);
+  const [isHomePracticeCorrect, setIsHomePracticeCorrect] = useState(false);
 
-  const normalizeDhanvantari = (value: string) =>
+  const normalizeHomePractice = (value: string) =>
     value
       .toLowerCase()
       .normalize("NFKD")
       .replace(/[^a-z]/g, "");
 
-  const checkDhanvantariAnswer = (answer: string) => {
-    const normalized = normalizeDhanvantari(answer);
+  const editDistance = (left: string, right: string) => {
+    const distances = Array.from({ length: left.length + 1 }, (_, index) => index);
 
-    const validSpellings = [
-      "dhanvantari",
-      "dhanwantari",
-      "dhanvantri",
-      "dhanwantri",
-      "dhanwanthari",
-      "dhanwanthri",
-      "dhanvanthari",
-      "dhanvanthri",
-      "dhanwantree",
-      "dhanvantree",
-      "dhanwantharee",
-      "dhanvantharee",
-      "dhanvathari",
-      "dhanvathri",
-      "dhawantari",
-      "dhawantri",
-      "dhawanthari",
-      "dhawanthri",
-      "danvantari",
-      "danwantri",
-      "dhanwantari",
-      "dhanwanthary",
-    ].map(normalizeDhanvantari);
+    for (let rightIndex = 1; rightIndex <= right.length; rightIndex += 1) {
+      let previous = distances[0];
+      distances[0] = rightIndex;
 
-    return validSpellings.some((spelling) => normalized.includes(spelling));
+      for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {
+        const current = distances[leftIndex];
+        const substitutionCost = left[leftIndex - 1] === right[rightIndex - 1] ? 0 : 1;
+
+        distances[leftIndex] = Math.min(
+          distances[leftIndex] + 1,
+          distances[leftIndex - 1] + 1,
+          previous + substitutionCost
+        );
+        previous = current;
+      }
+    }
+
+    return distances[left.length];
   };
 
-  const handleDhanvantariChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const isCloseAnswer = (answer: string, validAnswer: string) => {
+    if (answer.includes(validAnswer) || validAnswer.includes(answer)) {
+      return true;
+    }
+
+    const allowedDistance = validAnswer.length <= 8 ? 2 : 3;
+    return editDistance(answer, validAnswer) <= allowedDistance;
+  };
+
+  const checkHomePracticeAnswer = (answer: string) => {
+    const normalized = normalizeHomePractice(answer);
+
+    if (!normalized) {
+      return false;
+    }
+
+    const validAnswers = [
+      "bandhan",
+      "takebandhan",
+      "takeabandhan",
+      "givebandhan",
+      "giveabandhan",
+      "doabandhan",
+      "dobandhan",
+      "putbandhan",
+      "putabandhan",
+      "awakenkundalini",
+      "awakenyourkundalini",
+      "raisekundalini",
+      "raiseyourkundalini",
+      "liftkundalini",
+      "liftyourkundalini",
+    ].map(normalizeHomePractice);
+
+    const acceptedKeywords = ["bandhan", "kundalini"].map(normalizeHomePractice);
+
+    return (
+      validAnswers.some((validAnswer) => isCloseAnswer(normalized, validAnswer)) ||
+      acceptedKeywords.some((keyword) => isCloseAnswer(normalized, keyword))
+    );
+  };
+
+  const handleHomePracticeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const answer = e.target.value;
-    setUserState({ ...userState, dhanvantari: answer });
-    setIsDhanvantariCorrect(checkDhanvantariAnswer(answer));
+    setUserState({ ...userState, homePractice: answer });
+    setIsHomePracticeCorrect(checkHomePracticeAnswer(answer));
   };
 
   const submitForm = async () => {
@@ -242,23 +276,23 @@ export default function SignUp() {
 
                 <div>
                   <label
-                    htmlFor="dhanvantari"
+                    htmlFor="homePractice"
                     className="text-base font-medium text-[color:var(--muted)] mt-4"
                   >
-                    Which swaroop of Adishakti is referred to as the Doctor swaroop?
+                    What should we do before leaving home?
                   </label>
                   <div className="mt-2">
                     <input
                       className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-4 mb-4 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
                       type="text"
-                      placeholder="Enter the name of the swaroop"
-                      id="dhanvantari"
-                      onChange={handleDhanvantariChange}
-                      value={userState.dhanvantari}
+                      placeholder="Enter your answer"
+                      id="homePractice"
+                      onChange={handleHomePracticeChange}
+                      value={userState.homePractice}
                     />
-                    {!isDhanvantariCorrect && userState.dhanvantari && (
+                    {!isHomePracticeCorrect && userState.homePractice && (
                       <span className="text-red-500 font-bold">
-                        Please enter the correct swaroop name.
+                        Please enter the correct answer.
                       </span>
                     )}
                   </div>
@@ -268,12 +302,12 @@ export default function SignUp() {
                   <button
                     type="button"
                     className={`inline-flex w-full items-center justify-center rounded-full px-3.5 py-2.5 font-semibold leading-7 text-white ${
-                      loading || !isDhanvantariCorrect
+                      loading || !isHomePracticeCorrect
                         ? "bg-[color:var(--border)] cursor-not-allowed"
                         : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
                     }`}
                     onClick={submitForm}
-                    disabled={loading || !isDhanvantariCorrect}
+                    disabled={loading || !isHomePracticeCorrect}
                   >
                     {loading ? "Processing..." : "Create Account"}
                   </button>

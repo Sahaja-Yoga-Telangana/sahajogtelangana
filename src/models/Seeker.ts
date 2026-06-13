@@ -59,6 +59,15 @@ const seekerSchema = new Schema({
     trim: true,
     default: "",
   },
+  volunteerFollowUpCompletedAt: {
+    type: Date,
+    required: false,
+  },
+  volunteerFollowUpCompletedBy: {
+    type: String,
+    trim: true,
+    default: "",
+  },
   lastContactDate: {
     type: Date,
     required: false,
@@ -88,6 +97,7 @@ const seekerSchema = new Schema({
 seekerSchema.index({ addedAt: -1 });
 seekerSchema.index({ city: 1, followUpStatus: 1 });
 seekerSchema.index({ assignedVolunteer: 1, followUpStatus: 1 });
+seekerSchema.index({ assignedVolunteer: 1, volunteerFollowUpCompletedAt: 1 });
 
 const existingSeekerModel = mongoose.models.Seeker as any;
 
@@ -130,6 +140,15 @@ if (existingSeekerModel) {
       default: "New",
     },
     assignedVolunteer: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    volunteerFollowUpCompletedAt: {
+      type: Date,
+      required: false,
+    },
+    volunteerFollowUpCompletedBy: {
       type: String,
       trim: true,
       default: "",
