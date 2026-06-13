@@ -61,13 +61,12 @@ export default function SeekerRegistrationDownloads({
         Download seeker registration QR
       </a>
       <a
-        href={getSeekerRegistrationFormDownload(event)}
-        download={`${filePrefix}-seeker-registration-form.html`}
-        className={buttonClass}
-      >
-        <FiDownload className="h-3.5 w-3.5" aria-hidden="true" />
-        Download seeker registration form
-      </a>
+  href={`https://www.sahajayogatelangana.org/seeker-registration?event=${encodeURIComponent(event.title)}`}
+  className={buttonClass}
+>
+  
+  Register as a seeker
+</a>
     </>
   );
 }

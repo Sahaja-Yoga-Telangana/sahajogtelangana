@@ -213,7 +213,7 @@ export default function SeekerRegistrationPage() {
                 autoComplete="name"
               />
               <Field
-                label="Mobile number"
+                label="Whatsapp Number"
                 required
                 value={formData.phone}
                 onChange={(value) => updateField('phone', value)}
@@ -248,7 +248,7 @@ export default function SeekerRegistrationPage() {
                 value={formData.preferredLanguage}
                 onChange={(value) => updateField('preferredLanguage', value)}
                 error={errors.preferredLanguage}
-                placeholder="Odia, Hindi, English"
+                placeholder="Telugu, Hindi, English"
                 autoComplete="off"
               />
             </div>
@@ -262,7 +262,7 @@ export default function SeekerRegistrationPage() {
                   className="mt-1 h-4 w-4 rounded border-[color:var(--border)] text-[color:var(--primary)]"
                 />
                 <span className="text-sm leading-6 text-[color:var(--muted)]">
-                  I agree to be contacted by Sahaja Yoga Odisha volunteers for free meditation sessions and follow-up.
+                  I agree to be contacted by Sahaja Yoga Telangana volunteers for free meditation sessions and follow-up.
                 </span>
               </label>
               {errors.consent ? <p className="mt-2 text-sm text-red-600 dark:text-red-300">{errors.consent}</p> : null}
