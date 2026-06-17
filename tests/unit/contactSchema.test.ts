@@ -53,7 +53,7 @@ describe('Contact Schema Validation Unit Tests', () => {
     const invalidPayload = {
       name: 'John Doe',
       email: 'john@example.com',
-      phoneNumber: '123', // regex: ^\+?[\d\s]{10,15}$ (too short)
+      phoneNumber: '1234567890', // regex: ^\+?[\d\s]{10,15}$ (too short)
       message: 'Hello there!',
     };
 
