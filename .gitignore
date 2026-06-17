@@ -5,3 +5,7 @@ node_modules
 .DS_Store
 tsconfig.tsbuildinfo
 .vscode/
+.env
+test-results/
+playwright-report/
+blob-report/
