@@ -1,19 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/options";
 import { connect } from "@/database/mongo.config";
+import { getSessionFromRequest } from "@/lib/auth";
 import { EventSubscription } from "@/models/EventSubscription";
 
 export async function POST(request: NextRequest) {
   await connect();
-
-  const session = (await getServerSession(authOptions)) as CustomSession | null;
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { status: 401, message: "Please log in to subscribe for event updates." },
-      { status: 401 }
-    );
-  }
 
   try {
     const body = await request.json();
@@ -26,20 +17,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (email !== session.user.email.toLowerCase()) {
-      return NextResponse.json(
-        { status: 400, message: "Please use the email address of the logged in yogi." },
-        { status: 400 }
-      );
-    }
+    // Check session (cookie or mobile Bearer token)
+    const session = await getSessionFromRequest(request);
 
     const subscription = await EventSubscription.findOneAndUpdate(
       { email },
       {
         $set: {
           email,
-          name: session.user.name || "",
-          userId: session.user.id,
+          name: session?.name || body.name || "",
+          userId: session?.id || body.userId || undefined,
           isActive: true,
         },
       },
@@ -47,7 +34,7 @@ export async function POST(request: NextRequest) {
     );
 
     return NextResponse.json(
-      { status: 200, message: "You are subscribed for future event updates.", data: subscription },
+      { success: true, message: "You are subscribed for future event updates.", data: subscription },
       { status: 200 }
     );
   } catch (error) {

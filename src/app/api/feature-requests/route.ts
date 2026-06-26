@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
-import { getRequiredSession } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { User } from "@/models/User";
 import { FeatureRequest } from "@/models/FeatureRequest";
 import { sendEmail } from "@/config/mail";
@@ -8,8 +8,8 @@ import { sendEmail } from "@/config/mail";
 export async function POST(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
 
@@ -23,12 +23,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ status: 400, message: "Feature title and description are required." }, { status: 400 });
   }
 
-  const user = await User.findOne({ email: session.user.email }).lean() as any;
+  const user = await User.findOne({ email: session.email }).lean() as any;
 
   const featureRequest = await FeatureRequest.create({
     userId: user?._id,
-    name: session.user.name || user?.name || "Sahaja Yogi",
-    email: session.user.email,
+    name: session.name || user?.name || "Sahaja Yogi",
+    email: session.email,
     title,
     description,
     category,

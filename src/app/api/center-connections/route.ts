@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
 import { CenterConnection } from "@/models/CenterConnection";
-import { getRequiredSession } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { sendEmail } from "@/config/mail";
 import { Center } from "@/models/Center";
 import mongoose from "mongoose";
@@ -10,15 +10,15 @@ function toObjectId(value: string) {
   return new mongoose.Types.ObjectId(value);
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
 
-  const email = session.user.email.toLowerCase();
+  const email = session.email.toLowerCase();
   const connections = await CenterConnection.find({ userEmail: email, connectionType: "joined" }).lean();
   return NextResponse.json({
     status: 200,
@@ -36,15 +36,15 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
 
   const body = await request.json();
   const centerId = String(body.centerId || "").trim();
   const connectionType = "joined";
-  const email = session.user.email.toLowerCase();
+  const email = session.email.toLowerCase();
 
   if (!centerId || !mongoose.Types.ObjectId.isValid(centerId)) {
     return NextResponse.json({ status: 400, message: "Center is required." }, { status: 400 });
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     { userEmail: email, centerId: toObjectId(centerId), connectionType },
     {
       $setOnInsert: {
-        userId: session.user.id && mongoose.Types.ObjectId.isValid(session.user.id) ? toObjectId(session.user.id) : undefined,
+        userId: session.id && mongoose.Types.ObjectId.isValid(session.id) ? toObjectId(session.id) : undefined,
         userEmail: email,
         centerId: toObjectId(centerId),
         connectionType,
@@ -63,14 +63,14 @@ export async function POST(request: NextRequest) {
     { upsert: true, new: true }
   );
 
-  if (connectionType === "joined" && session.user.email) {
+  if (connectionType === "joined" && session.email) {
     const center = (await Center.findById(centerId).lean()) as any;
     if (center) {
       try {
         await sendEmail(
-          session.user.email,
+          session.email,
           `You joined updates for ${center.zone}`,
-          `<div style="font-family:Arial,sans-serif;line-height:1.6"><p>Namaste ${session.user.name || ""},</p><p>You will now receive email updates related to the <strong>${center.zone}</strong> center in ${center.city || "Hyderabad"}.</p><p>Weekly updates and announcements from the center team will come to this email.</p></div>`
+          `<div style="font-family:Arial,sans-serif;line-height:1.6"><p>Namaste ${session.name || ""},</p><p>You will now receive email updates related to the <strong>${center.zone}</strong> center in ${center.city || "Hyderabad"}.</p><p>Weekly updates and announcements from the center team will come to this email.</p></div>`
         );
       } catch (error) {
         console.error("Failed to send center follow confirmation email:", error);
