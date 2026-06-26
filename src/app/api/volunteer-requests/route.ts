@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
-import { getRequiredSession } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { VolunteerRequest } from "@/models/VolunteerRequest";
 
 export async function POST(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
 
@@ -21,12 +21,12 @@ export async function POST(request: NextRequest) {
   }
 
   const volunteerRequest = await VolunteerRequest.findOneAndUpdate(
-    { email: session.user.email.toLowerCase(), status: "Pending" },
+    { email: session.email.toLowerCase(), status: "Pending" },
     {
       $set: {
-        userId: session.user.id,
-        name: session.user.name || "Sahaja Yogi",
-        email: session.user.email.toLowerCase(),
+        userId: session.id,
+        name: session.name || "Sahaja Yogi",
+        email: session.email.toLowerCase(),
         phone: String(body.phone).trim(),
         city: String(body.city).trim(),
         interests,

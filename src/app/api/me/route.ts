@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
-import { exactEmailMatch, getRequiredSession, normalizeEmail } from "@/lib/auth";
+import { exactEmailMatch, getSessionFromRequest, normalizeEmail } from "@/lib/auth";
 import { User } from "@/models/User";
 import { EventRegistration } from "@/models/EventRegistration";
 import { Event } from "@/models/Event";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
-  const normalizedEmail = normalizeEmail(session.user.email);
+  const normalizedEmail = normalizeEmail(session.email);
 
   const user = (await User.findOne({ email: exactEmailMatch(normalizedEmail) }).lean()) as any;
   if (!user) {
@@ -40,11 +40,11 @@ export async function GET() {
 export async function PATCH(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
-  const normalizedEmail = normalizeEmail(session.user.email);
+  const normalizedEmail = normalizeEmail(session.email);
 
   const body = await request.json();
   const name = String(body.name || "").trim();

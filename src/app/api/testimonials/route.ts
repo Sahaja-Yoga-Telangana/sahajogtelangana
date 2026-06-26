@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/options";
 import { connect } from "@/database/mongo.config";
-import { normalizeEmail } from "@/lib/auth";
+import { getSessionFromRequest, normalizeEmail } from "@/lib/auth";
 import { Testimonial } from "@/models/Testimonial";
 
 export async function POST(request: NextRequest) {
   await connect();
 
-  const session = (await getServerSession(authOptions)) as CustomSession | null;
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json(
       { status: 401, message: "Please log in to share your experience." },
       { status: 401 }
@@ -30,9 +28,9 @@ export async function POST(request: NextRequest) {
     }
 
     const testimonial = await Testimonial.create({
-      userId: session.user.id,
-      name: session.user.name || "Sahaja Yogi",
-      email: normalizeEmail(session.user.email),
+      userId: session.id,
+      name: session.name || "Sahaja Yogi",
+      email: normalizeEmail(session.email),
       city,
       yearsInSahajaYoga,
       experience,
