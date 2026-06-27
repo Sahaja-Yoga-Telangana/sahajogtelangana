@@ -84,15 +84,15 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   await connect();
 
-  const session = await getRequiredSession();
-  if (!session?.user?.email) {
+  const session = await getSessionFromRequest(request);
+  if (!session?.email) {
     return NextResponse.json({ status: 401, message: "Please log in first." }, { status: 401 });
   }
 
   const { searchParams } = request.nextUrl;
   const centerId = searchParams.get("centerId");
   const connectionType = "joined";
-  const email = session.user.email.toLowerCase();
+  const email = session.email.toLowerCase();
 
   if (!centerId || !mongoose.Types.ObjectId.isValid(centerId)) {
     return NextResponse.json({ status: 400, message: "Center is required." }, { status: 400 });
