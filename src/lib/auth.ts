@@ -73,7 +73,7 @@ export async function getSessionFromRequest(request: Request): Promise<{ id: str
     return {
       id: session.user.id,
       email: session.user.email,
-      name: session.user.name,
+      name: session.user.name || undefined,
       role: session.user.role || "User",
     };
   }
