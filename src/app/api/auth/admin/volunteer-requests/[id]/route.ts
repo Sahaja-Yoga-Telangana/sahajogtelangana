@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
 import { requireAdminSession } from "@/lib/auth";
+import { User } from "@/models/User";
 import { VolunteerRequest } from "@/models/VolunteerRequest";
 import { VolunteerProfile } from "@/models/VolunteerProfile";
 
@@ -39,6 +40,10 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
         },
       },
       { upsert: true, new: true }
+    );
+    await User.findOneAndUpdate(
+      { email: requestRecord.email.toLowerCase() },
+      { $set: { role: "Volunteer" } }
     );
     requestRecord.status = "Approved";
     await requestRecord.save();

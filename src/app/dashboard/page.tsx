@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { FiCamera, FiFileText, FiPlus, FiEdit3, FiX } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 import { hasFeatureAccess } from '@/lib/roles';
 
@@ -176,7 +177,7 @@ export default function DashboardPage() {
                 <input className="admin-input" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} required />
               </Field>
               <Field label={t('dashboard.city')}>
-                <input className="admin-input" value={form.city} onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))} />
+                <CityPicker value={form.city} onChange={(v) => setForm((prev) => ({ ...prev, city: v }))} className="admin-input" />
               </Field>
               <Field label={t('dashboard.email')}>
                 <input className="admin-input opacity-70" value={data.profile.email} readOnly />

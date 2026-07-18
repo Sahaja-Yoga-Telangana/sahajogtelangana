@@ -1,15 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
+import { FiCopy, FiCheck, FiLink, FiUserPlus, FiRefreshCw } from 'react-icons/fi';
 
 const interestOptions = ['Follow-up', 'Events', 'Center support', 'Music', 'Public programs', 'Digital seva'];
 
+type InviteRecord = {
+  _id: string;
+  token: string;
+  status: string;
+  usedByEmail: string | null;
+  usedAt: string | null;
+  createdAt: string;
+};
+
 export default function VolunteerRequestPage() {
-  const { status } = useSession();
+  const { data: session, status: authStatus } = useSession();
   const router = useRouter();
   const t = useTranslations();
   const [form, setForm] = useState({
@@ -23,15 +34,36 @@ export default function VolunteerRequestPage() {
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const [inviteLink, setInviteLink] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [invites, setInvites] = useState<InviteRecord[]>([]);
+  const [invitesLoading, setInvitesLoading] = useState(false);
+
+  const userRole = ((session?.user as any)?.role || '').toLowerCase();
+  const isVolunteerOrAdmin = userRole === 'volunteer' || userRole === 'admin';
+
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (authStatus === 'unauthenticated') {
       router.push('/login');
     }
-  }, [router, status]);
+  }, [router, authStatus]);
 
-  if (status === 'unauthenticated') {
-    return null;
-  }
+  const fetchInvites = useCallback(async () => {
+    setInvitesLoading(true);
+    try {
+      const res = await fetch('/api/volunteer-invites');
+      const data = await res.json();
+      if (res.ok) setInvites(data.invites || []);
+    } catch { /* ignore */ }
+    setInvitesLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (isVolunteerOrAdmin) fetchInvites();
+  }, [isVolunteerOrAdmin, fetchInvites]);
+
+  if (authStatus === 'unauthenticated') return null;
 
   const toggleInterest = (interest: string) => {
     setForm((prev) => ({
@@ -54,13 +86,7 @@ export default function VolunteerRequestPage() {
       const data = await response.json();
       if (response.ok) {
         setSubmitted(true);
-        setForm({
-          phone: '',
-          city: '',
-          interests: [],
-          availability: '',
-          experience: '',
-        });
+        setForm({ phone: '', city: '', interests: [], availability: '', experience: '' });
         setMessage('');
       } else {
         setMessage(data.message || 'Volunteer request failed.');
@@ -73,10 +99,117 @@ export default function VolunteerRequestPage() {
     }
   };
 
+  const handleGenerate = async () => {
+    setGenerating(true);
+    setInviteLink('');
+    setCopied(false);
+    try {
+      const res = await fetch('/api/volunteer-invites', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        setInviteLink(data.inviteLink);
+        fetchInvites();
+      } else {
+        setMessage(data.error || 'Failed to generate link.');
+      }
+    } catch {
+      setMessage('Network error.');
+    }
+    setGenerating(false);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch { /* fallback */ }
+  };
+
   return (
     <YogiDashboardShell activeKey="volunteer">
       <div className="py-4 md:py-8">
-        <div className="mx-auto max-w-3xl px-4">
+        <div className="mx-auto max-w-3xl px-4 space-y-6">
+
+          {/* ---- Refer a Friend (Volunteers only) ---- */}
+          {isVolunteerOrAdmin && (
+            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--primary)]/10">
+                  <FiUserPlus className="h-5 w-5 text-[color:var(--primary)]" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Refer a Friend</p>
+                  <h2 className="text-xl font-semibold text-[color:var(--ink)]">Invite someone to volunteer</h2>
+                </div>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
+                Generate a one-time link to share on WhatsApp or elsewhere. When your friend (who is already a registered user) clicks it, they become a volunteer instantly. The link expires after one use.
+              </p>
+
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60"
+              >
+                {generating ? (
+                  <FiRefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <FiLink className="h-4 w-4" />
+                )}
+                {generating ? 'Generating...' : 'Generate Invite Link'}
+              </button>
+
+              {inviteLink && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-4 py-3">
+                  <input
+                    readOnly
+                    value={inviteLink}
+                    className="flex-1 bg-transparent text-sm text-[color:var(--ink)] outline-none"
+                  />
+                  <button
+                    onClick={handleCopy}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1.5 text-xs font-medium text-[color:var(--ink)] transition hover:bg-[color:var(--surface-2)]"
+                  >
+                    {copied ? (
+                      <><FiCheck className="h-3.5 w-3.5 text-emerald-500" /> Copied</>
+                    ) : (
+                      <><FiCopy className="h-3.5 w-3.5" /> Copy</>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {invites.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">Invite History</p>
+                  <div className="mt-3 space-y-2">
+                    {invites.map((inv) => (
+                      <div
+                        key={inv._id}
+                        className="flex items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/60 px-4 py-2.5"
+                      >
+                        <div>
+                          <span className={`inline-block h-2 w-2 rounded-full mr-2 ${
+                            inv.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-400'
+                          }`} />
+                          <span className="text-sm text-[color:var(--ink)]">
+                            {inv.status === 'active' ? 'Active' : `Used by ${inv.usedByEmail || '—'}`}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-[color:var(--muted)]">
+                          {new Date(inv.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {invitesLoading && <p className="mt-2 text-xs text-[color:var(--muted)]">Loading...</p>}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ---- Volunteer Interest Form ---- */}
           <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
             {submitted ? (
               <div className="text-center py-8 animate-fadeIn">
@@ -101,10 +234,16 @@ export default function VolunteerRequestPage() {
               </div>
             ) : (
               <>
-                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('volunteer.eyebrow')}</p>
-                <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)]">{t('volunteer.title')}</h1>
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">
+                  {isVolunteerOrAdmin ? 'Volunteer Details' : t('volunteer.eyebrow')}
+                </p>
+                <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)]">
+                  {isVolunteerOrAdmin ? 'Your volunteer profile' : t('volunteer.title')}
+                </h1>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-                  {t('volunteer.body')}
+                  {isVolunteerOrAdmin
+                    ? 'Update your availability, interests, and experience so the team knows how to reach you.'
+                    : t('volunteer.body')}
                 </p>
 
                 <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -113,7 +252,7 @@ export default function VolunteerRequestPage() {
                       <input className="admin-input" value={form.phone} onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))} required />
                     </Field>
                     <Field label={t('volunteer.city')}>
-                      <input className="admin-input" value={form.city} onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))} required />
+                      <CityPicker value={form.city} onChange={(v) => setForm((prev) => ({ ...prev, city: v }))} required className="admin-input" />
                     </Field>
                   </div>
 
@@ -141,7 +280,7 @@ export default function VolunteerRequestPage() {
                   </Field>
 
                   <button type="submit" disabled={saving} className="admin-btn-primary w-full disabled:opacity-60">
-                    {saving ? t('add_seeker.submitting') : t('volunteer.submit')}
+                    {saving ? t('add_seeker.submitting') : (isVolunteerOrAdmin ? 'Update Profile' : t('volunteer.submit'))}
                   </button>
                 </form>
 
@@ -149,6 +288,7 @@ export default function VolunteerRequestPage() {
               </>
             )}
           </div>
+
         </div>
       </div>
     </YogiDashboardShell>

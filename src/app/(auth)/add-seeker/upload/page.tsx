@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { FiUploadCloud, FiEdit3, FiTrash2, FiPlus, FiCheck, FiAlertCircle, FiFileText } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import CityPicker from '@/components/CityPicker';
 
 type SeekerEntry = {
   id: string;
@@ -308,7 +309,10 @@ export default function UploadSeekersPage() {
                           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             <EditField label="Name" value={editForm.name} onChange={(v) => setEditForm((p) => ({ ...p, name: v }))} />
                             <EditField label="Phone" value={editForm.phone} onChange={(v) => setEditForm((p) => ({ ...p, phone: v }))} />
-                            <EditField label="City" value={editForm.city} onChange={(v) => setEditForm((p) => ({ ...p, city: v }))} />
+                            <div>
+                              <label className="mb-1.5 block text-xs font-medium text-[color:var(--muted)]">City</label>
+                              <CityPicker value={editForm.city} onChange={(v) => setEditForm((p) => ({ ...p, city: v }))} className="admin-input text-sm" />
+                            </div>
                             <EditField label="Email" value={editForm.email} onChange={(v) => setEditForm((p) => ({ ...p, email: v }))} />
                             <EditField label="Language" value={editForm.preferredLanguage} onChange={(v) => setEditForm((p) => ({ ...p, preferredLanguage: v }))} />
                             <EditField label="Notes" value={editForm.notes} onChange={(v) => setEditForm((p) => ({ ...p, notes: v }))} />

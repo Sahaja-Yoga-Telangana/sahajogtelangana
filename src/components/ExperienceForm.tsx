@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import CityPicker from '@/components/CityPicker';
 
 export default function ExperienceForm({
   defaultName,
@@ -52,9 +53,9 @@ export default function ExperienceForm({
 
       <div className="mt-5 grid gap-5 md:grid-cols-2">
         <Field label="City or center (optional)">
-          <input
+          <CityPicker
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={setCity}
             className="admin-input"
             placeholder="Hyderabad, Secunderabad, Warangal..."
           />

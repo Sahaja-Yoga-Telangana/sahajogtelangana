@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { FiCheckCircle, FiHeart, FiMapPin, FiPhone, FiSend, FiUser } from 'react-icons/fi';
+import CityPicker from '@/components/CityPicker';
 
 type FieldName =
   | 'name'
@@ -213,15 +214,18 @@ export default function SeekerRegistrationPage() {
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
-              <Field
-                label="City"
-                required
-                value={formData.city}
-                onChange={(value) => updateField('city', value)}
-                error={errors.city}
-                placeholder="Bhubaneswar"
-                autoComplete="address-level2"
-              />
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[color:var(--ink)]" htmlFor="city">
+                  City<span className="text-red-600"> *</span>
+                </label>
+                <CityPicker
+                  id="city"
+                  value={formData.city}
+                  onChange={(value) => updateField('city', value)}
+                  error={errors.city}
+                  placeholder="Bhubaneswar"
+                />
+              </div>
               <Field
                 label="Email"
                 value={formData.email}
