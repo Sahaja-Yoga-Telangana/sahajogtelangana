@@ -131,7 +131,7 @@ export default function VolunteerRequestPage() {
       <div className="py-4 md:py-8">
         <div className="mx-auto max-w-3xl px-4 space-y-6">
 
-          {/* ---- Refer a Friend (Volunteers only) ---- */}
+          {/* ---- Refer a Yogi (Volunteers only) ---- */}
           {isVolunteerOrAdmin && (
             <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
               <div className="flex items-center gap-3 mb-1">
@@ -139,7 +139,7 @@ export default function VolunteerRequestPage() {
                   <FiUserPlus className="h-5 w-5 text-[color:var(--primary)]" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Refer a Friend</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Refer a Yogi</p>
                   <h2 className="text-xl font-semibold text-[color:var(--ink)]">Invite someone to volunteer</h2>
                 </div>
               </div>
