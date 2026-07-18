@@ -1,12 +1,13 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { CustomUser } from "./app/api/auth/[...nextauth]/options";
+import { hasFeatureAccess } from "@/lib/roles";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow access to /login without authentication
-  if (pathname === "/login") {
+  const publicPaths = ["/login", "/volunteer", "/seeker-registration", "/contact-us"];
+  if (publicPaths.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -22,9 +23,7 @@ export async function middleware(request: NextRequest) {
         )
       );
     }
-    // Get user from token
     const user: CustomUser | null = token?.user as CustomUser;
-    // If user is not an Admin, redirect to login
     if (user.role !== "Admin") {
       return NextResponse.redirect(
         new URL(
@@ -35,10 +34,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // * Protected routes for user
-  const userProtectedRoutes = [""];
-  // Check for user protected routes
-  if (userProtectedRoutes.includes(pathname)) {
+  // Protect Yogi/Volunteer routes
+  const featureRoutes = ["/add-seeker", "/dashboard"];
+  const isFeatureRoute = featureRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
+
+  if (isFeatureRoute) {
     if (!token) {
       return NextResponse.redirect(
         new URL(
@@ -47,13 +49,11 @@ export async function middleware(request: NextRequest) {
         )
       );
     }
-    // Get user from token
     const user: CustomUser | null = token?.user as CustomUser;
-    // If Admin tries to access user routes
-    if (user.role === "Admin") {
+    if (!hasFeatureAccess(user.role)) {
       return NextResponse.redirect(
         new URL(
-          "/login?error=Please login as a user to access this route.",
+          "/login?error=You need Yogi or Volunteer access to view this page.",
           request.url
         )
       );

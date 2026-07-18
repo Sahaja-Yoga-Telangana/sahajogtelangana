@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { FiCheckCircle, FiHeart, FiMapPin, FiPhone, FiSend, FiUser } from 'react-icons/fi';
 
 type FieldName =
@@ -28,7 +28,7 @@ const initialForm: FormData = {
   website: '',
 };
 
-const requiredFields: FieldName[] = ['name', 'phone', 'city', 'consent'];
+
 
 export default function SeekerRegistrationPage() {
   const [formData, setFormData] = useState<FormData>(initialForm);
@@ -45,14 +45,7 @@ export default function SeekerRegistrationPage() {
     }
   }, []);
 
-  const completionLabel = useMemo(() => {
-    const completed = requiredFields.filter((field) => {
-      if (field === 'consent') return formData.consent;
-      return formData[field].trim();
-    }).length;
 
-    return `${completed}/${requiredFields.length} required details`;
-  }, [formData]);
 
   const updateField = (field: keyof FormData, value: string | boolean) => {
     setFormData((current) => ({ ...current, [field]: value }));
@@ -136,7 +129,7 @@ export default function SeekerRegistrationPage() {
   return (
     <div className="min-h-screen bg-[color:var(--bg)]">
       <section className="mx-auto grid max-w-6xl gap-8 px-5 py-10 md:px-8 md:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <aside className="lg:sticky lg:top-28">
+        <aside className="lg:sticky lg:top-28 order-2 lg:order-none">
           <div className="rounded-[8px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft md:p-8">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-[color:var(--primary)] text-white">
               <FiHeart className="h-5 w-5" aria-hidden="true" />
@@ -164,16 +157,11 @@ export default function SeekerRegistrationPage() {
               <InfoRow icon={<FiMapPin />} label="City helps us suggest the nearest center" />
             </div>
 
-            <div className="mt-7 rounded-[8px] border border-[color:var(--border)] bg-[color:var(--surface-2)] p-4">
-              <p className="text-sm font-semibold text-[color:var(--ink)]">{completionLabel}</p>
-              <p className="mt-1 text-sm leading-6 text-[color:var(--muted)]">
-                Required fields are marked with an asterisk.
-              </p>
-            </div>
+
           </div>
         </aside>
 
-        <main className="rounded-[8px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-soft md:p-8">
+        <main className="rounded-[8px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-soft md:p-8 order-1 lg:order-none">
           {message ? (
             <div
               className={`mb-6 flex items-start gap-3 rounded-[8px] border px-4 py-3 text-sm ${

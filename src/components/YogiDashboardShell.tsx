@@ -12,6 +12,7 @@ import {
   MdVolunteerActivism,
 } from 'react-icons/md';
 import { useTranslations } from '@/app/provider/localeProvider';
+import { hasFeatureAccess } from '@/lib/roles';
 
 type NavItem = {
   key: string;
@@ -19,6 +20,7 @@ type NavItem = {
   href: string;
   description: string;
   icon: ReactNode;
+  requiresFeatureAccess?: boolean;
 };
 
 const navItems: NavItem[] = [
@@ -35,6 +37,7 @@ const navItems: NavItem[] = [
     href: '/add-seeker',
     description: 'Capture seeker follow-up details for the collective.',
     icon: <MdPersonAddAlt1 size={20} />,
+    requiresFeatureAccess: true,
   },
   {
     key: 'seeker-followups',
@@ -42,6 +45,7 @@ const navItems: NavItem[] = [
     href: '/dashboard/seeker-followups',
     description: 'Claim a small batch and update seeker follow-up notes.',
     icon: <MdGroups size={20} />,
+    requiresFeatureAccess: true,
   },
   {
     key: 'event-registrations',
@@ -70,10 +74,12 @@ export default function YogiDashboardShell({
   children,
   memberName,
   activeKey,
+  userRole,
 }: {
   children: ReactNode;
   memberName?: string;
   activeKey?: string;
+  userRole?: string | null;
 }) {
   const pathname = usePathname();
   const [hash, setHash] = useState('');
@@ -88,13 +94,16 @@ export default function YogiDashboardShell({
   }, []);
 
   const currentKey = activeKey || getActiveKey(pathname, hash);
+  const visibleNavItems = navItems.filter(
+    (item) => !item.requiresFeatureAccess || hasFeatureAccess(userRole)
+  );
   return (
     <div className="min-h-screen bg-[color:var(--bg)]">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 md:px-6 md:py-10">
         <aside className="hidden w-80 shrink-0 lg:block">
           <div className="sticky top-24 space-y-4 rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-soft">
             <SidebarIntro memberName={memberName} />
-            <SidebarNav currentKey={currentKey} t={t} />
+            <SidebarNav currentKey={currentKey} t={t} navItems={visibleNavItems} />
           </div>
         </aside>
 
@@ -102,7 +111,7 @@ export default function YogiDashboardShell({
           <div className="mb-4 lg:hidden">
             <div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/94 shadow-[0_12px_28px_rgba(25,22,18,0.08)] backdrop-blur">
               <div className="px-2.5 py-2.5">
-                <SidebarNav currentKey={currentKey} mobile t={t} />
+                <SidebarNav currentKey={currentKey} mobile t={t} navItems={visibleNavItems} />
               </div>
             </div>
           </div>
@@ -158,10 +167,12 @@ function SidebarNav({
   currentKey,
   mobile = false,
   t,
+  navItems,
 }: {
   currentKey: string;
   mobile?: boolean;
   t: ReturnType<typeof useTranslations>;
+  navItems: NavItem[];
 }) {
   return (
     <nav className={mobile ? 'flex gap-2 overflow-x-auto pb-0.5' : 'space-y-2'}>

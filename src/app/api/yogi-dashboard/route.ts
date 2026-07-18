@@ -8,6 +8,7 @@ import { EventSubscription } from "@/models/EventSubscription";
 import { CenterConnection } from "@/models/CenterConnection";
 import { Center } from "@/models/Center";
 import { Testimonial } from "@/models/Testimonial";
+import { hasFeatureAccess } from "@/lib/roles";
 
 export async function GET(request: NextRequest) {
   await connect();
@@ -21,6 +22,13 @@ export async function GET(request: NextRequest) {
   const user = (await User.findOne({ email: exactEmailMatch(normalizedEmail) }).lean()) as any;
   if (!user) {
     return NextResponse.json({ status: 404, message: "User not found." }, { status: 404 });
+  }
+
+  if (!hasFeatureAccess(user.role)) {
+    return NextResponse.json(
+      { status: 403, message: "This feature is available to Yogis and Volunteers." },
+      { status: 403 }
+    );
   }
 
   const [registrations, subscription, testimonials, connections, upcomingEvents] = await Promise.all([
