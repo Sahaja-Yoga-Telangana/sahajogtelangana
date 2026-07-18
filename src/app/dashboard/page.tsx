@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { FiCamera, FiFileText, FiPlus, FiEdit3, FiX } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
 import { useTranslations } from '@/app/provider/localeProvider';
+import { hasFeatureAccess } from '@/lib/roles';
 
 type DashboardData = {
   profile: {
@@ -49,7 +51,7 @@ type DashboardData = {
 };
 
 export default function DashboardPage() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations();
   const [data, setData] = useState<DashboardData | null>(null);
@@ -58,6 +60,8 @@ export default function DashboardPage() {
   const [message, setMessage] = useState('');
   const [loadError, setLoadError] = useState('');
   const [form, setForm] = useState({ name: '', city: '' });
+  const [showOptions, setShowOptions] = useState(false);
+  const canAddSeekers = hasFeatureAccess(session?.user?.role);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -154,7 +158,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <YogiDashboardShell memberName={data.profile.name}>
+    <YogiDashboardShell memberName={data.profile.name} userRole={session?.user?.role}>
       <main className="min-w-0 flex-1 space-y-6">
         <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('dashboard.shell_title')}</p>
@@ -233,6 +237,100 @@ export default function DashboardPage() {
             )}
           </Panel>
         </section>
+
+        {canAddSeekers && (
+          <>
+            <button
+              onClick={() => setShowOptions(true)}
+              className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--primary)] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+              style={{
+                boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+              }}
+              aria-label="Add seeker"
+            >
+              <FiPlus size={28} />
+            </button>
+
+            {showOptions && (
+              <div
+                className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 md:items-center"
+                onClick={() => setShowOptions(false)}
+              >
+                <div
+                  className="w-full max-w-md rounded-t-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-xl md:rounded-3xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-[color:var(--border)]" />
+
+                  <h2 className="text-lg font-semibold text-[color:var(--ink)]">Add New Seeker</h2>
+                  <p className="mt-1 text-sm text-[color:var(--muted)]">
+                    Choose a method to register a new seeker in the database.
+                  </p>
+
+                  <div className="mt-6 space-y-3">
+                    <button
+                      onClick={() => {
+                        setShowOptions(false);
+                        router.push('/add-seeker');
+                      }}
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                        <FiEdit3 className="text-[color:var(--primary)]" size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-[color:var(--ink)]">Fill Form Manually</p>
+                        <p className="mt-0.5 text-xs text-[color:var(--muted)]">Enter details one-by-one</p>
+                      </div>
+                      <FiX className="rotate-45 text-[color:var(--muted)]" size={16} />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowOptions(false);
+                        router.push('/add-seeker/upload');
+                      }}
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                        <FiFileText className="text-[color:var(--primary)]" size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-[color:var(--ink)]">Upload a Document</p>
+                        <p className="mt-0.5 text-xs text-[color:var(--muted)]">Import from CSV, Excel, or text files</p>
+                      </div>
+                      <FiX className="rotate-45 text-[color:var(--muted)]" size={16} />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowOptions(false);
+                        router.push('/add-seeker/scan');
+                      }}
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                        <FiCamera className="text-[color:var(--primary)]" size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-[color:var(--ink)]">Scan Using Camera</p>
+                        <p className="mt-0.5 text-xs text-[color:var(--muted)]">Take photo of a physical list & auto-extract</p>
+                      </div>
+                      <FiX className="rotate-45 text-[color:var(--muted)]" size={16} />
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setShowOptions(false)}
+                    className="mt-6 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] py-3 text-sm font-medium text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-2)]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </main>
     </YogiDashboardShell>
   );

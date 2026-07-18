@@ -7,15 +7,19 @@ import { FiAlertCircle, FiCheckCircle, FiMinusCircle, FiPlus, FiUsers } from 're
 import YogiDashboardShell from '@/components/YogiDashboardShell';
 import { useTranslations } from '@/app/provider/localeProvider';
 
+const LANGUAGES = ['English', 'Telugu', 'Hindi', 'Marathi', 'Odia', 'Kannada', 'Tamil', 'Other'];
+
 interface SeekerEntry {
   name: string;
   city: string;
   phone: string;
+  email: string;
+  preferredLanguage: string;
 }
 
 type SeekerErrors = Array<Partial<Record<keyof SeekerEntry, string>>>;
 
-const emptySeeker = (): SeekerEntry => ({ name: '', city: '', phone: '' });
+const emptySeeker = (): SeekerEntry => ({ name: '', city: '', phone: '', email: '', preferredLanguage: 'English' });
 
 export default function AddSeekerPage() {
   const t = useTranslations();
@@ -88,6 +92,10 @@ export default function AddSeekerPage() {
         entryErrors.phone = 'Enter a valid phone number.';
       }
 
+      if (seeker.email?.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(seeker.email.trim())) {
+        entryErrors.email = 'Enter a valid email address.';
+      }
+
       return entryErrors;
     });
 
@@ -116,6 +124,9 @@ export default function AddSeekerPage() {
             name: seeker.name.trim(),
             city: seeker.city.trim(),
             phone: seeker.phone.trim(),
+            email: seeker.email.trim(),
+            preferredLanguage: seeker.preferredLanguage,
+            source: 'Website Manual Entry',
           }))
         ),
       });
@@ -234,20 +245,13 @@ export default function AddSeekerPage() {
                         ) : null}
                       </div>
 
-                      <div className="grid gap-4 md:grid-cols-3">
+                      <div className="grid gap-4 md:grid-cols-2">
                         <Field
                           label={t('dashboard.name')}
                           value={seeker.name}
                           onChange={(value) => handleInputChange(index, 'name', value)}
                           placeholder={t('add_seeker.full_name')}
                           error={errors[index]?.name}
-                        />
-                        <Field
-                          label={t('dashboard.city')}
-                          value={seeker.city}
-                          onChange={(value) => handleInputChange(index, 'city', value)}
-                          placeholder={t('dashboard.city')}
-                          error={errors[index]?.city}
                         />
                         <Field
                           label={t('add_seeker.phone')}
@@ -257,6 +261,40 @@ export default function AddSeekerPage() {
                           error={errors[index]?.phone}
                           inputMode="tel"
                         />
+                        <Field
+                          label={t('dashboard.city')}
+                          value={seeker.city}
+                          onChange={(value) => handleInputChange(index, 'city', value)}
+                          placeholder={t('dashboard.city')}
+                          error={errors[index]?.city}
+                        />
+                        <Field
+                          label="Email"
+                          value={seeker.email}
+                          onChange={(value) => handleInputChange(index, 'email', value)}
+                          placeholder="e.g. name@example.com"
+                          error={errors[index]?.email}
+                          inputMode="email"
+                        />
+                      </div>
+                      <div className="mt-4">
+                        <label className="mb-2 block text-sm font-medium text-[color:var(--ink)]">Preferred Language</label>
+                        <div className="flex flex-wrap gap-2">
+                          {LANGUAGES.map((lang) => (
+                            <button
+                              key={lang}
+                              type="button"
+                              onClick={() => handleInputChange(index, 'preferredLanguage', lang)}
+                              className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
+                                seeker.preferredLanguage === lang
+                                  ? 'border-[color:var(--primary)] bg-[color:var(--primary)] text-white'
+                                  : 'border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--muted)] hover:bg-[color:var(--surface)]'
+                              }`}
+                            >
+                              {lang}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ))}
