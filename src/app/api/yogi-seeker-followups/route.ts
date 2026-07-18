@@ -111,11 +111,13 @@ export async function POST() {
     for (let index = 0; index < 4; index += 1) {
       const seeker = await Seeker.findOneAndUpdate(
         {
-          $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }],
-          $or: [
-            { snoozedUntil: { $exists: false } },
-            { snoozedUntil: null },
-            { snoozedUntil: { $lte: new Date() } }
+          $and: [
+            { $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }] },
+            { $or: [
+              { snoozedUntil: { $exists: false } },
+              { snoozedUntil: null },
+              { snoozedUntil: { $lte: new Date() } }
+            ] }
           ]
         },
         {
