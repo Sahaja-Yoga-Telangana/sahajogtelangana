@@ -112,14 +112,18 @@ export async function POST() {
       const seeker = await Seeker.findOneAndUpdate(
         {
           $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }],
-          followUpStatus: { $in: ['New', '', null] },
+          $or: [
+            { snoozedUntil: { $exists: false } },
+            { snoozedUntil: null },
+            { snoozedUntil: { $lte: new Date() } }
+          ]
         },
         {
           $set: {
             assignedVolunteer: volunteer.name,
-            followUpStatus: 'New',
           },
           $unset: {
+            snoozedUntil: '',
             volunteerFollowUpCompletedAt: '',
             volunteerFollowUpCompletedBy: '',
           },
@@ -161,24 +165,38 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Seeker ID is required.' }, { status: 400 });
     }
 
-    const update = {
-      followUpStatus: String(body.followUpStatus || 'New').trim(),
-      lastContactDate: body.lastContactDate ? new Date(body.lastContactDate) : undefined,
-      preferredLanguage: String(body.preferredLanguage || 'English').trim(),
-      eventInterest: String(body.eventInterest || '').trim(),
-      centerInterest: String(body.centerInterest || '').trim(),
-      notes: String(body.notes || '').trim(),
-      volunteerFollowUpCompletedAt: new Date(),
-      volunteerFollowUpCompletedBy: volunteer.name,
+    const status = String(body.followUpStatus || 'New').trim();
+    const isCompletedOrFollowUp = status !== 'New';
+
+    const update: any = {
+      $set: {
+        followUpStatus: status,
+        lastContactDate: body.lastContactDate ? new Date(body.lastContactDate) : new Date(),
+        preferredLanguage: String(body.preferredLanguage || 'English').trim(),
+        eventInterest: String(body.eventInterest || '').trim(),
+        centerInterest: String(body.centerInterest || '').trim(),
+        notes: String(body.notes || '').trim(),
+      }
     };
+
+    if (isCompletedOrFollowUp) {
+      update.$set.assignedVolunteer = '';
+      update.$set.snoozedUntil = new Date(Date.now() + 3.5 * 24 * 60 * 60 * 1000);
+      update.$unset = {
+        volunteerFollowUpCompletedAt: '',
+        volunteerFollowUpCompletedBy: '',
+      };
+    } else {
+      update.$set.volunteerFollowUpCompletedAt = new Date();
+      update.$set.volunteerFollowUpCompletedBy = volunteer.name;
+    }
 
     const seeker = await Seeker.findOneAndUpdate(
       {
         _id: seekerId,
         assignedVolunteer: volunteer.name,
-        $or: [{ volunteerFollowUpCompletedAt: { $exists: false } }, { volunteerFollowUpCompletedAt: null }],
       },
-      { $set: update },
+      update,
       { new: true, projection: seekerProjection() }
     );
 

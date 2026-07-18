@@ -57,6 +57,7 @@ export async function GET(request: NextRequest) {
   const eventHistory = typedRegistrations
     .filter((registration) => eventMap.has(String(registration.eventId)))
     .map((registration) => ({
+      registrationId: String(registration._id),
       receiptNumber: registration.receiptNumber || String(registration._id).substring(0, 8),
       eventTitle: eventMap.get(String(registration.eventId))?.title || registration.eventTitle,
       registeredAt: registration.registeredAt,
