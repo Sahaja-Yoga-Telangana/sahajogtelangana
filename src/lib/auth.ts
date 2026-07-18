@@ -39,17 +39,25 @@ export async function getRequiredSession() {
         token: tokenStr,
         secret: process.env.NEXTAUTH_SECRET!,
       });
-      if (decoded && decoded.email) {
-        session = {
-          user: {
-            id: (decoded.id as string) || (decoded.sub as string) || null,
-            name: (decoded.name as string) || null,
-            email: (decoded.email as string) || null,
-            role: (decoded.role as string) || "User",
-            avatar: (decoded.picture as string) || null,
-          },
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        };
+      if (decoded) {
+        // JWT callback stores user data nested as token.user = { id, name, email, role }
+        const nestedUser = (decoded as any).user as Record<string, any> | undefined;
+        const resolvedEmail = nestedUser?.email || decoded.email;
+        const resolvedId = nestedUser?.id || (decoded as any).id || null;
+        // Never fall back to decoded.sub — it holds the raw provider account ID
+        // (e.g. a Google numeric ID) which is NOT a valid Mongo ObjectId.
+        if (resolvedEmail) {
+          session = {
+            user: {
+              id: resolvedId ? String(resolvedId) : null,
+              name: (nestedUser?.name || decoded.name || null) as string | null,
+              email: String(resolvedEmail),
+              role: (nestedUser?.role || (decoded as any).role || "User") as string,
+              avatar: (nestedUser?.avatar || decoded.picture || null) as string | null,
+            },
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          };
+        }
       }
     } catch (error) {
       // Suppress, try simple JWT fallback

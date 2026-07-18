@@ -2,8 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const testimonialSchema = new Schema({
   userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: Schema.Types.String,
     required: false,
   },
   name: {

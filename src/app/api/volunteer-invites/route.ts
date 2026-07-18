@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { connect } from "@/database/mongo.config";
-import { getSessionFromRequest, normalizeEmail } from "@/lib/auth";
+import { exactEmailMatch, getSessionFromRequest, normalizeEmail } from "@/lib/auth";
 import { User } from "@/models/User";
 import { VolunteerInvite } from "@/models/VolunteerInvite";
 import { normalizeRole } from "@/lib/roles";
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Please log in first." }, { status: 401, headers: corsHeaders() });
     }
 
-    const user = await User.findById(session.id).lean();
+    const user = await User.findOne({ email: exactEmailMatch(normalizeEmail(session.email)) }).lean();
     const role = normalizeRole((user as any)?.role);
     if (role !== "Volunteer" && role !== "Admin") {
       return NextResponse.json({ error: "Only volunteers can view invites." }, { status: 403, headers: corsHeaders() });
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Please log in first." }, { status: 401, headers: corsHeaders() });
     }
 
-    const user = await User.findById(session.id).lean();
+    const user = await User.findOne({ email: exactEmailMatch(normalizeEmail(session.email)) }).lean();
     if (!user) {
       return NextResponse.json({ error: "User not found. Please log in again." }, { status: 401, headers: corsHeaders() });
     }

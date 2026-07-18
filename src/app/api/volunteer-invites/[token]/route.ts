@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/database/mongo.config";
-import { getSessionFromRequest, normalizeEmail } from "@/lib/auth";
+import { exactEmailMatch, getSessionFromRequest, normalizeEmail } from "@/lib/auth";
 import { User } from "@/models/User";
 import { VolunteerInvite } from "@/models/VolunteerInvite";
 import { VolunteerProfile } from "@/models/VolunteerProfile";
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       return NextResponse.json({ error: "This invite has already been used." }, { status: 410, headers: corsHeaders() });
     }
 
-    const user = await User.findById(session.id);
+    const user = await User.findOne({ email: exactEmailMatch(normalizeEmail(session.email)) });
     if (!user) {
       return NextResponse.json({ error: "User not found." }, { status: 404, headers: corsHeaders() });
     }
