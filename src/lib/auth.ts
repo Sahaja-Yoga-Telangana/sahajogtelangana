@@ -1,7 +1,9 @@
 import { getServerSession } from "next-auth";
-import { authOptions, CustomSession } from "@/app/api/auth/[...nextauth]/options";
+import { authOptions, CustomSession, CustomUser } from "@/app/api/auth/[...nextauth]/options";
 import { connect } from "@/database/mongo.config";
 import { User } from "@/models/User";
+import { headers } from "next/headers";
+import { decode } from "next-auth/jwt";
 import jwt from "jsonwebtoken";
 
 function escapeRegex(value: string) {
@@ -17,7 +19,68 @@ export function exactEmailMatch(value?: string | null) {
 }
 
 export async function getRequiredSession() {
-  const session = (await getServerSession(authOptions)) as CustomSession | null;
+  let tokenStr: string | null = null;
+  try {
+    const reqHeaders = headers();
+    const authHeader = reqHeaders.get("authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      tokenStr = authHeader.substring(7);
+    }
+  } catch (error) {
+    // Suppress console/headers error when context isn't a request handler (e.g. build time static pages)
+  }
+
+  let session: CustomSession | null = null;
+
+  if (tokenStr) {
+    try {
+      // 1. Try decoding with NextAuth JWE decode helper
+      const decoded = await decode({
+        token: tokenStr,
+        secret: process.env.NEXTAUTH_SECRET!,
+      });
+      if (decoded && decoded.email) {
+        session = {
+          user: {
+            id: (decoded.id as string) || (decoded.sub as string) || null,
+            name: (decoded.name as string) || null,
+            email: (decoded.email as string) || null,
+            role: (decoded.role as string) || "User",
+            avatar: (decoded.picture as string) || null,
+          },
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        };
+      }
+    } catch (error) {
+      // Suppress, try simple JWT fallback
+    }
+
+    // 2. Try verifying with jsonwebtoken verify for custom mobile tokens
+    if (!session) {
+      try {
+        const decoded = verifyMobileToken(tokenStr);
+        if (decoded && decoded.email) {
+          session = {
+            user: {
+              id: decoded.id,
+              name: decoded.name || null,
+              email: decoded.email,
+              role: decoded.role || "User",
+              avatar: null,
+            },
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          };
+        }
+      } catch (error) {
+        // Suppress
+      }
+    }
+  }
+
+  if (!session) {
+    session = (await getServerSession(authOptions)) as CustomSession | null;
+  }
+
   if (!session?.user?.email) {
     return session;
   }

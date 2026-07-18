@@ -24,28 +24,29 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/login",
   },
-  
+
   // debug: process.env.NODE_ENV === "development",
   debug: true,
- 
+
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      connect();
+      await connect();
       try {
         const findUser = await UserModel.findOne({ email: user.email });
         if (findUser) {
           return true;
         }
+        const name = user.name || user.email?.split("@")[0] || "User";
         await UserModel.create({
           email: user.email,
-          name: user.name,
+          name: name.length < 2 ? `${name} User` : name,
           role: "User",
         });
         return true;
       } catch (error) {
-        console.log("The error is ", error);
+        console.error("The sign-in callback error is:", error);
         return false;
-      }      
+      }
     },
 
     async jwt({ token, user }: { token: JWT; user: CustomUser }) {
@@ -58,7 +59,7 @@ export const authOptions: AuthOptions = {
       // console.log("JWT Callback - Modified Token:", JSON.stringify(token));
       return token;
     },
-    
+
     async session({
       session,
       token,
