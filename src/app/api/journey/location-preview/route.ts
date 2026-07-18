@@ -3,6 +3,8 @@ import { enforceJourneyRateLimit } from "@/lib/journeySecurity";
 import { getJourneyLocationPreview } from "@/lib/journey";
 import { isSyCentersConfigured } from "@/lib/syCenters";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const rateLimit = await enforceJourneyRateLimit({
