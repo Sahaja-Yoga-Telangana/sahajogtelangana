@@ -46,17 +46,34 @@ export default function ScanPage() {
     );
   }
 
-  const simulateOcr = (imageUri: string) => {
+  const runRealOcr = async (imageUri: string) => {
     setImagePreview(imageUri);
     setIsScanning(true);
     setMessage('');
 
-    setTimeout(() => {
-      setSeekers(MOCK_OCR_RESULTS);
+    try {
+      const response = await fetch('/api/ocr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageUri }),
+      });
+      const resData = await response.json();
+      if (response.ok && resData.status === 200) {
+        setSeekers(resData.data);
+        setMessageType('success');
+        setMessage(`OCR completed. Extracted ${resData.data.length} seekers. Please review.`);
+      } else {
+        setMessageType('error');
+        setMessage(resData.message || 'Failed to scan image.');
+      }
+    } catch (err: any) {
+      setMessageType('error');
+      setMessage(err.message || 'Error occurred while contacting OCR API.');
+    } finally {
       setIsScanning(false);
-      setMessageType('success');
-      setMessage(`OCR completed. Extracted ${MOCK_OCR_RESULTS.length} seekers. Please review.`);
-    }, 2500);
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +83,7 @@ export default function ScanPage() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const uri = ev.target?.result as string;
-      simulateOcr(uri);
+      runRealOcr(uri);
     };
     reader.readAsDataURL(file);
 
@@ -80,7 +97,7 @@ export default function ScanPage() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const uri = ev.target?.result as string;
-      simulateOcr(uri);
+      runRealOcr(uri);
     };
     reader.readAsDataURL(file);
 
