@@ -8,8 +8,7 @@ const volunteerInviteSchema = new Schema({
     trim: true,
   },
   createdBy: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: Schema.Types.String,
     required: [true, "Creator is required."],
   },
   createdByEmail: {
