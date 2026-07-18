@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FiAlertCircle, FiCheckCircle, FiMinusCircle, FiPlus, FiUsers } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 
 const LANGUAGES = ['English', 'Telugu', 'Hindi', 'Marathi', 'Odia', 'Kannada', 'Tamil', 'Other'];
@@ -261,13 +262,16 @@ export default function AddSeekerPage() {
                           error={errors[index]?.phone}
                           inputMode="tel"
                         />
-                        <Field
-                          label={t('dashboard.city')}
-                          value={seeker.city}
-                          onChange={(value) => handleInputChange(index, 'city', value)}
-                          placeholder={t('dashboard.city')}
-                          error={errors[index]?.city}
-                        />
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-[color:var(--ink)]">{t('dashboard.city')}</label>
+                          <CityPicker
+                            value={seeker.city}
+                            onChange={(value) => handleInputChange(index, 'city', value)}
+                            placeholder={t('dashboard.city')}
+                            error={errors[index]?.city}
+                            className={`admin-input ${errors[index]?.city ? 'border-red-500' : ''}`}
+                          />
+                        </div>
                         <Field
                           label="Email"
                           value={seeker.email}

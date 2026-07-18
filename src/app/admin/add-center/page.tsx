@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { mutate } from 'swr';
+import CityPicker from '@/components/CityPicker';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -176,7 +177,12 @@ const ManageCentersPage: React.FC = () => {
               <input type="text" id="zone" name="zone" value={formData.zone} onChange={handleChange} required className="admin-input" />
             </Field>
             <Field label="City">
-              <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required className="admin-input" />
+              <CityPicker
+                value={formData.city}
+                onChange={(v) => setFormData((prev) => ({ ...prev, city: v }))}
+                required
+                className="admin-input"
+              />
             </Field>
           </div>
 

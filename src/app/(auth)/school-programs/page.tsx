@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Image from 'next/image';
 import { useLocale } from '@/app/provider/localeProvider';
+import CityPicker from '@/components/CityPicker';
 
 const content = {
   en: {
@@ -280,9 +281,15 @@ export default function SchoolRegisterClient() {
               setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, street: v } })
             } />
 
-            <Input label={copy.labels.city} error={errors['schoolAddress.city']} onChange={(v) =>
-              setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, city: v } })
-            } />
+            <div>
+              <label className="block text-base font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
+              <CityPicker
+                value={formData.schoolAddress.city}
+                onChange={(v) => setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, city: v } })}
+                className={`mt-1 bg-[color:var(--surface-2)] w-full rounded-md border p-2 ${errors['schoolAddress.city'] ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              {errors['schoolAddress.city'] && <p className="mt-1 text-base text-red-600">{errors['schoolAddress.city']}</p>}
+            </div>
 
             <Input label={copy.labels.state} error={errors['schoolAddress.state']} onChange={(v) =>
               setFormData({ ...formData, schoolAddress: { ...formData.schoolAddress, state: v } })

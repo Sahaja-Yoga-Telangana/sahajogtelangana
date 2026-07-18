@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Image from 'next/image';
 import { useLocale } from '@/app/provider/localeProvider';
+import CityPicker from '@/components/CityPicker';
 
 const content = {
   en: {
@@ -327,9 +328,15 @@ export default function CorporateRegisterPage() {
               setFormData({ ...formData, officeAddress: { ...formData.officeAddress, street: v } })
             } />
 
-            <Input label={copy.labels.city} error={errors['officeAddress.city']} onChange={(v) =>
-              setFormData({ ...formData, officeAddress: { ...formData.officeAddress, city: v } })
-            } />
+            <div>
+              <label className="block text-base font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
+              <CityPicker
+                value={formData.officeAddress.city}
+                onChange={(v) => setFormData({ ...formData, officeAddress: { ...formData.officeAddress, city: v } })}
+                className={`mt-1 bg-[color:var(--surface-2)] w-full rounded-md border p-2 ${errors['officeAddress.city'] ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              {errors['officeAddress.city'] && <p className="mt-1 text-base text-red-600">{errors['officeAddress.city']}</p>}
+            </div>
 
             <Input label={copy.labels.state} error={errors['officeAddress.state']} onChange={(v) =>
               setFormData({ ...formData, officeAddress: { ...formData.officeAddress, state: v } })

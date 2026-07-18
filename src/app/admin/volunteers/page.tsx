@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import CityPicker from '@/components/CityPicker';
 
 type Volunteer = {
   _id: string;
@@ -168,7 +169,10 @@ export default function VolunteersPage() {
           <Input label="Name" value={form.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} required />
           <Input label="Email" value={form.email} onChange={(value) => setForm((prev) => ({ ...prev, email: value }))} required />
           <Input label="Phone" value={form.phone} onChange={(value) => setForm((prev) => ({ ...prev, phone: value }))} />
-          <Input label="City" value={form.city} onChange={(value) => setForm((prev) => ({ ...prev, city: value }))} />
+          <label>
+            <span className="mb-2 block text-sm font-medium text-[color:var(--ink)]">City</span>
+            <CityPicker value={form.city} onChange={(value) => setForm((prev) => ({ ...prev, city: value }))} className="admin-input" />
+          </label>
           <Input label="Roles" value={form.roles} onChange={(value) => setForm((prev) => ({ ...prev, roles: value }))} placeholder="Follow-up, Events, Music" />
           <Input label="Assignments" value={form.assignments} onChange={(value) => setForm((prev) => ({ ...prev, assignments: value }))} placeholder="Beginners, Center north, Event desk" />
           <Input label="Availability" value={form.availability} onChange={(value) => setForm((prev) => ({ ...prev, availability: value }))} />
