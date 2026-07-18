@@ -54,7 +54,7 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 60;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connect();
 
   const session = (await getServerSession(authOptions)) as CustomSession | null;
