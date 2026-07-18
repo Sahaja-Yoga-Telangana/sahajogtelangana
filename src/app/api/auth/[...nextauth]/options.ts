@@ -50,13 +50,19 @@ export const authOptions: AuthOptions = {
     },
 
     async jwt({ token, user }: { token: JWT; user: CustomUser }) {
-      // console.log("JWT Callback - Token:", JSON.stringify(token));
-      // console.log("JWT Callback - User:", JSON.stringify(user));
       if (user) {
-        user.role = user?.role == null ? "User" : user?.role;
+        await connect();
+        const dbUser = await UserModel.findOne({ email: user.email });
+
+        if (dbUser) {
+          user.role = dbUser.role || "User";
+          user.id = String(dbUser._id);
+        } else {
+          user.role = "User";
+        }
+
         token.user = user;
       }
-      // console.log("JWT Callback - Modified Token:", JSON.stringify(token));
       return token;
     },
 
