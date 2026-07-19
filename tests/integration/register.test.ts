@@ -7,12 +7,7 @@ import { User } from '@/models/User';
 let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
-  // Spin up an in-memory MongoDB instance with ephemeralForTest storage engine
-  mongoServer = await MongoMemoryServer.create({
-    instance: {
-      storageEngine: 'ephemeralForTest',
-    },
-  });
+  mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
   
   // Set environment variable before importing route handler
