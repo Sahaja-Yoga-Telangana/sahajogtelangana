@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { FiCheckCircle, FiHeart, FiMapPin, FiPhone, FiSend, FiUser } from 'react-icons/fi';
 import CityPicker from '@/components/CityPicker';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type FieldName =
   | 'name'
@@ -265,7 +266,7 @@ export default function SeekerRegistrationPage() {
               disabled={status === 'submitting'}
               className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] bg-[color:var(--primary)] px-5 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
             >
-              <FiSend className="h-4 w-4" aria-hidden="true" />
+              {status === 'submitting' ? <LoadingSpinner /> : <FiSend className="h-4 w-4" aria-hidden="true" />}
               {status === 'submitting' ? 'Submitting...' : 'Submit my details'}
             </button>
           </form>

@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Image from 'next/image';
 import { useLocale } from '@/app/provider/localeProvider';
 import CityPicker from '@/components/CityPicker';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const content = {
   en: {
@@ -359,8 +360,9 @@ export default function CorporateRegisterPage() {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="mt-10 w-full bg-[#5B2C41] hover:bg-[#4a2335] text-white py-3 rounded-md font-medium transition"
+            className="mt-10 w-full bg-[#5B2C41] hover:bg-[#4a2335] text-white py-3 rounded-md font-medium transition inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
+            {loading && <LoadingSpinner />}
             {loading ? copy.submitting : copy.submit}
           </button>
         </div>

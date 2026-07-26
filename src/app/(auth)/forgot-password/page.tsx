@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -55,9 +56,10 @@ export default function ForgotPassword() {
             </div>
             <div className="mt-5">
               <button
-                className="w-full bg-black p-2 rounded-lg text-white"
+                className="w-full bg-black p-2 rounded-lg text-white inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={loading}
               >
+                {loading && <LoadingSpinner />}
                 {loading ? "Processing" : "Submit"}
               </button>
             </div>

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { FiUsers } from 'react-icons/fi';
+import EmptyState from '@/components/EmptyState';
 
 interface User {
   _id: string;
@@ -85,6 +87,13 @@ export default function UsersPage() {
         <div className="admin-card px-5 py-4 text-sm text-[color:var(--muted)]">{roleMessage}</div>
       ) : null}
 
+      {users.length === 0 ? (
+        <EmptyState
+          icon={<FiUsers className="w-7 h-7 text-[color:var(--muted)]" />}
+          title="No users found"
+          message="Registered users will appear here."
+        />
+      ) : (
       <section className="admin-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="admin-table min-w-full">
@@ -120,6 +129,7 @@ export default function UsersPage() {
           </table>
         </div>
       </section>
+      )}
     </div>
   );
 }

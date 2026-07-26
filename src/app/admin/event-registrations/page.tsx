@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { FiUsers } from 'react-icons/fi';
 import axios from 'axios';
 import { format } from 'date-fns';
+import EmptyState from '@/components/EmptyState';
 
 type ReceiptGroup = {
   receiptNumber: string;
@@ -212,7 +214,11 @@ export default function EventRegistrationsAdmin() {
         {loading ? (
           <div className="admin-card p-10 text-center text-sm text-[color:var(--muted)]">Loading registrations...</div>
         ) : groups.length === 0 ? (
-          <div className="admin-card p-10 text-center text-sm text-[color:var(--muted)]">No registrations found for the selected filters.</div>
+          <EmptyState
+            icon={<FiUsers className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No registrations found"
+            message="Try adjusting your filters to find registrations."
+          />
         ) : (
           groups.map((group) => (
             <article key={group.receiptNumber} className="admin-card overflow-hidden">

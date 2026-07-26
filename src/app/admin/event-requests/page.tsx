@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FiCalendar } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import EmptyState from '@/components/EmptyState';
 
 type EventRequestItem = {
   _id: string;
@@ -150,7 +152,11 @@ export default function AdminEventRequestsPage() {
         ))}
 
         {requests.length === 0 ? (
-          <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">No event requests yet.</div>
+          <EmptyState
+            icon={<FiCalendar className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No event requests"
+            message="Requested pujas, sessions, and program ideas from yogis will appear here."
+          />
         ) : null}
       </div>
     </div>

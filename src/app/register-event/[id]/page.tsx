@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { getEventDateLabel } from '@/lib/events';
 import PaymentInfoCard from '@/components/events/PaymentInfoCard';
 import { FiArrowLeft, FiCalendar, FiClock, FiExternalLink, FiMapPin, FiPhone } from 'react-icons/fi';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type EventDetails = {
   _id: string;
@@ -860,8 +861,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       <button
                         onClick={handleSendEmail}
                         disabled={sendingEmail || emailSent}
-                        className="min-h-[48px] whitespace-nowrap rounded-b-xl bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400 sm:rounded-b-none sm:rounded-r-xl"
+                        className="inline-flex min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-b-xl bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 sm:rounded-b-none sm:rounded-r-xl"
                       >
+                        {sendingEmail && <LoadingSpinner />}
                         {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                       </button>
                     </div>
@@ -1168,9 +1170,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     
                     <button
                       type="submit"
-                      className="w-full rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:bg-gray-400"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={submitting || (isBulkRegistration && participants.length === 0)}
                     >
+                      {submitting && <LoadingSpinner />}
                       {submitting ? 'Registering...' : 'Register for Event'}
                     </button>
                   </form>

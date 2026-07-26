@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import { FiCheckCircle, FiAlertCircle, FiClock, FiUserPlus, FiLogIn } from 'react-icons/fi';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type InviteStatus = 'loading' | 'not_found' | 'used' | 'already_volunteer' | 'success' | 'ready';
 
@@ -165,8 +166,9 @@ export default function InvitePage() {
                 <button
                   onClick={handleAccept}
                   disabled={accepting}
-                  className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
+                  {accepting && <LoadingSpinner />}
                   {accepting ? 'Accepting...' : 'Accept Invitation'}
                 </button>
               ) : (

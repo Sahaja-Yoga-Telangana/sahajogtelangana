@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { FiCalendar } from 'react-icons/fi';
 import EventCard from '@/components/events/EventCard';
 import SeekerRegistrationDownloads from '@/components/events/SeekerRegistrationDownloads';
 import { AppEvent } from '@/lib/events';
 import EventSubscriptionForm from '@/components/EventSubscriptionForm';
 import { useTranslations } from '@/app/provider/localeProvider';
+import EmptyState from '@/components/EmptyState';
 
 export default function EventsPage() {
   const { status } = useSession();
@@ -36,8 +38,26 @@ export default function EventsPage() {
 
   if (status === 'loading' || loadingEvents) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
-        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-[color:var(--primary)]" />
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_42%,transparent),_transparent_28%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_82%,transparent),_var(--bg))] py-14">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8">
+          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-6 py-10 shadow-soft backdrop-blur-sm md:px-10 animate-pulse">
+            <div className="h-4 w-24 rounded-full bg-[color:var(--border)]" />
+            <div className="mt-6 h-10 w-72 rounded-lg bg-[color:var(--border)]" />
+            <div className="mt-4 h-4 w-full max-w-2xl rounded bg-[color:var(--border)]" />
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 p-5 animate-pulse">
+                <div className="aspect-[4/3] w-full rounded-2xl bg-[color:var(--border)]" />
+                <div className="mt-4 space-y-3">
+                  <div className="h-4 w-3/4 rounded bg-[color:var(--border)]" />
+                  <div className="h-3 w-1/2 rounded bg-[color:var(--border)]" />
+                  <div className="h-3 w-full rounded bg-[color:var(--border)]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -56,9 +76,11 @@ export default function EventsPage() {
         <EventSubscriptionForm />
 
         {events.length === 0 ? (
-          <div className="mt-10 rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-10 text-center text-sm text-[color:var(--muted)] shadow-soft">
-            {t('events.empty')}
-          </div>
+          <EmptyState
+            icon={<FiCalendar className="w-7 h-7 text-[color:var(--muted)]" />}
+            title={t('events.empty')}
+            message="Check back later for upcoming programs and events."
+          />
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {events.map((event) => (

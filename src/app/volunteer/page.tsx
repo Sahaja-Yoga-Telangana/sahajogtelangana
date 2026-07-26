@@ -7,6 +7,7 @@ import YogiDashboardShell from '@/components/YogiDashboardShell';
 import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 import { FiCopy, FiCheck, FiLink, FiUserPlus, FiRefreshCw } from 'react-icons/fi';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const interestOptions = ['Follow-up', 'Events', 'Center support', 'Music', 'Public programs', 'Digital seva'];
 
@@ -150,10 +151,10 @@ export default function VolunteerRequestPage() {
               <button
                 onClick={handleGenerate}
                 disabled={generating}
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {generating ? (
-                  <FiRefreshCw className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <FiLink className="h-4 w-4" />
                 )}
@@ -279,7 +280,8 @@ export default function VolunteerRequestPage() {
                     <textarea className="admin-input min-h-[140px]" value={form.experience} onChange={(e) => setForm((prev) => ({ ...prev, experience: e.target.value }))} />
                   </Field>
 
-                  <button type="submit" disabled={saving} className="admin-btn-primary w-full disabled:opacity-60">
+                  <button type="submit" disabled={saving} className="admin-btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                    {saving && <LoadingSpinner />}
                     {saving ? t('add_seeker.submitting') : (isVolunteerOrAdmin ? 'Update Profile' : t('volunteer.submit'))}
                   </button>
                 </form>

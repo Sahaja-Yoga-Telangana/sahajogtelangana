@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function FeatureRequestForm({
   labels,
@@ -96,7 +97,8 @@ export default function FeatureRequestForm({
         />
       </Field>
 
-      <button type="submit" disabled={submitting} className="admin-btn-primary mt-6 w-full disabled:opacity-60">
+      <button type="submit" disabled={submitting} className="admin-btn-primary mt-6 w-full disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+        {submitting && <LoadingSpinner />}
         {submitting ? labels.submitting : labels.submit}
       </button>
 

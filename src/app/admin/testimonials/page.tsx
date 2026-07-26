@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FiMessageSquare } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import EmptyState from '@/components/EmptyState';
 
 type TestimonialRecord = {
   _id: string;
@@ -106,7 +108,11 @@ export default function AdminTestimonialsPage() {
 
       <div className="space-y-6">
         {testimonials.length === 0 ? (
-          <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">No testimonials submitted yet.</div>
+          <EmptyState
+            icon={<FiMessageSquare className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No testimonials"
+            message="Testimonials submitted by yogis will appear here for review."
+          />
         ) : (
           testimonials.map((testimonial) => (
             <article key={testimonial._id} className="admin-card p-5 md:p-6">

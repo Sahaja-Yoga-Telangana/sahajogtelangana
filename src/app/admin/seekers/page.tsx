@@ -2,6 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { FiUsers } from 'react-icons/fi';
+import EmptyState from '@/components/EmptyState';
 
 type Seeker = {
   _id: string;
@@ -254,8 +256,12 @@ export default function SeekersPage() {
         })}
       </section>
 
-      {seekers.length === 0 && (
-        <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">No seekers found for the selected filters.</div>
+      {seekers.length === 0 && !loading && (
+        <EmptyState
+          icon={<FiUsers className="w-7 h-7 text-[color:var(--muted)]" />}
+          title="No seekers found"
+          message="No seekers match the selected filters. Try adjusting your search criteria."
+        />
       )}
     </div>
   );

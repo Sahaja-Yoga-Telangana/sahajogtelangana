@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { FiBriefcase } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import EmptyState from '@/components/EmptyState';
 
 type ProgramType = 'Corporate' | 'School';
 
@@ -101,6 +103,13 @@ export default function ProgramRequestsPage() {
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-4xl">Program requests</h1>
       </section>
 
+      {requests.length === 0 ? (
+        <EmptyState
+          icon={<FiBriefcase className="w-7 h-7 text-[color:var(--muted)]" />}
+          title="No program requests"
+          message="Corporate and school program requests will appear here."
+        />
+      ) : (
       <div className="space-y-6">
         {requests.map((req) => (
           <article key={`${req.type}-${req._id}`} className="admin-card p-5 md:p-6">
@@ -153,6 +162,7 @@ export default function ProgramRequestsPage() {
           </article>
         ))}
       </div>
+      )}
     </div>
   );
 }
