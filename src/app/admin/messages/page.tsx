@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { FiMessageSquare } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import EmptyState from '@/components/EmptyState';
 
 interface Message {
   _id: string;
@@ -66,6 +68,13 @@ export default function MessagesPage() {
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--ink)] md:text-4xl">Messages</h1>
       </section>
 
+      {messages.length === 0 ? (
+        <EmptyState
+          icon={<FiMessageSquare className="w-7 h-7 text-[color:var(--muted)]" />}
+          title="No messages"
+          message="Messages from the contact form will appear here."
+        />
+      ) : (
       <div className="space-y-6">
         {messages.map((msg) => {
           const whatsappText = encodeURIComponent(`Hello ${msg.name},\n\nThank you for reaching out to Sahaja Yoga Telangana.`);
@@ -117,6 +126,7 @@ export default function MessagesPage() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

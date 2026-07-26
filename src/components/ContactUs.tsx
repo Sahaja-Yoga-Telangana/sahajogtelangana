@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from '@/app/provider/localeProvider';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type ContactErrorType = {
   name?: string;
@@ -176,8 +177,9 @@ const ContactUs = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-[color:var(--primary)] text-white px-6 py-2 rounded-full hover:bg-[color:var(--primary-600)] transition disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 bg-[color:var(--primary)] text-white px-6 py-2 rounded-full hover:bg-[color:var(--primary-600)] transition disabled:opacity-60 disabled:cursor-not-allowed"
                   >
+                    {loading && <LoadingSpinner />}
                     {loading ? t('contact.sending') : t('contact.send')}
                   </button>
                 </div>

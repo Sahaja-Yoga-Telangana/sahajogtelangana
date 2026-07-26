@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Toast from "@/components/Toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function SignInOne({ error }: { error?: string }) {
 
@@ -152,9 +153,14 @@ export default function SignInOne({ error }: { error?: string }) {
               <div>
                 <button
                   type="submit"
-                  className={`w-full rounded-full px-4 py-2 text-white font-semibold transition ${loading ? "bg-[color:var(--border)]" : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
+                  disabled={loading}
+                  className={`w-full rounded-full px-4 py-2 text-white font-semibold transition inline-flex items-center justify-center gap-2 ${
+                    loading
+                      ? "bg-[color:var(--border)] cursor-not-allowed opacity-60"
+                      : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
                     }`}
                 >
+                  {loading && <LoadingSpinner />}
                   {loading ? "Processing..." : "Login"}
                 </button>
               </div>

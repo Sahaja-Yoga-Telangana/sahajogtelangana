@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FiUserPlus } from 'react-icons/fi';
 import CityPicker from '@/components/CityPicker';
+import EmptyState from '@/components/EmptyState';
 
 type Volunteer = {
   _id: string;
@@ -131,7 +133,11 @@ export default function VolunteersPage() {
       <section className="admin-card p-6 md:p-8">
         <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Volunteer requests from yogis</h2>
         {requests.length === 0 ? (
-          <p className="mt-4 text-sm text-[color:var(--muted)]">No pending or reviewed requests yet.</p>
+          <EmptyState
+            icon={<FiUserPlus className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No volunteer requests"
+            message="Pending volunteer requests from yogis will appear here."
+          />
         ) : (
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             {requests.map((request) => (
@@ -207,6 +213,14 @@ export default function VolunteersPage() {
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {loading ? (
           <div className="admin-card p-8 text-sm text-[color:var(--muted)]">Loading volunteers...</div>
+        ) : volunteers.length === 0 ? (
+          <div className="md:col-span-2 xl:col-span-3">
+            <EmptyState
+              icon={<FiUserPlus className="w-7 h-7 text-[color:var(--muted)]" />}
+              title="No volunteers yet"
+              message="Add volunteers using the form above."
+            />
+          </div>
         ) : volunteers.map((volunteer) => (
           <article key={volunteer._id} className="admin-card p-6">
             <div className="flex items-start justify-between gap-4">

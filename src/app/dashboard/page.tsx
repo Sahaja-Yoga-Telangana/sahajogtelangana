@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { FiCamera, FiFileText, FiPlus, FiEdit3, FiX } from 'react-icons/fi';
+import { FiCamera, FiFileText, FiPlus, FiEdit3, FiX, FiMapPin } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import EmptyState from '@/components/EmptyState';
 import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 import { hasFeatureAccess } from '@/lib/roles';
@@ -189,7 +191,8 @@ export default function DashboardPage() {
               </Field>
               <div className="flex items-center justify-between gap-4">
                 <p className="text-sm text-[color:var(--muted)]">{t('dashboard.role')}: {data.profile.role}</p>
-                <button type="submit" disabled={saving} className="admin-btn-primary disabled:opacity-60">
+                <button type="submit" disabled={saving} className="admin-btn-primary disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2">
+                  {saving && <LoadingSpinner />}
                   {saving ? t('dashboard.saving') : t('dashboard.save')}
                 </button>
               </div>
@@ -230,7 +233,11 @@ export default function DashboardPage() {
         <section>
           <Panel title={t('dashboard.following_centers')}>
             {data.joinedCenters.length === 0 ? (
-              <p className="text-sm text-[color:var(--muted)]">{t('dashboard.following_centers_empty')}</p>
+              <EmptyState
+                icon={<FiMapPin className="w-7 h-7 text-[color:var(--muted)]" />}
+                title={t('dashboard.following_centers_empty')}
+                message="Browse centers to find one near you and follow it."
+              />
             ) : (
               data.joinedCenters.map((center) => (
                 <CenterCard key={center._id} center={center} />

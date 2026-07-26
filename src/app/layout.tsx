@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_Telugu, Ysabeau } from 'next/font/google'
 import NextAuthSessionProvider from './provider/sessionProvider'
 import LocaleProvider from './provider/localeProvider'
+import ThemeProvider from './provider/themeProvider'
 import Navbar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import { Toaster } from 'react-hot-toast'
@@ -37,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang={locale} className={`${ysabeau.variable} ${notoSansTelugu.variable}`}>
       <body className="font-sans bg-[color:var(--bg)] text-[color:var(--ink)]">
+        <ThemeProvider>
         <LocaleProvider initialLocale={locale}>
           <NextAuthSessionProvider>
             <div className="flex flex-col min-h-screen">
@@ -55,6 +57,7 @@ export default function RootLayout({
             </div>
           </NextAuthSessionProvider>
         </LocaleProvider>
+        </ThemeProvider>
         <ClientExitIntentNote />
       </body>
     </html>

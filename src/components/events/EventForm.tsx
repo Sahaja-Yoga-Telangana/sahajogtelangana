@@ -5,6 +5,7 @@ import type { Dispatch, FormEvent, ReactNode, SetStateAction } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ImageUpload from './ImageUpload';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { EVENT_TYPES, EVENT_TYPE_LABELS, EventType, isEventType } from '@/lib/eventTypes';
 
 export type EventFormValues = {
@@ -249,7 +250,8 @@ export default function EventForm({
 
       {showSubmitButton ? (
         <div className="flex items-center justify-end">
-          <button type="submit" disabled={submitting || mediaUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60">
+          <button type="submit" disabled={submitting || mediaUploading} className="admin-btn-primary min-w-[180px] disabled:cursor-not-allowed disabled:opacity-60 inline-flex items-center justify-center gap-2">
+            {(submitting || mediaUploading) && <LoadingSpinner />}
             {mediaUploading ? 'Uploading media...' : submitting ? 'Saving...' : submitLabel}
           </button>
         </div>

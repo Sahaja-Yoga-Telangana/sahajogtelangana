@@ -21,7 +21,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --bg: #2A1E1E;
     --surface: #1e1a17;
     --surface-2: #4a3a38;
@@ -35,6 +35,36 @@
     --accent-200: #B38E8E;
     --focus: #BFA3A3;
   }
+}
+
+html.dark {
+  --bg: #2A1E1E;
+  --surface: #1e1a17;
+  --surface-2: #4a3a38;
+  --surface-3: #463131;
+  --ink: #F4EAEA;
+  --muted: #D3C2C2;
+  --border: #4B3535;
+  --primary: #6d3030;
+  --primary-600: #563535;
+  --accent: #D9B6B6;
+  --accent-200: #B38E8E;
+  --focus: #BFA3A3;
+}
+
+html.light {
+  --bg: #FBF8F4;
+  --surface: #FFFFFF;
+  --surface-2: #F6F1EA;
+  --surface-3: #EFE7DC;
+  --ink: #2C2A28;
+  --muted: #6C6A66;
+  --border: #E8E1D7;
+  --primary: #6C5A4A;
+  --primary-600: #5C4C3E;
+  --accent: #D9B98F;
+  --accent-200: #F1E2CE;
+  --focus: #CBBBA6;
 }
 
 /* === GLOBAL STYLES === */

@@ -8,6 +8,7 @@ import { NAV_LINKS } from '../../constants';
 import { CustomUser } from '@/app/api/auth/[...nextauth]/options';
 import { Locale, messages } from '@/lib/i18n';
 import { useLocale, useTranslations } from '@/app/provider/localeProvider';
+import { useTheme } from '@/app/provider/themeProvider';
 
 type MessageKey = keyof typeof messages.en;
 
@@ -112,6 +113,8 @@ const Navbar = () => {
                 </Link>
               );
             })}
+
+            <ThemeToggle />
 
             <LanguageToggle locale={locale} setLocale={setLocale} />
 
@@ -325,11 +328,15 @@ const Navbar = () => {
               );
             })}
 
-            <div className="px-2 pt-2">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[color:var(--muted)]">
+            <div className="px-2 pt-2 space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[color:var(--muted)]">
                 {t('nav.language')}
               </p>
               <LanguageToggle locale={locale} setLocale={setLocale} mobile />
+              <div className="flex items-center gap-3 pt-1">
+                <ThemeToggle />
+                <span className="text-xs text-[color:var(--muted)]">Toggle theme</span>
+              </div>
             </div>
 
             {session ? null : (
@@ -349,6 +356,29 @@ const Navbar = () => {
     </nav>
   );
 };
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-2)] hover:text-[color:var(--ink)]"
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {theme === 'dark' ? (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      ) : (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      )}
+    </button>
+  );
+}
 
 function LanguageToggle({
   locale,

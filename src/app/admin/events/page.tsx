@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
+import { FiCalendar } from 'react-icons/fi';
 import axios from 'axios';
 import EventForm, { EventFormValues } from '@/components/events/EventForm';
 import EventCard from '@/components/events/EventCard';
 import SeekerRegistrationDownloads from '@/components/events/SeekerRegistrationDownloads';
 import { AppEvent } from '@/lib/events';
+import EmptyState from '@/components/EmptyState';
 
 const initialFormData: EventFormValues = {
   title: '',
@@ -214,7 +216,11 @@ export default function AdminEvents() {
         {loading ? (
           <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">Loading events...</div>
         ) : events.length === 0 ? (
-          <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">No events found.</div>
+          <EmptyState
+            icon={<FiCalendar className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No events found"
+            message="Create your first event using the form above."
+          />
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event) => (

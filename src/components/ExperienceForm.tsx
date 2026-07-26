@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import CityPicker from '@/components/CityPicker';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function ExperienceForm({
   defaultName,
@@ -92,8 +93,9 @@ export default function ExperienceForm({
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
         >
+          {submitting && <LoadingSpinner />}
           {submitting ? 'Submitting...' : 'Share experience'}
         </button>
       </div>

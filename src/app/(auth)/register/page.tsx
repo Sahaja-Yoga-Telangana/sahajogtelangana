@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function SignUp() {
   const router = useRouter();
@@ -301,7 +302,7 @@ export default function SignUp() {
                 <div>
                   <button
                     type="button"
-                    className={`inline-flex w-full items-center justify-center rounded-full px-3.5 py-2.5 font-semibold leading-7 text-white ${
+                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-3.5 py-2.5 font-semibold leading-7 text-white ${
                       loading || !isHomePracticeCorrect
                         ? "bg-[color:var(--border)] cursor-not-allowed"
                         : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
@@ -309,6 +310,7 @@ export default function SignUp() {
                     onClick={submitForm}
                     disabled={loading || !isHomePracticeCorrect}
                   >
+                    {loading && <LoadingSpinner />}
                     {loading ? "Processing..." : "Create Account"}
                   </button>
                   </div>

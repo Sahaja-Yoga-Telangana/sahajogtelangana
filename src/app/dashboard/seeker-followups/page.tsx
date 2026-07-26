@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { FiPhone, FiRefreshCw, FiSave, FiUsers } from 'react-icons/fi';
+import { FiPhone, FiRefreshCw, FiSave, FiUsers, FiInbox } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import EmptyState from '@/components/EmptyState';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 type Seeker = {
   _id: string;
@@ -141,10 +143,10 @@ export default function SeekerFollowupsPage() {
               type="button"
               onClick={claimBatch}
               disabled={claiming || seekers.length > 0}
-              className="admin-btn-primary inline-flex items-center gap-2 disabled:opacity-60"
+              className="admin-btn-primary inline-flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               title={seekers.length > 0 ? 'Complete your current batch before fetching another one.' : undefined}
             >
-              <FiUsers className="h-4 w-4" aria-hidden="true" />
+              {claiming ? <LoadingSpinner /> : <FiUsers className="h-4 w-4" aria-hidden="true" />}
               {claiming ? 'Claiming...' : seekers.length > 0 ? 'Complete current batch first' : 'Get next 4 seekers'}
             </button>
           </div>
@@ -257,9 +259,9 @@ export default function SeekerFollowupsPage() {
                   type="button"
                   onClick={() => updateSeeker(seeker._id, {})}
                   disabled={savingId === seeker._id}
-                  className="admin-btn-primary mt-5 inline-flex items-center gap-2 disabled:opacity-60"
+                  className="admin-btn-primary mt-5 inline-flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {savingId === seeker._id ? <FiRefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" /> : <FiSave className="h-4 w-4" aria-hidden="true" />}
+                  {savingId === seeker._id ? <LoadingSpinner /> : <FiSave className="h-4 w-4" aria-hidden="true" />}
                   {savingId === seeker._id ? 'Saving...' : 'Save follow-up'}
                 </button>
               </article>
@@ -268,9 +270,11 @@ export default function SeekerFollowupsPage() {
         </section>
 
         {seekers.length === 0 ? (
-          <div className="admin-card p-8 text-center text-sm text-[color:var(--muted)]">
-            No seekers assigned to you yet. Use “Get next 4 seekers” when you are ready to follow up.
-          </div>
+          <EmptyState
+            icon={<FiInbox className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No seekers assigned"
+            message='Use "Get next 4 seekers" when you are ready to follow up.'
+          />
         ) : null}
       </main>
     </YogiDashboardShell>

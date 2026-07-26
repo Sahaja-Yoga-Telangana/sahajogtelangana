@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FiAlertCircle, FiCheckCircle, FiMinusCircle, FiPlus, FiUsers } from 'react-icons/fi';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 
@@ -317,8 +318,9 @@ export default function AddSeekerPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
+                    {loading && <LoadingSpinner />}
                     {loading ? t('add_seeker.submitting') : t('add_seeker.save')}
                   </button>
                 </div>

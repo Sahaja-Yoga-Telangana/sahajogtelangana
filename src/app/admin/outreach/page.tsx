@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { FiSend } from 'react-icons/fi';
+import EmptyState from '@/components/EmptyState';
 
 type Seeker = {
   _id: string;
@@ -151,7 +153,11 @@ export default function OutreachPage() {
           <h2 className="text-xl font-semibold text-[color:var(--ink)]">Matches</h2>
         </div>
         {results.length === 0 ? (
-          <div className="p-8 text-sm text-[color:var(--muted)]">No seekers loaded yet. Run a filter to prepare an outreach segment.</div>
+          <EmptyState
+            icon={<FiSend className="w-7 h-7 text-[color:var(--muted)]" />}
+            title="No results yet"
+            message="Run a filter to prepare an outreach segment."
+          />
         ) : (
           <div className="overflow-x-auto">
             <table className="admin-table min-w-full">

@@ -2,9 +2,11 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { FiSearch } from 'react-icons/fi';
 import axios from 'axios';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import EmptyState from '@/components/EmptyState';
 
 type RegistrationResponse = {
   _id: string;
@@ -216,6 +218,14 @@ export default function DownloadReceipt() {
             </div>
           </div>
           
+          {registrations && registrations.length === 0 && !loading && (
+            <EmptyState
+              icon={<FiSearch className="w-7 h-7 text-[color:var(--muted)]" />}
+              title="No receipts found"
+              message="No registrations match your search. Try a different transaction number or name."
+            />
+          )}
+
           {registrations && registrations.length > 0 && (
             <div className="mb-8">
               <div className="bg-[#F8ECF2] border border-[#8A1457] text-[#8A1457] rounded-lg p-6 mb-4">
