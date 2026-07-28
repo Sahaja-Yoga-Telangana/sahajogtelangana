@@ -100,6 +100,8 @@ export const NAV_LINKS = [
         { labelKey: 'footer.school_programs', path: '/school-programs' },
         { labelKey: 'footer.corporate_programs', path: '/corporate-register' },
         { labelKey: 'footer.contact_us', path: '/contact-us' },
+        { labelKey: 'Privacy Policy', path: '/privacy-policy' },
+        { labelKey: 'Account & Data Deletion', path: '/delete-account' },
       ],
     },
     {
