@@ -78,9 +78,12 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       return NextResponse.json({ error: "You are already a volunteer." }, { status: 409, headers: corsHeaders() });
     }
 
+    const body = await request.json().catch(() => ({}));
     const userEmail = normalizeEmail(session.email);
 
     user.role = "Volunteer";
+    if (body.language) user.language = String(body.language).trim();
+    if (body.city) user.city = String(body.city).trim();
     await user.save();
 
     await VolunteerProfile.findOneAndUpdate(
@@ -89,14 +92,17 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
         $set: {
           name: user.name || "Sahaja Yogi",
           email: userEmail,
-          city: user.city || "",
+          userId: user._id,
+          phone: String(body.phone || user.phone || "").trim(),
+          city: String(body.city || user.city || "").trim(),
+          language: String(body.language || user.language || "").trim(),
           isActive: true,
+          roles: ["follow-up"],
+          staffingFocus: "follow-up volunteer",
         },
         $setOnInsert: {
-          roles: [],
           assignments: [],
           availability: "",
-          staffingFocus: "",
           notes: "Invited by " + invite.createdByEmail,
         },
       },

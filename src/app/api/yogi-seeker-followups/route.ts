@@ -3,11 +3,15 @@ import { connect } from '@/database/mongo.config';
 import { getRequiredSession } from '@/lib/auth';
 import { Seeker } from '@/models/Seeker';
 import { VolunteerProfile } from '@/models/VolunteerProfile';
+import { INDIAN_CITIES, NEIGHBORING_STATES, CityEntry } from '@/data/indian-districts';
 
 export const dynamic = 'force-dynamic';
 
 type FollowUpVolunteer = {
+  _id?: string;
   name: string;
+  language?: string;
+  city?: string;
   roles?: string[];
   staffingFocus?: string;
   isActive?: boolean;
@@ -17,6 +21,12 @@ function hasFollowUpAccess(volunteer: any) {
   const roles = Array.isArray(volunteer?.roles) ? volunteer.roles : [];
   const values = [...roles, volunteer?.staffingFocus || ''].map((value) => String(value).toLowerCase());
   return volunteer?.isActive !== false && values.some((value) => value.includes('follow'));
+}
+
+function resolveCity(cityName: string): CityEntry | undefined {
+  return INDIAN_CITIES.find(
+    (c) => c.name.toLowerCase() === cityName.trim().toLowerCase()
+  );
 }
 
 async function getVolunteer(): Promise<{ session: any; volunteer: FollowUpVolunteer | null }> {
@@ -106,35 +116,74 @@ export async function POST() {
       );
     }
 
-    const claimedIds = [];
+    const volLang = (volunteer.language || '').toLowerCase().trim();
+    const volCity = (volunteer.city || '').trim();
+    const volCityEntry = resolveCity(volCity);
+    const volState = volCityEntry?.state || '';
+    const volZone = volCityEntry?.zone || '';
+    const neighboringStates = volState ? NEIGHBORING_STATES[volState] || [] : [];
 
-    for (let index = 0; index < 4; index += 1) {
+    const unassignedFilter: any = {
+      $and: [
+        { $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }] },
+        { $or: [
+          { snoozedUntil: { $exists: false } },
+          { snoozedUntil: null },
+          { snoozedUntil: { $lte: new Date() } },
+        ] },
+      ],
+    };
+
+    if (volLang) {
+      unassignedFilter.preferredLanguage = { $regex: new RegExp(`^${volLang.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') };
+    }
+
+    const candidates = await Seeker.find(unassignedFilter, { _id: 1, city: 1 })
+      .sort({ addedAt: 1 })
+      .limit(20)
+      .lean();
+
+    const scored: { _id: any; ring: number }[] = candidates.map((c: any) => {
+      const entry = resolveCity(String(c.city || ''));
+      let ring = 4;
+      if (entry) {
+        const cName = entry.name.toLowerCase();
+        const vName = volCity.toLowerCase();
+        if (cName === vName) {
+          ring = 0;
+        } else if (entry.state === volState) {
+          ring = 1;
+        } else if (neighboringStates.includes(entry.state)) {
+          ring = 2;
+        } else if (volZone && entry.zone === volZone) {
+          ring = 3;
+        }
+      }
+      return { _id: c._id, ring };
+    });
+
+    scored.sort((a, b) => a.ring - b.ring);
+
+    const claimedIds: string[] = [];
+    for (const candidate of scored.slice(0, 4)) {
       const seeker = await Seeker.findOneAndUpdate(
         {
-          $and: [
-            { $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }] },
-            { $or: [
-              { snoozedUntil: { $exists: false } },
-              { snoozedUntil: null },
-              { snoozedUntil: { $lte: new Date() } }
-            ] }
-          ]
+          _id: candidate._id,
+          $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }],
         },
         {
-          $set: {
-            assignedVolunteer: volunteer.name,
-          },
+          $set: { assignedVolunteer: volunteer.name },
           $unset: {
             snoozedUntil: '',
             volunteerFollowUpCompletedAt: '',
             volunteerFollowUpCompletedBy: '',
           },
         },
-        { sort: { addedAt: 1 }, new: true, projection: { _id: 1 } }
+        { new: true, projection: { _id: 1 } }
       );
-
-      if (!seeker) break;
-      claimedIds.push(seeker._id);
+      if (seeker) {
+        claimedIds.push(seeker._id.toString());
+      }
     }
 
     const seekers = await Seeker.find({

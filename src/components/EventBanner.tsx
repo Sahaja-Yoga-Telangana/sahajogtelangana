@@ -7,7 +7,6 @@ import Slider from 'react-slick';
 import { FiArrowRight, FiCalendar, FiClock, FiMapPin } from 'react-icons/fi';
 import { AppEvent, getEventDateLabel, getEventExcerpt } from '@/lib/events';
 import { useTranslations } from '@/app/provider/localeProvider';
-
 export default function EventBanner({ initialEvents = [] }: { initialEvents?: AppEvent[] }) {
   const t = useTranslations();
   const [events, setEvents] = useState<AppEvent[]>(initialEvents);
@@ -59,16 +58,7 @@ export default function EventBanner({ initialEvents = [] }: { initialEvents?: Ap
     return null;
   }
 
-  if (events.length === 0) {
-    return (
-      <div id="events" className="bg-[color:var(--surface-2)] py-10">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{t('event_banner.upcoming_events')}</h2>
-          <p className="mt-2 text-[color:var(--muted)]">{t('event_banner.no_events_desc')}</p>
-        </div>
-      </div>
-    );
-  }
+  if (events.length === 0) return null;
 
   return (
     <section id="events" className="bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_92%,transparent),_color-mix(in_srgb,var(--bg)_92%,transparent))] py-12">

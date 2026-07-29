@@ -7,7 +7,7 @@ export default async function Page() {
   const initialCenters = await getPublicCenters();
 
   return (
-    <div className="page-container bg-[color:var(--bg)] pb-6 text-[color:var(--ink)] lg:px-20">
+    <div className="bg-[color:var(--bg)] pb-12 text-[color:var(--ink)]">
       <CentersClient initialCenters={initialCenters} />
     </div>
   );

@@ -129,11 +129,19 @@ export default function InvitePage() {
           <StateCard
             icon={<FiCheckCircle className="h-10 w-10 text-emerald-500" />}
             title="Welcome to the team!"
-            body="You are now a volunteer. You can access the dashboard and start helping seekers."
+            body="You are now a volunteer. Complete your profile in the app to start matching with seekers."
             action={
-              <button onClick={() => router.push('/dashboard')} className="admin-btn-primary px-6">
-                Go to Dashboard
-              </button>
+              <div className="flex flex-col items-center gap-3">
+                <a
+                  href={`sytelangana://volunteer?token=${token}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-3 text-base font-semibold text-white transition hover:bg-emerald-700"
+                >
+                  Open in App
+                </a>
+                <button onClick={() => router.push('/dashboard')} className="text-sm text-[color:var(--muted)] underline hover:text-[color:var(--ink)]">
+                  Go to Dashboard instead
+                </button>
+              </div>
             }
           />
         );
@@ -180,6 +188,15 @@ export default function InvitePage() {
                   Sign in to accept
                 </button>
               )}
+              <div className="mt-2 border-t border-[color:var(--border)] pt-4 w-full text-center">
+                <p className="text-xs text-[color:var(--muted)] mb-2">Already have the app?</p>
+                <a
+                  href={`sytelangana://volunteer?token=${token}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--primary)] hover:underline"
+                >
+                  Open in Saadhak App
+                </a>
+              </div>
             </div>
           </div>
         );
