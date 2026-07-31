@@ -12,5 +12,8 @@ export function hashInviteToken(token: string): string {
 }
 
 export function isInviteExpired(invite: { expiresAt?: Date | null }): boolean {
-  return !!invite.expiresAt && invite.expiresAt.getTime() < Date.now();
+  // Legacy invites created before the expiry system have no expiresAt and never
+  // auto-delete; treat them as expired so they don't linger as "active" forever.
+  if (!invite?.expiresAt) return true;
+  return invite.expiresAt.getTime() < Date.now();
 }

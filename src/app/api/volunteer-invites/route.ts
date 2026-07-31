@@ -99,6 +99,9 @@ export async function POST(request: NextRequest) {
     const activeCount = await VolunteerInvite.countDocuments({
       createdBy: session.id,
       status: "active",
+      // Only invites that are still usable count toward the cap. Legacy invites
+      // (no expiresAt) and past-due ones must not block new generations.
+      $or: [{ expiresAt: { $gt: new Date() } }],
     });
     if (activeCount >= MAX_ACTIVE_INVITES) {
       return NextResponse.json(

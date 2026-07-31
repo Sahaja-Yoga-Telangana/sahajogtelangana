@@ -28,7 +28,9 @@ describe("invite token helpers", () => {
   it("flags invites past their expiry", () => {
     expect(isInviteExpired({ expiresAt: new Date(Date.now() - 1000) })).toBe(true);
     expect(isInviteExpired({ expiresAt: new Date(Date.now() + INVITE_TTL_MS) })).toBe(false);
-    expect(isInviteExpired({ expiresAt: null })).toBe(false);
-    expect(isInviteExpired({})).toBe(false);
+    // Legacy invites created before the expiry system have no expiresAt and must
+    // be treated as expired so they never linger as "active".
+    expect(isInviteExpired({ expiresAt: null })).toBe(true);
+    expect(isInviteExpired({})).toBe(true);
   });
 });
