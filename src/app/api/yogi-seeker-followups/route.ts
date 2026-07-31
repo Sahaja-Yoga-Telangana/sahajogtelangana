@@ -4,6 +4,7 @@ import { getRequiredSession } from '@/lib/auth';
 import { Seeker } from '@/models/Seeker';
 import { VolunteerProfile } from '@/models/VolunteerProfile';
 import { INDIAN_CITIES, NEIGHBORING_STATES, CityEntry } from '@/data/indian-districts';
+import { isTerminalStatus, computeSnoozedUntil } from '@/lib/seeker-snooze';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +58,9 @@ function seekerProjection() {
     volunteerFollowUpCompletedAt: 1,
     volunteerFollowUpCompletedBy: 1,
     lastContactDate: 1,
+    snoozedUntil: 1,
+    snoozedBy: 1,
+    snoozeReason: 1,
     source: 1,
     eventInterest: 1,
     centerInterest: 1,
@@ -232,11 +236,25 @@ export async function PATCH(request: NextRequest) {
 
     if (isCompletedOrFollowUp) {
       update.$set.assignedVolunteer = '';
-      update.$set.snoozedUntil = new Date(Date.now() + 3.5 * 24 * 60 * 60 * 1000);
-      update.$unset = {
-        volunteerFollowUpCompletedAt: '',
-        volunteerFollowUpCompletedBy: '',
-      };
+      if (isTerminalStatus(status)) {
+        update.$unset = {
+          snoozedUntil: '',
+          snoozedBy: '',
+          snoozeReason: '',
+          volunteerFollowUpCompletedAt: '',
+          volunteerFollowUpCompletedBy: '',
+        };
+      } else {
+        update.$set.snoozedUntil = computeSnoozedUntil(new Date(), body.snoozeDays);
+        update.$set.snoozedBy = volunteer.name;
+        if (body.snoozeReason) {
+          update.$set.snoozeReason = String(body.snoozeReason).trim();
+        }
+        update.$unset = {
+          volunteerFollowUpCompletedAt: '',
+          volunteerFollowUpCompletedBy: '',
+        };
+      }
     } else {
       update.$set.volunteerFollowUpCompletedAt = new Date();
       update.$set.volunteerFollowUpCompletedBy = volunteer.name;
