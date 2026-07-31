@@ -8,8 +8,7 @@ import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
 import { FiCopy, FiCheck, FiLink, FiUserPlus, FiRefreshCw } from 'react-icons/fi';
 import LoadingSpinner from '@/components/LoadingSpinner';
-
-const interestOptions = ['Follow-up', 'Events', 'Center support', 'Music', 'Public programs', 'Digital seva'];
+import { VOLUNTEER_INTEREST_OPTIONS } from '@/constants/volunteer';
 
 type InviteRecord = {
   _id: string;
@@ -18,6 +17,7 @@ type InviteRecord = {
   usedByEmail: string | null;
   usedAt: string | null;
   createdAt: string;
+  expiresAt: string | null;
 };
 
 export default function VolunteerRequestPage() {
@@ -195,7 +195,13 @@ export default function VolunteerRequestPage() {
                             inv.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-400'
                           }`} />
                           <span className="text-sm text-[color:var(--ink)]">
-                            {inv.status === 'active' ? 'Active' : `Used by ${inv.usedByEmail || '—'}`}
+                            {inv.status === 'active'
+                              ? inv.expiresAt
+                                ? `Active until ${new Date(inv.expiresAt).toLocaleDateString()}`
+                                : 'Active'
+                              : inv.status === 'expired'
+                              ? 'Expired'
+                              : `Used by ${inv.usedByEmail || '—'}`}
                           </span>
                         </div>
                         <span className="text-[11px] text-[color:var(--muted)]">
@@ -259,7 +265,7 @@ export default function VolunteerRequestPage() {
 
                   <Field label={t('volunteer.interests')}>
                     <div className="flex flex-wrap gap-3">
-                      {interestOptions.map((interest) => (
+                      {VOLUNTEER_INTEREST_OPTIONS.map((interest) => (
                         <button
                           key={interest}
                           type="button"

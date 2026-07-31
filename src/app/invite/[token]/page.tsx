@@ -5,8 +5,19 @@ import { useParams, useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import { FiCheckCircle, FiAlertCircle, FiClock, FiUserPlus, FiLogIn } from 'react-icons/fi';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import CityPicker from '@/components/CityPicker';
+import { VOLUNTEER_INTEREST_OPTIONS, VOLUNTEER_LANGUAGES } from '@/constants/volunteer';
 
-type InviteStatus = 'loading' | 'not_found' | 'used' | 'already_volunteer' | 'success' | 'ready';
+type InviteStatus = 'loading' | 'not_found' | 'used' | 'expired' | 'already_volunteer' | 'success' | 'ready';
+
+type InviteInfo = {
+  status: string;
+  createdByEmail: string;
+  usedByEmail?: string | null;
+  usedAt?: string | null;
+  createdAt?: string;
+  expiresAt?: string | null;
+};
 
 export default function InvitePage() {
   const { token } = useParams<{ token: string }>();
@@ -15,10 +26,11 @@ export default function InvitePage() {
   const [pageState, setPageState] = useState<InviteStatus>('loading');
   const [errorMsg, setErrorMsg] = useState('');
   const [accepting, setAccepting] = useState(false);
-  const [inviteInfo, setInviteInfo] = useState<{
-    status: string;
-    createdByEmail: string;
-  } | null>(null);
+  const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null);
+  const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
+  const [language, setLanguage] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
 
   useEffect(() => {
     fetch(`/api/volunteer-invites/${token}`)
@@ -31,11 +43,12 @@ export default function InvitePage() {
       })
       .then((data) => {
         if (!data) return;
+        setInviteInfo(data);
         if (data.status === 'used') {
           setPageState('used');
-          setInviteInfo(data);
+        } else if (data.status === 'expired') {
+          setPageState('expired');
         } else {
-          setInviteInfo(data);
           if (authStatus === 'authenticated') {
             const role = (session?.user as any)?.role?.toLowerCase();
             if (role === 'volunteer' || role === 'admin') {
@@ -53,15 +66,35 @@ export default function InvitePage() {
       });
   }, [token, authStatus, session]);
 
+  const toggleInterest = (item: string) => {
+    setInterests((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
+  };
+
   const handleAccept = async () => {
     if (!session) {
       router.push(`/login?callbackUrl=/invite/${token}`);
       return;
     }
 
+    if (!phone.trim()) {
+      setErrorMsg('Phone number is required.');
+      return;
+    }
+    if (!city.trim()) {
+      setErrorMsg('City is required.');
+      return;
+    }
+
     setAccepting(true);
+    setErrorMsg('');
     try {
-      const res = await fetch(`/api/volunteer-invites/${token}`, { method: 'POST' });
+      const res = await fetch(`/api/volunteer-invites/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone.trim(), city: city.trim(), language, interests }),
+      });
       const data = await res.json();
       if (res.ok) {
         setPageState('success');
@@ -70,7 +103,7 @@ export default function InvitePage() {
         if (res.status === 409) {
           setPageState('already_volunteer');
         } else if (res.status === 410) {
-          setPageState('used');
+          setPageState(data.code === 'expired' ? 'expired' : 'used');
         } else {
           setPageState('ready');
         }
@@ -106,7 +139,20 @@ export default function InvitePage() {
           <StateCard
             icon={<FiAlertCircle className="h-10 w-10 text-amber-500" />}
             title="Invite already used"
-            body="This invite link has already been used and is no longer valid."
+            body={
+              inviteInfo?.usedByEmail
+                ? `This invite link has already been used by ${inviteInfo.usedByEmail}.`
+                : 'This invite link has already been used and is no longer valid.'
+            }
+          />
+        );
+
+      case 'expired':
+        return (
+          <StateCard
+            icon={<FiClock className="h-10 w-10 text-amber-500" />}
+            title="Invite expired"
+            body="This invite link has expired. Please ask the volunteer to generate a new one."
           />
         );
 
@@ -129,19 +175,11 @@ export default function InvitePage() {
           <StateCard
             icon={<FiCheckCircle className="h-10 w-10 text-emerald-500" />}
             title="Welcome to the team!"
-            body="You are now a volunteer. Complete your profile in the app to start matching with seekers."
+            body="You are now a volunteer. You can access the dashboard and start helping seekers."
             action={
-              <div className="flex flex-col items-center gap-3">
-                <a
-                  href={`sytelangana://volunteer?token=${token}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-3 text-base font-semibold text-white transition hover:bg-emerald-700"
-                >
-                  Open in App
-                </a>
-                <button onClick={() => router.push('/dashboard')} className="text-sm text-[color:var(--muted)] underline hover:text-[color:var(--ink)]">
-                  Go to Dashboard instead
-                </button>
-              </div>
+              <button onClick={() => router.push('/dashboard')} className="admin-btn-primary px-6">
+                Go to Dashboard
+              </button>
             }
           />
         );
@@ -161,43 +199,102 @@ export default function InvitePage() {
                 <span className="font-medium text-[color:var(--ink)]">{inviteInfo.createdByEmail}</span>
               </p>
             )}
-            <p className="mt-2 text-sm leading-7 text-[color:var(--muted)] max-w-md mx-auto">
-              Click below to accept the invitation and become a volunteer. This link can only be used once.
-            </p>
 
-            {errorMsg && (
-              <p className="mt-4 text-sm text-red-500 font-medium">{errorMsg}</p>
-            )}
+            {!session ? (
+              <>
+                <p className="mt-2 text-sm leading-7 text-[color:var(--muted)] max-w-md mx-auto">
+                  Sign in to accept the invitation and become a volunteer. This link can only be used once.
+                </p>
+                <div className="mt-8">
+                  <button
+                    onClick={() => signIn(undefined, { callbackUrl: `/invite/${token}` })}
+                    className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)]"
+                  >
+                    <FiLogIn className="h-4 w-4" />
+                    Sign in to accept
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="mt-6 text-left space-y-5">
+                <p className="text-sm text-[color:var(--muted)]">
+                  Complete your volunteer profile to accept. This link can only be used once.
+                </p>
 
-            <div className="mt-8 flex flex-col items-center gap-3">
-              {session ? (
+                <div className="space-y-1">
+                  <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    Phone <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    className="admin-input"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter your phone"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    City <span className="text-red-500">*</span>
+                  </label>
+                  <CityPicker value={city} onChange={setCity} required className="admin-input" />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    Preferred Language
+                  </label>
+                  <select
+                    className="admin-input"
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                  >
+                    <option value="">Select language</option>
+                    {VOLUNTEER_LANGUAGES.map((lang) => (
+                      <option key={lang} value={lang}>
+                        {lang}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    Areas of Interest
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {VOLUNTEER_INTEREST_OPTIONS.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => toggleInterest(item)}
+                        className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                          interests.includes(item)
+                            ? 'bg-[color:var(--primary)] text-white'
+                            : 'border border-[color:var(--border)] text-[color:var(--ink)]'
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {errorMsg && (
+                  <p className="text-sm text-red-500 font-medium">{errorMsg}</p>
+                )}
+
                 <button
                   onClick={handleAccept}
                   disabled={accepting}
-                  className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {accepting && <LoadingSpinner />}
-                  {accepting ? 'Accepting...' : 'Accept Invitation'}
+                  {accepting ? 'Accepting...' : 'Accept & Become a Volunteer'}
                 </button>
-              ) : (
-                <button
-                  onClick={() => signIn(undefined, { callbackUrl: `/invite/${token}` })}
-                  className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)]"
-                >
-                  <FiLogIn className="h-4 w-4" />
-                  Sign in to accept
-                </button>
-              )}
-              <div className="mt-2 border-t border-[color:var(--border)] pt-4 w-full text-center">
-                <p className="text-xs text-[color:var(--muted)] mb-2">Already have the app?</p>
-                <a
-                  href={`sytelangana://volunteer?token=${token}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--primary)] hover:underline"
-                >
-                  Open in Saadhak App
-                </a>
               </div>
-            </div>
+            )}
           </div>
         );
     }
@@ -207,6 +304,15 @@ export default function InvitePage() {
     <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)] px-4">
       <div className="w-full max-w-lg rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-soft">
         {renderState()}
+        <div className="mt-2 border-t border-[color:var(--border)] pt-4 w-full text-center">
+          <p className="text-xs text-[color:var(--muted)] mb-2">Already have the app?</p>
+          <a
+            href={`sytelangana://volunteer?token=${token}`}
+            className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--primary)] hover:underline"
+          >
+            Open in Saadhak App
+          </a>
+        </div>
       </div>
     </div>
   );

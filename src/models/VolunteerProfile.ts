@@ -27,10 +27,19 @@ const volunteerProfileSchema = new Schema({
     trim: true,
     default: "",
   },
+  state: {
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
   language: {
     type: Schema.Types.String,
     trim: true,
     default: "",
+  },
+  interests: {
+    type: [Schema.Types.String],
+    default: [],
   },
   roles: {
     type: [Schema.Types.String],

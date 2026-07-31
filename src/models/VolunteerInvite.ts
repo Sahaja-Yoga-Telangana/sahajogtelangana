@@ -7,6 +7,16 @@ const volunteerInviteSchema = new Schema({
     unique: true,
     trim: true,
   },
+  tokenHash: {
+    type: Schema.Types.String,
+    unique: true,
+    sparse: true,
+    trim: true,
+  },
+  expiresAt: {
+    type: Schema.Types.Date,
+    default: null,
+  },
   createdBy: {
     type: Schema.Types.String,
     required: [true, "Creator is required."],
@@ -39,7 +49,9 @@ const volunteerInviteSchema = new Schema({
 });
 
 volunteerInviteSchema.index({ token: 1 }, { unique: true });
+volunteerInviteSchema.index({ tokenHash: 1 }, { unique: true, sparse: true });
 volunteerInviteSchema.index({ createdBy: 1, createdAt: -1 });
+volunteerInviteSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export const VolunteerInvite =
   mongoose.models.VolunteerInvite ||
