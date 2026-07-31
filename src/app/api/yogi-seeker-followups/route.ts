@@ -54,6 +54,7 @@ function seekerProjection() {
     addedBy: 1,
     addedAt: 1,
     followUpStatus: 1,
+    seekerPhase: 1,
     assignedVolunteer: 1,
     volunteerFollowUpCompletedAt: 1,
     volunteerFollowUpCompletedBy: 1,
@@ -226,6 +227,7 @@ export async function PATCH(request: NextRequest) {
     const update: any = {
       $set: {
         followUpStatus: status,
+        seekerPhase: String(body.seekerPhase || '').trim(),
         lastContactDate: body.lastContactDate ? new Date(body.lastContactDate) : new Date(),
         preferredLanguage: String(body.preferredLanguage || 'English').trim(),
         eventInterest: String(body.eventInterest || '').trim(),
@@ -236,13 +238,15 @@ export async function PATCH(request: NextRequest) {
 
     if (isCompletedOrFollowUp) {
       update.$set.assignedVolunteer = '';
+      // Keep the volunteer's attribution on terminal statuses too, so per-volunteer
+      // dashboards can count "converted by me" / "dormant by me".
+      update.$set.volunteerFollowUpCompletedAt = new Date();
+      update.$set.volunteerFollowUpCompletedBy = volunteer.name;
       if (isTerminalStatus(status)) {
         update.$unset = {
           snoozedUntil: '',
           snoozedBy: '',
           snoozeReason: '',
-          volunteerFollowUpCompletedAt: '',
-          volunteerFollowUpCompletedBy: '',
         };
       } else {
         update.$set.snoozedUntil = computeSnoozedUntil(new Date(), body.snoozeDays);
@@ -250,10 +254,6 @@ export async function PATCH(request: NextRequest) {
         if (body.snoozeReason) {
           update.$set.snoozeReason = String(body.snoozeReason).trim();
         }
-        update.$unset = {
-          volunteerFollowUpCompletedAt: '',
-          volunteerFollowUpCompletedBy: '',
-        };
       }
     } else {
       update.$set.volunteerFollowUpCompletedAt = new Date();

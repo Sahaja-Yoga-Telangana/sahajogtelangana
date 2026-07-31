@@ -54,6 +54,11 @@ const seekerSchema = new Schema({
     trim: true,
     default: "New",
   },
+  seekerPhase: {
+    type: String,
+    trim: true,
+    default: "New Seeker",
+  },
   assignedVolunteer: {
     type: String,
     trim: true,
@@ -153,6 +158,11 @@ if (existingSeekerModel) {
       type: String,
       trim: true,
       default: "New",
+    },
+    seekerPhase: {
+      type: String,
+      trim: true,
+      default: "New Seeker",
     },
     assignedVolunteer: {
       type: String,
