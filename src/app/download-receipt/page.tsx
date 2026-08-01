@@ -152,7 +152,7 @@ export default function DownloadReceipt() {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-8">
-        <Link href="/" className="text-[#8A1457] hover:underline flex items-center">
+        <Link href="/" className="text-[color:var(--primary)] hover:underline flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -160,14 +160,14 @@ export default function DownloadReceipt() {
         </Link>
       </div>
       
-      <div className="bg-[color:var(--surface)] rounded-lg shadow-md overflow-hidden">
+      <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-panel">
         <div className="p-6">
-          <h2 className="text-2xl font-bold text-center text-[#8A1457] mb-6">Download Registration Receipt</h2>
+          <h2 className="mb-6 text-center font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] text-[color:var(--ink)]">Download Registration Receipt</h2>
           
           <div className="max-w-md mx-auto mb-8">
             <form onSubmit={handleSearch} className="space-y-4">
               <div>
-                <label htmlFor="transactionNumber" className="block text-gray-700 font-medium mb-2">
+                <label htmlFor="transactionNumber" className="block text-[color:var(--ink)] font-medium mb-2">
                   Transaction Number
                 </label>
                 <input
@@ -178,13 +178,13 @@ export default function DownloadReceipt() {
                     setTransactionNumber(e.target.value);
                     setError('');
                   }}
-                  className="w-full p-2 border rounded text-gray-800 border-gray-300"
+                  className="w-full p-2 border rounded text-[color:var(--ink)] border-[color:var(--border)]"
                   placeholder="Enter your payment transaction ID"
                 />
               </div>
               
               <div>
-                <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+                <label htmlFor="name" className="block text-[color:var(--ink)] font-medium mb-2">
                   Name
                 </label>
                 <input
@@ -195,25 +195,25 @@ export default function DownloadReceipt() {
                     setName(e.target.value);
                     setError('');
                   }}
-                  className="w-full p-2 border rounded text-gray-800 border-gray-300"
+                  className="w-full p-2 border rounded text-[color:var(--ink)] border-[color:var(--border)]"
                   placeholder="Enter your name as provided during registration"
                 />
               </div>
               
               {error && (
-                <p className="text-red-500 text-base mt-1">{error}</p>
+                <p className="text-[color:var(--danger)] text-base mt-1">{error}</p>
               )}
               
               <button
                 type="submit"
-                className="w-full bg-[#8A1457] hover:bg-[#6A0F43] text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                className="btn btn-primary w-full"
                 disabled={loading}
               >
                 {loading ? 'Searching...' : 'Find My Receipt'}
               </button>
             </form>
             
-            <div className="mt-4 text-base text-gray-600 text-center">
+            <div className="mt-4 text-base text-[color:var(--muted)] text-center">
               <p>Enter either your transaction number or name to find and download your registration receipt.</p>
             </div>
           </div>
@@ -228,19 +228,19 @@ export default function DownloadReceipt() {
 
           {registrations && registrations.length > 0 && (
             <div className="mb-8">
-              <div className="bg-[#F8ECF2] border border-[#8A1457] text-[#8A1457] rounded-lg p-6 mb-4">
-                <h3 className="text-xl font-bold text-[#8A1457] text-center mb-4">Receipt Found!</h3>
+              <div className="bg-[color:var(--accent-200)]/35 border border-[color:var(--primary)]/30 text-[color:var(--primary)] rounded-lg p-6 mb-4">
+                <h3 className="text-xl font-bold text-[color:var(--primary)] text-center mb-4">Receipt Found!</h3>
                 <p className="text-center mb-6">Your registration receipt is available below. You can download or print it for your records.</p>
                 
-                <div className="bg-[color:var(--surface)] border border-gray-200 rounded-lg p-6 mb-4" ref={receiptRef}>
+                <div className="bg-[color:var(--surface)] border border-[color:var(--border)] rounded-lg p-6 mb-4" ref={receiptRef}>
                   <div className="flex justify-between items-center mb-6">
                     <div>
-                      <h4 className="text-xl font-bold text-gray-800">Sahaja Yoga Telangana</h4>
-                      <p className="text-base text-gray-600">Event Registration Receipt</p>
+                      <h4 className="text-xl font-bold text-[color:var(--ink)]">Sahaja Yoga Telangana</h4>
+                      <p className="text-base text-[color:var(--muted)]">Event Registration Receipt</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-base text-gray-600">Receipt #: {registrations[0]?._id.substring(0, 8)}</p>
-                      <p className="text-base text-gray-600">Date: {
+                      <p className="text-base text-[color:var(--muted)]">Receipt #: {registrations[0]?._id.substring(0, 8)}</p>
+                      <p className="text-base text-[color:var(--muted)]">Date: {
                         // Safely format the date with a fallback
                         registrations[0]?.createdAt 
                           ? format(new Date(registrations[0].createdAt), 'dd MMM yyyy') 
@@ -249,34 +249,34 @@ export default function DownloadReceipt() {
                     </div>
                   </div>
                   
-                  <div className="border-t border-b border-gray-200 py-4 mb-4">
-                    <h5 className="font-semibold text-gray-700 mb-3">Event Details</h5>
-                    <p className="text-gray-800 font-medium">{registrations[0]?.eventTitle}</p>
+                  <div className="border-t border-b border-[color:var(--border)] py-4 mb-4">
+                    <h5 className="font-semibold text-[color:var(--ink)] mb-3">Event Details</h5>
+                    <p className="text-[color:var(--ink)] font-medium">{registrations[0]?.eventTitle}</p>
                   </div>
                   
                   {/* Participant Information - Single Registration */}
                   {registrations.length === 1 && (
                     <div className="mb-4">
-                      <h5 className="font-semibold text-gray-700 mb-3">Participant Information</h5>
+                      <h5 className="font-semibold text-[color:var(--ink)] mb-3">Participant Information</h5>
                       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                         <div>
-                          <p className="text-base text-gray-600">Name:</p>
+                          <p className="text-base text-[color:var(--muted)]">Name:</p>
                           <p className="font-medium">{registrations[0].name}</p>
                         </div>
                         <div>
-                          <p className="text-base text-gray-600">Age:</p>
+                          <p className="text-base text-[color:var(--muted)]">Age:</p>
                           <p className="font-medium">{registrations[0].age} years</p>
                         </div>
                         <div>
-                          <p className="text-base text-gray-600">Location:</p>
+                          <p className="text-base text-[color:var(--muted)]">Location:</p>
                           <p className="font-medium">{registrations[0].city}, {registrations[0].state}</p>
                         </div>
                         <div>
-                          <p className="text-base text-gray-600">Email:</p>
+                          <p className="text-base text-[color:var(--muted)]">Email:</p>
                           <p className="font-medium">{registrations[0].email}</p>
                         </div>
                         <div>
-                          <p className="text-base text-gray-600">Receipt Number:</p>
+                          <p className="text-base text-[color:var(--muted)]">Receipt Number:</p>
                           <p className="font-medium">{registrations[0]._id.substring(0, 8)}</p>
                         </div>
                       </div>
@@ -286,30 +286,30 @@ export default function DownloadReceipt() {
                   {/* Participant Information - Bulk Registration */}
                   {registrations.length > 1 && (
                     <div className="mb-4">
-                      <h5 className="font-semibold text-gray-700 mb-3">Participants Information</h5>
+                      <h5 className="font-semibold text-[color:var(--ink)] mb-3">Participants Information</h5>
                       <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
+                        <table className="min-w-full divide-y divide-[color:var(--border)]">
+                          <thead className="bg-[color:var(--surface-2)]">
                             <tr>
-                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
-                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-[color:var(--muted)] uppercase tracking-wider">Name</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-[color:var(--muted)] uppercase tracking-wider">Age</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-[color:var(--muted)] uppercase tracking-wider">Location</th>
+                              <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-[color:var(--muted)] uppercase tracking-wider">Amount</th>
                             </tr>
                           </thead>
-                          <tbody className="bg-[color:var(--surface)] divide-y divide-gray-200">
+                          <tbody className="bg-[color:var(--surface)] divide-y divide-[color:var(--border)]">
                             {registrations.map((registration, index) => (
                               <tr key={index}>
-                                <td className="px-3 py-2 whitespace-nowrap text-base font-medium text-gray-900">
+                                <td className="px-3 py-2 whitespace-nowrap text-base font-medium text-[color:var(--ink)]">
                                   {registration.name}
                                 </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-base text-gray-500">
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   {registration.age} years
                                 </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-base text-gray-500">
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   {registration.city}, {registration.state}
                                 </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-base text-gray-500">
+                                <td className="px-3 py-2 whitespace-nowrap text-base text-[color:var(--muted)]">
                                   ₹{registration.amountPaid.toLocaleString()}
                                 </td>
                               </tr>
@@ -321,32 +321,32 @@ export default function DownloadReceipt() {
                   )}
                   
                   <div className="mb-4">
-                    <h5 className="font-semibold text-gray-700 mb-3">Payment Information</h5>
+                    <h5 className="font-semibold text-[color:var(--ink)] mb-3">Payment Information</h5>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                       <div>
-                        <p className="text-base text-gray-600">Amount Paid:</p>
+                        <p className="text-base text-[color:var(--muted)]">Amount Paid:</p>
                         <p className="font-medium">₹{
                           registrations.reduce((sum, reg) => sum + reg.amountPaid, 0).toLocaleString()
                         }</p>
                       </div>
                       <div>
-                        <p className="text-base text-gray-600">Transaction ID:</p>
+                        <p className="text-base text-[color:var(--muted)]">Transaction ID:</p>
                         <p className="font-medium">{registrations[0]?.transactionNumber}</p>
                       </div>
                       <div>
-                        <p className="text-base text-gray-600">Payment Status:</p>
-                        <p className="font-medium text-[#8A1457]">Confirmed</p>
+                        <p className="text-base text-[color:var(--muted)]">Payment Status:</p>
+                        <p className="font-medium text-[color:var(--primary)]">Confirmed</p>
                       </div>
                       {registrations.length > 1 && (
                         <div>
-                          <p className="text-base text-gray-600">Participants:</p>
+                          <p className="text-base text-[color:var(--muted)]">Participants:</p>
                           <p className="font-medium">{registrations.length}</p>
                         </div>
                       )}
                     </div>
                   </div>
                   
-                  <div className="text-center mt-8 text-base text-gray-600">
+                  <div className="text-center mt-8 text-base text-[color:var(--muted)]">
                     <p>Thank you for registering for the event!</p>
                     <p>For any inquiries, please contact us at sahajogtelangana@gmail.com</p>
                   </div>
@@ -355,7 +355,7 @@ export default function DownloadReceipt() {
                 <div className="flex justify-center">
                   <button 
                     onClick={handlePrintReceipt} 
-                    className="bg-[#8A1457] hover:bg-[#6A0F43] text-white font-bold py-2 px-4 rounded flex items-center justify-center mr-3"
+                    className="btn btn-primary"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -365,7 +365,7 @@ export default function DownloadReceipt() {
                   
                   <button 
                     onClick={handleDownloadPDF} 
-                    className="bg-[#E39321] hover:bg-[#C37D1D] text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+                    className="btn bg-[color:var(--accent)] text-white hover:bg-[color:var(--accent-600)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -374,7 +374,7 @@ export default function DownloadReceipt() {
                   </button>
                 </div>
                 
-                <div className="mt-6 border-t border-gray-200 pt-6">
+                <div className="mt-6 border-t border-[color:var(--border)] pt-6">
                   <h3 className="text-center font-medium mb-4">Email Receipt</h3>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
@@ -388,18 +388,18 @@ export default function DownloadReceipt() {
                             setEmailError('');
                             setEmailSent(false);
                           }}
-                          className={`flex-1 p-2 border rounded-l text-gray-800 ${emailError ? 'border-red-500' : 'border-gray-300'}`}
+                          className={`flex-1 p-2 border rounded-l text-[color:var(--ink)] ${emailError ? '!border-[color:var(--danger)]' : 'border-[color:var(--border)]'}`}
                         />
                         <button
                           onClick={handleSendEmail}
                           disabled={sendingEmail || emailSent}
-                          className={`bg-[#E39321] hover:bg-[#C37D1D] text-white font-bold py-2 px-4 rounded-r disabled:bg-gray-400 whitespace-nowrap`}
+                          className={`btn rounded-l-none whitespace-nowrap bg-[color:var(--accent)] text-white hover:bg-[color:var(--accent-600)] disabled:bg-[color:var(--border)]`}
                         >
                           {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                         </button>
                       </div>
-                      {emailError && <p className="text-red-500 text-base mt-1">{emailError}</p>}
-                      {emailSent && <p className="text-[#8A1457] text-base mt-1">Receipt has been sent to your email!</p>}
+                      {emailError && <p className="text-[color:var(--danger)] text-base mt-1">{emailError}</p>}
+                      {emailSent && <p className="text-[color:var(--primary)] text-base mt-1">Receipt has been sent to your email!</p>}
                     </div>
                   </div>
                 </div>

@@ -533,7 +533,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[color:var(--success)]"></div>
       </div>
     );
   }
@@ -541,9 +541,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
   if (!event) {
     return (
       <div className="container mx-auto px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold text-red-600">Event not found</h1>
+        <h1 className="text-2xl font-bold text-[color:var(--danger)]">Event not found</h1>
         <p className="mt-4">The event you are looking for does not exist or has been removed.</p>
-        <Link href="/" className="mt-6 inline-block bg-[#8A1457] text-white px-6 py-2 rounded-md">
+        <Link href="/" className="mt-6 inline-block btn btn-primary">
           Return to Home
         </Link>
       </div>
@@ -643,7 +643,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
           )}
           
           {errorMessage && (
-            <div className="mb-4 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-600 dark:text-red-300">
+            <div className="mb-4 rounded-2xl border !border-[color:var(--danger)]/40 bg-red-500/10 px-4 py-3 text-[color:var(--danger)] ">
               {errorMessage}
             </div>
           )}
@@ -856,7 +856,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           setEmail(e.target.value);
                           setEmailError('');
                         }}
-                        className={`min-h-[48px] flex-1 rounded-t-xl border bg-[color:var(--surface)] p-3 text-[color:var(--ink)] sm:rounded-l-xl sm:rounded-tr-none ${emailError ? 'border-red-500' : 'border-[color:var(--border)]'}`}
+                        className={`min-h-[48px] flex-1 rounded-t-xl border bg-[color:var(--surface)] p-3 text-[color:var(--ink)] sm:rounded-l-xl sm:rounded-tr-none ${emailError ? '!border-[color:var(--danger)]' : 'border-[color:var(--border)]'}`}
                       />
                       <button
                         onClick={handleSendEmail}
@@ -867,7 +867,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                       </button>
                     </div>
-                    {emailError && <p className="text-red-500 text-base mt-1">{emailError}</p>}
+                    {emailError && <p className="text-[color:var(--danger)] text-base mt-1">{emailError}</p>}
                     {emailSent && <p className="mt-1 text-base text-[color:var(--primary)]">Receipt has been sent to your email!</p>}
                   </div>
                 </div>
@@ -932,10 +932,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               name="state"
                               value={formData.state}
                               onChange={handleInputChange}
-                              className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                              className={`admin-input ${errors.state ? '!border-[color:var(--danger)]' : ''}`}
                               placeholder="Your state"
                             />
-                            {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                            {errors.state && <p className="text-[color:var(--danger)] text-base mt-1">{errors.state}</p>}
                           </div>
                           
                           <div>
@@ -946,10 +946,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               name="city"
                               value={formData.city}
                               onChange={handleInputChange}
-                              className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                              className={`admin-input ${errors.city ? '!border-[color:var(--danger)]' : ''}`}
                               placeholder="Your city"
                             />
-                            {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                            {errors.city && <p className="text-[color:var(--danger)] text-base mt-1">{errors.city}</p>}
                           </div>
                         </div>
 
@@ -961,10 +961,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.email ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Enter your email"
                           />
-                          {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                          {errors.email && <p className="text-[color:var(--danger)] text-base mt-1">{errors.email}</p>}
                         </div>
                       </div>
                     ) : null}
@@ -979,10 +979,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className={`admin-input ${errors.name ? 'border-red-500' : ''}`}
+                        className={`admin-input ${errors.name ? '!border-[color:var(--danger)]' : ''}`}
                         placeholder="Enter full name"
                       />
-                      {errors.name && <p className="text-red-500 text-base mt-1">{errors.name}</p>}
+                      {errors.name && <p className="text-[color:var(--danger)] text-base mt-1">{errors.name}</p>}
                     </div>
                     
                     {!isBulkRegistration ? (
@@ -995,10 +995,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.state ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Your state"
                           />
-                          {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                          {errors.state && <p className="text-[color:var(--danger)] text-base mt-1">{errors.state}</p>}
                         </div>
                         
                         <div>
@@ -1009,10 +1009,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="city"
                             value={formData.city}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.city ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Your city"
                           />
-                          {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                          {errors.city && <p className="text-[color:var(--danger)] text-base mt-1">{errors.city}</p>}
                         </div>
                       </div>
                     ) : null}
@@ -1025,11 +1025,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         name="age"
                         value={formData.age}
                         onChange={handleInputChange}
-                        className={`admin-input ${errors.age ? 'border-red-500' : ''}`}
+                        className={`admin-input ${errors.age ? '!border-[color:var(--danger)]' : ''}`}
                         placeholder="Age"
                         min="1"
                       />
-                      {errors.age && <p className="text-red-500 text-base mt-1">{errors.age}</p>}
+                      {errors.age && <p className="text-[color:var(--danger)] text-base mt-1">{errors.age}</p>}
                     </div>
                     
                     {!isBulkRegistration ? (
@@ -1041,10 +1041,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                          className={`admin-input ${errors.email ? '!border-[color:var(--danger)]' : ''}`}
                           placeholder="Enter your email"
                         />
-                        {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                        {errors.email && <p className="text-[color:var(--danger)] text-base mt-1">{errors.email}</p>}
                       </div>
                     ) : null}
                     
@@ -1096,7 +1096,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                                     <button
                                       type="button"
                                       onClick={() => handleRemoveParticipant(index)}
-                                      className="text-red-600 hover:text-red-800"
+                                      className="text-[color:var(--danger)] hover:text-red-800"
                                     >
                                       Remove
                                     </button>
@@ -1107,7 +1107,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           </table>
                         </div>
                         {errors.participants && (
-                          <p className="text-red-500 text-base mt-1">{errors.participants}</p>
+                          <p className="text-[color:var(--danger)] text-base mt-1">{errors.participants}</p>
                         )}
                       </div>
                     )}
@@ -1152,11 +1152,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               });
                             }
                           }}
-                          className={`admin-input ${errors.transactionNumber ? 'border-red-500' : ''}`}
+                          className={`admin-input ${errors.transactionNumber ? '!border-[color:var(--danger)]' : ''}`}
                           placeholder="Enter payment transaction ID"
                         />
                         {errors.transactionNumber && (
-                          <p className="text-red-500 text-base mt-1">{errors.transactionNumber}</p>
+                          <p className="text-[color:var(--danger)] text-base mt-1">{errors.transactionNumber}</p>
                         )}
                       </div>
                     ) : (
