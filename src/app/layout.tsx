@@ -51,7 +51,7 @@ export default function RootLayout({
               <Toaster position="top-center" />
               <div aria-hidden className="grain-overlay" />
 
-              <header className="bg-[color:var(--surface)] border-b border-gray-200 shadow-sm sticky top-0 z-30">
+              <header className="sticky top-0 z-30">
                 <Navbar />
               </header>
 
