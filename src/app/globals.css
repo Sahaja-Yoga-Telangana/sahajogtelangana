@@ -583,9 +583,27 @@ a[href*='wa.me/'] {
   }
 
   .admin-sidebar {
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--primary-600) 92%, black 8%), color-mix(in srgb, var(--primary) 88%, black 12%));
-    color: var(--on-primary);
+    --sidebar-bg-start: color-mix(in srgb, var(--primary-600) 92%, black 8%);
+    --sidebar-bg-end: color-mix(in srgb, var(--primary) 88%, black 12%);
+    --sidebar-fg: var(--on-primary);
+    --sidebar-fg-soft: color-mix(in srgb, var(--on-primary) 60%, transparent);
+    --sidebar-fg-nav: color-mix(in srgb, var(--on-primary) 82%, transparent);
+    --sidebar-border: color-mix(in srgb, var(--on-primary) 10%, transparent);
+    --sidebar-active-bg: color-mix(in srgb, var(--on-primary) 90%, transparent);
+    --sidebar-active-fg: var(--primary-600);
+    background: linear-gradient(180deg, var(--sidebar-bg-start), var(--sidebar-bg-end));
+    color: var(--sidebar-fg);
+  }
+
+  html.dark .admin-sidebar {
+    --sidebar-bg-start: var(--surface-3);
+    --sidebar-bg-end: var(--bg);
+    --sidebar-fg: var(--ink);
+    --sidebar-fg-soft: color-mix(in srgb, var(--ink) 60%, transparent);
+    --sidebar-fg-nav: color-mix(in srgb, var(--ink) 82%, transparent);
+    --sidebar-border: color-mix(in srgb, var(--ink) 10%, transparent);
+    --sidebar-active-bg: var(--primary);
+    --sidebar-active-fg: var(--bg);
   }
 
   .admin-input-sm {
