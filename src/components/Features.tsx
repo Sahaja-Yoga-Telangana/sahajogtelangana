@@ -3,6 +3,8 @@
 import { FEATURES } from '../../constants'
 import Image from 'next/image'
 import React from 'react'
+import Reveal from '@/components/motion/Reveal'
+import MaskedReveal from '@/components/motion/MaskedReveal'
 import { useTranslations } from '@/app/provider/localeProvider';
 
 const Features = () => {
@@ -15,87 +17,47 @@ const Features = () => {
   ];
 
   return (
-    <section className="flex-col flexCenter overflow-hidden bg-[color:var(--surface)] py-20 w-full">
-      <div className="max-container relative w-full flex flex-col items-center px-6 md:px-10">
-        
+    <section className="relative w-full overflow-hidden bg-[color:var(--surface)] py-[clamp(72px,9vh,104px)]">
+      <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
         {/* Decorative elements */}
-        <div className="absolute top-12 left-10 w-24 h-24 rounded-full bg-[color:var(--accent-200)]/40 blur-3xl hidden lg:block"></div>
-        <div className="absolute bottom-12 right-10 w-32 h-32 rounded-full bg-[color:var(--surface-3)]/60 blur-3xl hidden lg:block"></div>
-        
+        <div className="pointer-events-none absolute left-10 top-12 hidden h-40 w-40 rounded-full bg-[color:var(--accent-200)]/40 blur-3xl lg:block"></div>
+        <div className="pointer-events-none absolute bottom-12 right-10 hidden h-44 w-44 rounded-full bg-[color:var(--surface-3)]/60 blur-3xl lg:block"></div>
+
         {/* Title */}
-        <div className="text-center mb-14 relative z-10">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[color:var(--ink)] mb-4 tracking-tight">
-            {t('features.title')}
-          </h2>
-          <div className="w-28 h-px bg-[color:var(--accent)] mx-auto"></div>
+        <div className="relative z-10 mb-14 text-center">
+          <p className="eyebrow">{t('features.eyebrow')}</p>
+          <MaskedReveal
+            as="h2"
+            delay={60}
+            text={t('features.title')}
+            className="mt-4 text-[clamp(28px,3.4vw,40px)] font-display leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]"
+          />
+          <div className="mt-5 flex items-center justify-center gap-2">
+            <div className="h-[2px] w-16 bg-[color:var(--accent)]"></div>
+            <div className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]"></div>
+          </div>
         </div>
 
-        {/* Main content */}
-        <div className="w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          
-          {/* Image */}
-          <div className="lg:w-2/5 relative">
-            <div className="relative z-10 rounded-2xl overflow-hidden">
-              <Image
-                src="/boy-beach.svg"
-                alt="Meditation"
-                width={500}
-                height={700}
-                className="w-full h-auto object-cover rounded-2xl"
-              />
-            </div>
-
-            {/* Subtle soft background glow */}
-            <div className="absolute inset-0 rounded-2xl bg-[color:var(--surface-2)] blur-2xl scale-105 -z-10"></div>
-          </div>
-
-          {/* Features Grid */}
-          <div className="lg:w-3/5 z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {localizedFeatures.map((feature, index) => (
-                <FeatureItem 
-                  key={feature.title}
-                  title={feature.title} 
-                  icon={feature.icon}
-                  description={feature.description}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
+        {/* Feature cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {localizedFeatures.map((feature, index) => (
+            <Reveal key={feature.title} delay={index * 80}>
+              <div className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel md:p-7">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--accent-200),var(--surface-2))] border border-[color:var(--accent)]/30 transition-transform duration-300 group-hover:scale-105">
+                  <Image src={feature.icon} alt={feature.title} width={26} height={26} className="opacity-80" />
+                </div>
+                <h3 className="mt-5 text-[19px] font-semibold leading-snug text-[color:var(--ink)]">
+                  {feature.title}
+                </h3>
+                <p className="mt-3 text-[14.5px] leading-[1.7] text-[color:var(--muted)]">
+                  {feature.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
-
-type FeatureItem = {
-  title: string;
-  icon: string;
-  description: string;
-  index: number;
-}
-
-const FeatureItem = ({ title, icon, description }: FeatureItem) => {
-  return (
-    <div className="group bg-[color:var(--surface)] border border-[color:var(--border)] rounded-2xl p-6 transition-all hover:shadow-soft hover:-translate-y-1 duration-300">
-      <div className="flex items-start gap-4">
-        
-        {/* Icon container with subtle pink-toned background for contrast */}
-        <div className="rounded-full p-3 flex-shrink-0 bg-[color:var(--primary)] shadow-md">
-          <Image src={icon} alt={title} width={28} height={28} />
-        </div>
-
-        <div>
-          <h3 className="text-xl md:text-2xl font-semibold text-[color:var(--ink)] mb-2">
-            {title}
-          </h3>
-          <p className="text-[color:var(--muted)] leading-relaxed">
-            {description}
-          </p>
-        </div>
-      </div>
-    </div>
   )
 }
 

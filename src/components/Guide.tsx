@@ -1,149 +1,111 @@
 'use client';
 
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
-import Button from './Button'
+import Reveal from '@/components/motion/Reveal'
+import MaskedReveal from '@/components/motion/MaskedReveal'
+import CountUp from '@/components/motion/CountUp'
 import { useTranslations } from '@/app/provider/localeProvider';
 
 const Guide = () => {
   const t = useTranslations();
 
   return (
-    <section className="py-20 bg-[color:var(--surface-2)]">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          {/* Image */}
-          <div className="lg:w-5/12 flex justify-center">
-            <Image
-              src="/maaaa.jpg"
-              alt="Shri Mataji"
-              width={500}
-              height={500}
-              className="w-full h-auto object-contain"
-              priority
-            />
-          </div>
-
-          {/* Text Content */}
-          <div className="lg:w-6/12 space-y-6">
-            <p className="uppercase tracking-[0.3em] text-base font-semibold text-[color:var(--muted)]">
-              {t('guide.our_mother')}
-            </p>
-            <div className="flex items-center gap-4">
-              <h2 className="text-4xl font-semibold text-[color:var(--ink)]">{t('guide.shri_mataji')}</h2>
-              <Button
-                type="button"
-                title={t('guide.know_more')}
-                icon="/play.svg"
-                variant="secondary"
-                href="/shri-mataji"
+    <section className="py-[clamp(72px,9vh,104px)] bg-[color:var(--surface-2)]">
+      <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
+        {/* Shri Mataji */}
+        <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          <Reveal variant="scale" className="relative order-2 lg:order-1">
+            <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:var(--accent-200)]/60 blur-3xl" />
+            <div className="arch relative mx-auto h-[420px] w-[300px] overflow-hidden border border-[color:var(--border)] bg-[color:var(--surface)] shadow-panel md:h-[500px] md:w-[360px]">
+              <Image
+                src="/maaaa.jpg"
+                alt="Shri Mataji"
+                fill
+                sizes="(max-width: 768px) 300px, 360px"
+                className="object-cover"
               />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:var(--primary-700)]/25 via-transparent to-transparent" />
             </div>
-            <p className="text-[color:var(--muted)] text-lg leading-relaxed">
+            <div className="mx-auto -mt-2 flex h-12 w-36 items-center justify-center rounded-b-[20px] border border-t-0 border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">
+              <p className="eyebrow !tracking-[0.28em]">Shri Mataji</p>
+            </div>
+          </Reveal>
+
+          <div className="order-1 lg:order-2">
+            <p className="eyebrow">{t('guide.our_mother')}</p>
+            <MaskedReveal
+              as="h2"
+              delay={60}
+              text={t('guide.shri_mataji')}
+              className="mt-4 text-[clamp(32px,4vw,44px)] font-display leading-[1.1] tracking-[-0.015em] text-[color:var(--ink)]"
+            />
+            <p className="mt-6 max-w-xl text-[17px] leading-[1.75] text-[color:var(--muted)]">
               {t('guide.shri_mataji_body')}
             </p>
+            <Link href="/shri-mataji" className="btn btn-primary btn-icon-shift mt-8">
+              {t('guide.know_more')}
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5-5 5M6 12h12" />
+              </svg>
+            </Link>
           </div>
         </div>
-      </div>
 
-      {/* Sahaja Corporate Section */}
-      <div className="container mx-auto px-6 mt-24 relative">
-        <Image
-          src="/corporate-bg.svg"
-          alt="Corporate wellness and meditation"
-          width={1440}
-          height={380}
-          className="w-full h-auto object-cover rounded-xl shadow-md"
-        />
-
-        <div
-          className="
-            relative
-            lg:absolute lg:left-16 lg:top-16
-            bg-[color:var(--surface)]
-            border border-[color:var(--border)]
-            p-6 sm:p-8
-            rounded-2xl
-            shadow-soft
-            max-w-xl
-            mx-auto lg:mx-0
-            -mt-16 sm:-mt-20 lg:mt-0
-            flex flex-col
-          "
-        >
-          {/* Heading */}
-          <h2
-            className="
-              text-2xl sm:text-3xl
-              font-semibold
-              text-[color:var(--ink)]
-              leading-snug
-              mb-3
-            "
-          >
-            {t('guide.corporate_title')}
-          </h2>
-
-          {/* Description */}
-          <p
-            className="
-              text-sm sm:text-base
-              text-[color:var(--muted)]
-              leading-relaxed
-              mb-6
-            "
-          >
-            {t('guide.corporate_body')}
-          </p>
-
-          {/* CTA – moved below content on mobile */}
-          <div className="mb-3 justify-center sm:justify-start">
-            <Button
-              type="button"
-              title={t('guide.corporate_cta')}
-              variant="secondary"
-              full
-              href="/corporate-register"
+        {/* Corporate */}
+        <div className="relative mt-24 overflow-hidden rounded-[var(--radius-xl)]">
+          <div className="relative h-[420px] md:h-[380px]">
+            <Image
+              src="/corporate.jpg"
+              alt="Corporate wellness and meditation"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--primary-700)]/85 via-[color:var(--primary-700)]/60 to-[color:var(--primary-700)]/35" />
           </div>
 
-          {/* Divider (mobile only) */}
-          <div className="h-px bg-[color:var(--border)] mb-6 sm:hidden" />
+          {/* Overlapping content card */}
+          <Reveal delay={120} className="relative z-10 -mt-36 mx-auto max-w-2xl px-4 md:-mt-32 md:px-0">
+            <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-7 shadow-pop md:p-10">
+              <h2 className="text-[clamp(22px,2.6vw,30px)] font-display leading-[1.25] text-[color:var(--ink)]">
+                {t('guide.corporate_title')}
+              </h2>
+              <p className="mt-3 text-[15px] leading-[1.7] text-[color:var(--muted)]">
+                {t('guide.corporate_body')}
+              </p>
 
-          {/* Impact Title */}
-          <h3
-            className="
-              text-lg sm:text-xl
-              font-semibold
-              text-[color:var(--ink)]
-              text-center
-              mb-4
-            "
-          >
-            {t('guide.impact')}
-          </h3>
-
-          {/* Impact Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { label: t('guide.orgs'), value: '300+' },
-              { label: t('guide.employees'), value: '50K+' },
-              { label: t('guide.countries'), value: '25+' },
-              { label: t('guide.years'), value: '30+' },
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <p className="text-2xl sm:text-3xl font-semibold text-[color:var(--ink)]">
-                  {item.value}
-                </p>
-                <p className="text-sm text-[color:var(--muted)]">
-                  {item.label}
-                </p>
+              <div className="mt-7">
+                <p className="eyebrow text-center">{t('guide.impact')}</p>
+                <div className="mt-4 grid grid-cols-2 gap-5 sm:grid-cols-4">
+                  {[
+                    { label: t('guide.orgs'), value: 300, suffix: '+' },
+                    { label: t('guide.employees'), value: 50, suffix: 'K+' },
+                    { label: t('guide.countries'), value: 25, suffix: '+' },
+                    { label: t('guide.years'), value: 30, suffix: '+' },
+                  ].map((item) => (
+                    <div key={item.label} className="text-center">
+                      <CountUp
+                        value={item.value}
+                        suffix={item.suffix}
+                        className="font-display text-[clamp(24px,2.6vw,32px)] font-medium text-[color:var(--ink)]"
+                      />
+                      <p className="mt-1 text-[12.5px] leading-snug text-[color:var(--muted)]">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
+
+              <div className="mt-8 flex justify-center">
+                <Link href="/corporate-register" className="btn btn-primary">
+                  {t('guide.corporate_cta')}
+                </Link>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
-
     </section>
   )
 }

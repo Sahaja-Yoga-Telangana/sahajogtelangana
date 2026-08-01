@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="840" viewBox="0 0 640 840">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F0E2C8"/><stop offset="1" stop-color="#C29A5E"/>
+  </linearGradient>
+  <radialGradient id="r" cx="0.5" cy="0.38" r="0.55">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="640" height="840" fill="url(#g)"/>
+<rect width="640" height="840" fill="url(#r)"/>
+<g stroke="#6E5543" stroke-opacity="0.28" stroke-width="1">
+  <path d="M0 40 H640"/><path d="M0 800 H640"/><path d="M213 0 V840"/><path d="M426 0 V840"/>
+</g>
+<g transform="translate(320,420)" fill="none" stroke="#6E5543" stroke-width="2.5" stroke-opacity="0.85">
+  <path d="M0,-92.4 C 38.4,-42.0 38.4,16.8 0,42.0 C -38.4,16.8 -38.4,-42.0 0,-92.4 Z"/>
+  <path d="M0,-42.0 C 54.400000000000006,-8.4 54.400000000000006,42.0 0,71.4 C -54.400000000000006,42.0 -54.400000000000006,-8.4 0,-42.0 Z" stroke-opacity="0.65"/>
+  <path d="M0,42.0 C 70.4,67.2 70.4,109.2 0,126.0 C -70.4,109.2 -70.4,67.2 0,42.0 Z" stroke-opacity="0.45"/>
+</g>
+<text x="320" y="812" text-anchor="middle" font-family="Georgia, serif" font-size="16" letter-spacing="4" fill="#463529" fill-opacity="0.6">PLACEHOLDER — REPLACE</text>
+</svg>
