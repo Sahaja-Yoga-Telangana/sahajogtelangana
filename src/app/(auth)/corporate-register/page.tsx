@@ -200,7 +200,8 @@ export default function CorporateRegisterPage() {
       {/* ================= HERO ================= */}
       <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <h1 className="text-4xl md:text-5xl font-semibold text-[color:var(--ink)] leading-tight">
+          <p className="eyebrow">Corporate Wellness</p>
+          <h1 className="mt-4 font-display text-[clamp(30px,3.8vw,44px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">
             {copy.heroTitle}
           </h1>
 
@@ -210,12 +211,15 @@ export default function CorporateRegisterPage() {
 
           <ul className="mt-8 space-y-3 text-[color:var(--muted)]">
             {copy.heroPoints.map((item) => (
-              <li key={item}>• {item}</li>
+              <li key={item} className="flex items-start gap-2.5">
+                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                <span>{item}</span>
+              </li>
             ))}
           </ul>
         </div>
 
-        <div className="rounded-2xl overflow-hidden shadow-soft">
+        <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
           <Image
             src="/corporate.jpg"
             alt="Corporate meditation session"
@@ -228,8 +232,9 @@ export default function CorporateRegisterPage() {
 
       {/* ================= WHY CORPORATES ================= */}
       <section className="max-w-5xl mx-auto px-6 pb-20">
-        <div className="bg-[color:var(--surface)] backdrop-blur rounded-2xl shadow-sm p-8 md:p-10">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">
+        <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-card md:p-10">
+          <p className="eyebrow">Why Sahaja Yoga</p>
+          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
             {copy.whyTitle}
           </h2>
 
@@ -241,7 +246,7 @@ export default function CorporateRegisterPage() {
 
       {/* ================= BENEFITS ================= */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] text-center">
+        <h2 className="mx-auto max-w-2xl font-display text-[clamp(26px,3vw,34px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)] text-center">
           {copy.benefitsTitle}
         </h2>
 
@@ -258,8 +263,9 @@ export default function CorporateRegisterPage() {
 
       {/* ================= CUSTOMIZED SESSIONS ================= */}
       <section className="max-w-5xl mx-auto px-6 pb-20">
-        <div className="bg-[color:var(--surface-2)]/70 backdrop-blur rounded-2xl p-8 md:p-10 border border-[#f2d8c5]">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">
+        <div className="rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[color:var(--surface-2)]/70 p-8 shadow-card md:p-10">
+          <p className="eyebrow">Tailored Sessions</p>
+          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
             {copy.customTitle}
           </h2>
 
@@ -269,7 +275,10 @@ export default function CorporateRegisterPage() {
 
           <ul className="mt-6 space-y-2 text-[color:var(--muted)]">
             {copy.customPoints.map((item) => (
-              <li key={item}>• {item}</li>
+              <li key={item} className="flex items-start gap-2.5">
+                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                <span>{item}</span>
+              </li>
             ))}
           </ul>
 
@@ -281,8 +290,9 @@ export default function CorporateRegisterPage() {
 
       {/* ================= FORM ================= */}
       <section className="max-w-4xl mx-auto px-6 pb-28">
-        <div className="bg-[color:var(--surface)] rounded-2xl shadow-md p-8 md:p-12">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">
+        <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-panel md:p-12">
+          <p className="eyebrow">Request a Session</p>
+          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
             {copy.formTitle}
           </h2>
 
@@ -312,7 +322,7 @@ export default function CorporateRegisterPage() {
             } />
 
             <div>
-              <label className="block text-base font-medium text-[color:var(--muted)]">
+              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
                 {copy.labels.preferredDate}
               </label>
               <DatePicker
@@ -320,7 +330,7 @@ export default function CorporateRegisterPage() {
                 onChange={(date) =>
                   setFormData({ ...formData, preferredProgramDate: date || new Date() })
                 }
-                className="mt-1 bg-[color:var(--surface-2)] w-full rounded-md border border-gray-300 p-2"
+                className="mt-1 admin-input w-full"
                 dateFormat="yyyy-MM-dd"
               />
             </div>
@@ -330,13 +340,13 @@ export default function CorporateRegisterPage() {
             } />
 
             <div>
-              <label className="block text-base font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
+              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
               <CityPicker
                 value={formData.officeAddress.city}
                 onChange={(v) => setFormData({ ...formData, officeAddress: { ...formData.officeAddress, city: v } })}
-                className={`mt-1 bg-[color:var(--surface-2)] w-full rounded-md border p-2 ${errors['officeAddress.city'] ? 'border-red-500' : 'border-gray-300'}`}
+                className={`mt-1 w-full ${errors['officeAddress.city'] ? '!border-[color:var(--danger)]' : ''}`}
               />
-              {errors['officeAddress.city'] && <p className="mt-1 text-base text-red-600">{errors['officeAddress.city']}</p>}
+              {errors['officeAddress.city'] && <p className="mt-1 text-[13.5px] text-[color:var(--danger)]">{errors['officeAddress.city']}</p>}
             </div>
 
             <Input label={copy.labels.state} error={errors['officeAddress.state']} onChange={(v) =>
@@ -344,12 +354,12 @@ export default function CorporateRegisterPage() {
             } />
 
             <div className="md:col-span-2">
-              <label className="block text-base font-medium text-[color:var(--muted)]">
+              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
                 {copy.labels.remarks}
               </label>
               <textarea
                 rows={4}
-                className="mt-1 w-full bg-[color:var(--surface-2)] rounded-md border border-gray-300 p-2"
+                className="mt-1 admin-input w-full resize-none"
                 onChange={(e) =>
                   setFormData({ ...formData, additionalRemarks: e.target.value })
                 }
@@ -360,7 +370,7 @@ export default function CorporateRegisterPage() {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="mt-10 w-full bg-[#5B2C41] hover:bg-[#4a2335] text-white py-3 rounded-md font-medium transition inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+className="btn btn-primary mt-10 w-full"
           >
             {loading && <LoadingSpinner />}
             {loading ? copy.submitting : copy.submit}
@@ -388,22 +398,23 @@ function Input({
 }) {
   return (
     <div className={className}>
-      <label className="block text-base font-medium text-[color:var(--muted)]">{label}</label>
+      <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">{label}</label>
       <input
         type={type}
-        className={`mt-1 bg-[color:var(--surface-2)] w-full rounded-md border p-2 ${error ? 'border-red-500' : 'border-gray-300'}`}
+        className={`admin-input w-full ${error ? '!border-[color:var(--danger)]' : ''}`}
         onChange={(e) => onChange(e.target.value)}
       />
-      {error && <p className="mt-1 text-base text-red-600">{error}</p>}
+      {error && <p className="mt-1.5 text-[13.5px] text-[color:var(--danger)]">{error}</p>}
     </div>
   );
 }
 
 function InfoCard({ title, text }: { title: string; text: string }) {
   return (
-    <div className="bg-[color:var(--surface)] rounded-xl p-6 shadow-soft border border-gray-100 hover:shadow-md transition">
-      <h3 className="text-lg font-semibold text-[color:var(--ink)]">{title}</h3>
-      <p className="mt-3 text-[color:var(--muted)] text-base leading-relaxed">{text}</p>
+    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
+      <div className="mb-4 h-1.5 w-10 rounded-full bg-[color:var(--accent)]" />
+      <h3 className="font-display text-[19px] leading-snug text-[color:var(--ink)]">{title}</h3>
+      <p className="mt-3 text-[14.5px] leading-[1.75] text-[color:var(--muted)]">{text}</p>
     </div>
   );
 }
