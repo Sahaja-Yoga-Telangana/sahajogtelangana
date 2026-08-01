@@ -240,8 +240,8 @@ export default function UploadSeekersPage() {
                 <div
                   className={`mb-6 flex items-start gap-3 rounded-[20px] border px-4 py-3 text-sm ${
                     messageType === 'success'
-                      ? 'border-green-500/25 bg-green-500/10 text-green-700 dark:text-green-300'
-                      : 'border-red-500/25 bg-red-500/10 text-red-700 dark:text-red-300'
+                      ? 'border-[color:var(--success)]/30 bg-[color:var(--success)]/10 text-[color:var(--success)]'
+                      : 'border-[color:var(--danger)]/30 bg-[color:var(--danger)]/10 text-[color:var(--danger)]'
                   }`}
                 >
                   {messageType === 'success' ? (
@@ -345,7 +345,7 @@ export default function UploadSeekersPage() {
                               </button>
                               <button
                                 onClick={() => handleDelete(seeker.id)}
-                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-300/30 text-red-500 hover:bg-red-500/10"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[color:var(--danger)]/30 text-[color:var(--danger)] hover:bg-[color:var(--danger)]/10"
                               >
                                 <FiTrash2 size={14} />
                               </button>

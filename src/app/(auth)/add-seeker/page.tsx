@@ -210,14 +210,14 @@ export default function AddSeekerPage() {
 
             <div className="mt-8">
               {successMessage ? (
-                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-green-500/25 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-300">
+                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:var(--success)]/30 bg-[color:var(--success)]/10 px-4 py-3 text-sm text-[color:var(--success)]">
                   <FiCheckCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                   <p>{successMessage}</p>
                 </div>
               ) : null}
 
               {errorMessage ? (
-                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:var(--danger)]/30 bg-[color:var(--danger)]/10 px-4 py-3 text-sm text-[color:var(--danger)]">
                   <FiAlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                   <p>{errorMessage}</p>
                 </div>
@@ -239,7 +239,7 @@ export default function AddSeekerPage() {
                           <button
                             type="button"
                             onClick={() => removeRow(index)}
-                            className="inline-flex items-center gap-2 rounded-full border border-red-300/60 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-500/15 dark:text-red-300"
+                            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--danger)]/40 bg-[color:var(--danger)]/10 px-4 py-2 text-sm font-semibold text-[color:var(--danger)] transition-colors hover:bg-[color:var(--danger)]/15"
                           >
                             <FiMinusCircle className="h-4 w-4" aria-hidden="true" />
                             {t('add_seeker.remove')}
@@ -270,7 +270,7 @@ export default function AddSeekerPage() {
                             onChange={(value) => handleInputChange(index, 'city', value)}
                             placeholder={t('dashboard.city')}
                             error={errors[index]?.city}
-                            className={`admin-input ${errors[index]?.city ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors[index]?.city ? '!border-[color:var(--danger)]' : ''}`}
                           />
                         </div>
                         <Field
@@ -356,11 +356,11 @@ function Field({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`admin-input ${error ? 'border-red-500' : ''}`}
+        className={`admin-input ${error ? '!border-[color:var(--danger)]' : ''}`}
         placeholder={placeholder}
         inputMode={inputMode}
       />
-      {error ? <p className="mt-2 text-sm text-red-600 dark:text-red-300">{error}</p> : null}
+      {error ? <p className="mt-2 text-sm text-[color:var(--danger)] ">{error}</p> : null}
     </div>
   );
 }

@@ -165,7 +165,7 @@ export default function DashboardPage() {
       <main className="min-w-0 flex-1 space-y-6">
         <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('dashboard.shell_title')}</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)]">{t('dashboard.title')}</h1>
+          <h1 className="mt-4 font-display text-[clamp(30px,3.6vw,42px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">{t('dashboard.title')}</h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
             {t('dashboard.body')}
           </p>
@@ -173,7 +173,7 @@ export default function DashboardPage() {
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
-            <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{t('dashboard.profile')}</h2>
+            <h2 className="font-display text-[clamp(22px,2.4vw,26px)] font-medium leading-[1.2] text-[color:var(--ink)]">{t('dashboard.profile')}</h2>
             <form onSubmit={handleSave} className="mt-5 space-y-4">
               <Field label={t('dashboard.name')}>
                 <input className="admin-input" value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} required />
@@ -209,7 +209,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
-          <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{t('dashboard.requests_title')}</h2>
+          <h2 className="font-display text-[clamp(22px,2.4vw,26px)] font-medium leading-[1.2] text-[color:var(--ink)]">{t('dashboard.requests_title')}</h2>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--muted)]">
             {t('dashboard.requests_body')}
           </p>
@@ -270,7 +270,7 @@ export default function DashboardPage() {
                 >
                   <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-[color:var(--border)]" />
 
-                  <h2 className="text-lg font-semibold text-[color:var(--ink)]">Add New Seeker</h2>
+                  <h2 className="font-display text-lg font-medium text-[color:var(--ink)]">Add New Seeker</h2>
                   <p className="mt-1 text-sm text-[color:var(--muted)]">
                     Choose a method to register a new seeker in the database.
                   </p>
@@ -365,7 +365,7 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 function Panel({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-28 rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
-      <h2 className="text-2xl font-semibold text-[color:var(--ink)]">{title}</h2>
+      <h2 className="font-display text-[clamp(22px,2.4vw,26px)] font-medium leading-[1.2] text-[color:var(--ink)]">{title}</h2>
       <div className="mt-5 space-y-4">{children}</div>
     </section>
   );

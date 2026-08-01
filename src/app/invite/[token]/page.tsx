@@ -128,7 +128,7 @@ export default function InvitePage() {
       case 'not_found':
         return (
           <StateCard
-            icon={<FiAlertCircle className="h-10 w-10 text-red-500" />}
+            icon={<FiAlertCircle className="h-10 w-10 text-[color:var(--danger)]" />}
             title="Invite not found"
             body="This invite link is invalid or does not exist."
           />
@@ -159,7 +159,7 @@ export default function InvitePage() {
       case 'already_volunteer':
         return (
           <StateCard
-            icon={<FiCheckCircle className="h-10 w-10 text-emerald-500" />}
+            icon={<FiCheckCircle className="h-10 w-10 text-[color:var(--success)]" />}
             title="You are already a volunteer"
             body="You already have volunteer access. No action needed."
             action={
@@ -173,7 +173,7 @@ export default function InvitePage() {
       case 'success':
         return (
           <StateCard
-            icon={<FiCheckCircle className="h-10 w-10 text-emerald-500" />}
+            icon={<FiCheckCircle className="h-10 w-10 text-[color:var(--success)]" />}
             title="Welcome to the team!"
             body="You are now a volunteer. You can access the dashboard and start helping seekers."
             action={
@@ -190,7 +190,7 @@ export default function InvitePage() {
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
               <FiUserPlus className="h-8 w-8 text-[color:var(--primary)]" />
             </div>
-            <h1 className="text-3xl font-semibold tracking-tight text-[color:var(--ink)]">
+            <h1 className="font-display text-[clamp(26px,3vw,34px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
               Volunteer Invitation
             </h1>
             {inviteInfo?.createdByEmail && (
@@ -223,7 +223,7 @@ export default function InvitePage() {
 
                 <div className="space-y-1">
                   <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                    Phone <span className="text-red-500">*</span>
+                    Phone <span className="text-[color:var(--danger)]">*</span>
                   </label>
                   <input
                     className="admin-input"
@@ -236,7 +236,7 @@ export default function InvitePage() {
 
                 <div className="space-y-1">
                   <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
-                    City <span className="text-red-500">*</span>
+                    City <span className="text-[color:var(--danger)]">*</span>
                   </label>
                   <CityPicker value={city} onChange={setCity} required className="admin-input" />
                 </div>
@@ -282,7 +282,7 @@ export default function InvitePage() {
                 </div>
 
                 {errorMsg && (
-                  <p className="text-sm text-red-500 font-medium">{errorMsg}</p>
+                  <p className="text-sm text-[color:var(--danger)] font-medium">{errorMsg}</p>
                 )}
 
                 <button
@@ -334,7 +334,7 @@ function StateCard({
       <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--surface-2)]">
         {icon}
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight text-[color:var(--ink)]">{title}</h1>
+      <h1 className="font-display text-[clamp(22px,2.6vw,28px)] font-medium leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">{title}</h1>
       <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{body}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>

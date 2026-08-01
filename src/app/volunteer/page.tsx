@@ -141,7 +141,7 @@ export default function VolunteerRequestPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">Refer a Yogi</p>
-                  <h2 className="text-xl font-semibold text-[color:var(--ink)]">Invite someone to volunteer</h2>
+                  <h2 className="font-display text-xl font-medium text-[color:var(--ink)]">Invite someone to volunteer</h2>
                 </div>
               </div>
               <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
@@ -173,7 +173,7 @@ export default function VolunteerRequestPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1.5 text-xs font-medium text-[color:var(--ink)] transition hover:bg-[color:var(--surface-2)]"
                   >
                     {copied ? (
-                      <><FiCheck className="h-3.5 w-3.5 text-emerald-500" /> Copied</>
+                      <><FiCheck className="h-3.5 w-3.5 text-[color:var(--success)]" /> Copied</>
                     ) : (
                       <><FiCopy className="h-3.5 w-3.5" /> Copy</>
                     )}
@@ -192,7 +192,7 @@ export default function VolunteerRequestPage() {
                       >
                         <div>
                           <span className={`inline-block h-2 w-2 rounded-full mr-2 ${
-                            inv.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-400'
+                            inv.status === 'active' ? 'bg-[color:var(--success)]' : 'bg-[color:var(--border-strong)]'
                           }`} />
                           <span className="text-sm text-[color:var(--ink)]">
                             {inv.status === 'active'
@@ -219,13 +219,13 @@ export default function VolunteerRequestPage() {
           {/* ---- Volunteer Interest Form ---- */}
           <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
             {submitted ? (
-              <div className="text-center py-8 animate-fadeIn">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+              <div className="animate-fade-in text-center py-8">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--success)]/12 text-[color:var(--success)]">
                   <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h2 className="text-3xl font-semibold tracking-tight text-[color:var(--ink)]">
+                <h2 className="font-display text-[clamp(24px,2.8vw,30px)] leading-[1.2] tracking-[-0.015em] text-[color:var(--ink)]">
                   {t('volunteer.success_title')}
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--muted)] max-w-md mx-auto">
@@ -241,10 +241,10 @@ export default function VolunteerRequestPage() {
               </div>
             ) : (
               <>
-                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">
+                <p className="eyebrow">
                   {isVolunteerOrAdmin ? 'Volunteer Details' : t('volunteer.eyebrow')}
                 </p>
-                <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)]">
+                <h1 className="mt-4 font-display text-[clamp(30px,3.6vw,42px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">
                   {isVolunteerOrAdmin ? 'Your volunteer profile' : t('volunteer.title')}
                 </h1>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
@@ -292,7 +292,7 @@ export default function VolunteerRequestPage() {
                   </button>
                 </form>
 
-                {message ? <p className="mt-4 text-sm text-red-500 font-medium">{message}</p> : null}
+                {message ? <p className="mt-4 text-sm font-medium text-[color:var(--danger)]">{message}</p> : null}
               </>
             )}
           </div>
