@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Noto_Sans_Telugu, Ysabeau } from 'next/font/google'
+import { Fraunces, Noto_Sans_Telugu, Ysabeau } from 'next/font/google'
 import NextAuthSessionProvider from './provider/sessionProvider'
 import LocaleProvider from './provider/localeProvider'
 import ThemeProvider from './provider/themeProvider'
@@ -16,6 +16,12 @@ const ysabeau = Ysabeau({
   subsets: ['latin'],
   variable: '--font-sans',
   weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
   display: 'swap',
 });
 
@@ -36,13 +42,14 @@ export default function RootLayout({
   const locale = getRequestLocale();
 
   return (
-    <html lang={locale} className={`${ysabeau.variable} ${notoSansTelugu.variable}`}>
+    <html lang={locale} className={`${ysabeau.variable} ${fraunces.variable} ${notoSansTelugu.variable}`}>
       <body className="font-sans bg-[color:var(--bg)] text-[color:var(--ink)]">
         <ThemeProvider>
         <LocaleProvider initialLocale={locale}>
           <NextAuthSessionProvider>
             <div className="flex flex-col min-h-screen">
               <Toaster position="top-center" />
+              <div aria-hidden className="grain-overlay" />
 
               <header className="bg-[color:var(--surface)] border-b border-gray-200 shadow-sm sticky top-0 z-30">
                 <Navbar />
