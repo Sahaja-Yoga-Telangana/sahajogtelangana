@@ -64,7 +64,7 @@ export default function Events() {
           {events.map((event) => (
             <div key={event._id} className="flex h-full flex-col gap-3">
               <EventCard event={event} />
-              <div className="flex flex-col gap-2 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-3 shadow-soft">
+              <div className="flex flex-col gap-2 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-3 shadow-soft">
                 <SeekerRegistrationDownloads event={event} />
               </div>
             </div>

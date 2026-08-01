@@ -248,7 +248,7 @@ export default function EventRegistrationsAdmin() {
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm">
+                  <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] px-4 py-3 text-sm">
                     <p className="text-[color:var(--muted)]">Group total</p>
                     <p className="mt-1 text-lg font-semibold text-[color:var(--ink)]">₹{group.totalAmount.toLocaleString()}</p>
                   </div>
@@ -292,7 +292,7 @@ export default function EventRegistrationsAdmin() {
         )}
       </section>
 
-      <section className="flex flex-col items-center justify-between gap-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-5 py-4 sm:flex-row">
+      <section className="flex flex-col items-center justify-between gap-4 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-5 py-4 sm:flex-row">
         <p className="text-sm text-[color:var(--muted)]">
           Page {meta.page} of {meta.totalPages} • {meta.totalGroups} grouped receipts
         </p>
@@ -321,7 +321,7 @@ export default function EventRegistrationsAdmin() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-5">
+    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-5">
       <p className="text-sm text-[color:var(--muted)]">{label}</p>
       <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">{value}</p>
     </div>

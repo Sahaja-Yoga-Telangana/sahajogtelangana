@@ -81,7 +81,7 @@ export default function JourneyHubEntry({
               <button
                 type="button"
                 onClick={openModal}
-                className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)]"
+                className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)]"
               >
                 {t('journey_hub.cta')}
               </button>
@@ -110,7 +110,7 @@ export default function JourneyHubEntry({
               <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row">
                 <Link
                   href={`/start-your-journey?source=${encodeURIComponent(sourcePage)}`}
-                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)]"
+                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)]"
                 >
                   {t('journey_hub.modal_start')}
                 </Link>

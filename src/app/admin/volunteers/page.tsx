@@ -141,7 +141,7 @@ export default function VolunteersPage() {
         ) : (
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             {requests.map((request) => (
-              <article key={request._id} className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
+              <article key={request._id} className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="text-lg font-semibold text-[color:var(--ink)]">{request.name}</h3>

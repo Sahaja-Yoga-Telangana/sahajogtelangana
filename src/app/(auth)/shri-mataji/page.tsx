@@ -201,7 +201,7 @@ export default function ShriMatajiPage() {
         <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
           <Reveal variant="scale">
             <div className="relative mx-auto max-w-md">
-              <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:var(--accent-200)]/50 blur-3xl" />
+              <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_50%,transparent)] blur-3xl" />
               <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
                 <Image
                   src="/maa-wide.jpg"

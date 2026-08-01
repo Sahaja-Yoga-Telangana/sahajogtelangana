@@ -111,14 +111,14 @@ function HomeEventCard({ event }: { event: AppEvent }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center p-8">
-              <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/84 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+              <div className="rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_84%,transparent)] px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
                 {t('event_banner.default_badge')}
               </div>
             </div>
           )}
 
           {/* {isFreeEntry ? (
-            <div className="absolute left-4 top-4 z-10 inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/96 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm">
+            <div className="absolute left-4 top-4 z-10 inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_96%,transparent)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm">
               Free Entry
             </div>
           ) : null} */}
@@ -149,7 +149,7 @@ function HomeEventCard({ event }: { event: AppEvent }) {
           </div>
 
           <div className="mt-8 flex items-center justify-between">
-            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
+            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-[color:var(--on-primary)] transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
               {t('event_banner.register_now')}
             </span>
             <FiArrowRight className="h-5 w-5 text-[color:var(--primary)] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />

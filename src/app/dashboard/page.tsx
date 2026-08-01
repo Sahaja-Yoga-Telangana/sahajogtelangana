@@ -163,7 +163,7 @@ export default function DashboardPage() {
   return (
     <YogiDashboardShell memberName={data.profile.name} userRole={session?.user?.role}>
       <main className="min-w-0 flex-1 space-y-6">
-        <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+        <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('dashboard.shell_title')}</p>
           <h1 className="mt-4 font-display text-[clamp(30px,3.6vw,42px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">{t('dashboard.title')}</h1>
           <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
@@ -185,7 +185,7 @@ export default function DashboardPage() {
                 <input className="admin-input opacity-70" value={data.profile.email} readOnly />
               </Field>
               <Field label={t('dashboard.event_interest')}>
-                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 px-4 py-3 text-sm text-[color:var(--ink)]">
+                <div className="rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_65%,transparent)] px-4 py-3 text-sm text-[color:var(--ink)]">
                   {data.profile.eventInterest.length > 0 ? data.profile.eventInterest.join(', ') : t('dashboard.event_interest_empty')}
                 </div>
               </Field>
@@ -250,7 +250,7 @@ export default function DashboardPage() {
           <>
             <button
               onClick={() => setShowOptions(true)}
-              className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--primary)] text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+              className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--primary)] text-[color:var(--on-primary)] shadow-lg transition-transform hover:scale-105 active:scale-95"
               style={{
                 boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
               }}
@@ -281,9 +281,9 @@ export default function DashboardPage() {
                         setShowOptions(false);
                         router.push('/add-seeker');
                       }}
-                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_40%,transparent)] p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                         <FiEdit3 className="text-[color:var(--primary)]" size={20} />
                       </div>
                       <div className="flex-1">
@@ -298,9 +298,9 @@ export default function DashboardPage() {
                         setShowOptions(false);
                         router.push('/add-seeker/upload');
                       }}
-                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_40%,transparent)] p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                         <FiFileText className="text-[color:var(--primary)]" size={20} />
                       </div>
                       <div className="flex-1">
@@ -315,9 +315,9 @@ export default function DashboardPage() {
                         setShowOptions(false);
                         router.push('/add-seeker/scan');
                       }}
-                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/40 p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
+                      className="flex w-full items-center gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_40%,transparent)] p-4 text-left transition-colors hover:bg-[color:var(--surface-2)]"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                         <FiCamera className="text-[color:var(--primary)]" size={20} />
                       </div>
                       <div className="flex-1">
@@ -373,7 +373,7 @@ function Panel({ id, title, children }: { id?: string; title: string; children: 
 
 function CenterCard({ center }: { center: { zone: string; city: string; day: string; time: string; announcement: string; weeklyUpdate: string } }) {
   return (
-    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
       <p className="font-semibold text-[color:var(--ink)]">{center.zone}</p>
       <p className="mt-1 text-sm text-[color:var(--muted)]">{center.city} • {center.day} • {center.time}</p>
       {center.weeklyUpdate ? <p className="mt-2 text-sm text-[color:var(--muted)]">{center.weeklyUpdate}</p> : null}
@@ -396,11 +396,11 @@ function RequestActionCard({
   return (
     <Link
       href={href}
-      className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft"
+      className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft"
     >
       <h3 className="text-xl font-semibold text-[color:var(--ink)]">{title}</h3>
       <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{description}</p>
-      <span className="mt-5 inline-flex items-center rounded-full bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-white">
+      <span className="mt-5 inline-flex items-center rounded-full bg-[color:var(--primary)] px-4 py-2 text-sm font-semibold text-[color:var(--on-primary)]">
         {cta}
       </span>
     </Link>

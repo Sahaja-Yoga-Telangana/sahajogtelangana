@@ -61,7 +61,7 @@ export default function CreateAdmin() {
         <h1 className="mb-6 text-center font-display text-[clamp(24px,2.8vw,30px)] leading-[1.2] text-[color:var(--ink)]">Create Admin User</h1>
         
         {message && (
-          <div className={`p-4 mb-6 rounded ${success ? 'bg-[color:var(--accent-200)]/40 text-[color:var(--primary)]' : 'bg-[color:var(--danger)]/10 text-[color:var(--danger)]'}`}>
+          <div className={`p-4 mb-6 rounded ${success ? 'bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] text-[color:var(--primary)]' : 'bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] text-[color:var(--danger)]'}`}>
             {message}
           </div>
         )}

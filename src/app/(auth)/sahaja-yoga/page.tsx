@@ -180,7 +180,7 @@ export default function AboutSahajaYogaPage() {
             </div>
           </Reveal>
           <Reveal variant="scale" className="relative">
-            <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[color:var(--accent-200)]/50 blur-3xl" />
+            <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_50%,transparent)] blur-3xl" />
             <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
               <Image
                 src="/sahaja5.jpg"
@@ -339,19 +339,19 @@ export default function AboutSahajaYogaPage() {
         <Reveal>
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[var(--radius-xl)] px-[var(--gutter)] py-16 text-center">
             <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--primary-700),var(--primary-600))]" />
-            <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[color:var(--accent)]/25 blur-3xl" />
+            <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[color:color-mix(in_srgb,var(--accent)_25%,transparent)] blur-3xl" />
             <div className="relative">
-              <h2 className="text-[clamp(28px,3.4vw,38px)] font-display leading-[1.15] text-white">
+              <h2 className="text-[clamp(28px,3.4vw,38px)] font-display leading-[1.15] text-[color:var(--on-primary)]">
                 {copy.ctaTitle}
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-[15.5px] leading-[1.8] text-white/85">{copy.ctaBody}</p>
+              <p className="mx-auto mt-4 max-w-xl text-[15.5px] leading-[1.8] text-[color:color-mix(in_srgb,var(--on-primary)_85%,transparent)]">{copy.ctaBody}</p>
               <div className="mt-8 flex justify-center gap-3">
-                <Link href="/meditate" className="btn bg-white text-[color:var(--primary-700)] hover:bg-[color:var(--surface-2)]">
+                <Link href="/meditate" className="btn bg-[color:var(--on-primary)] text-[color:var(--primary-700)] hover:bg-[color:color-mix(in_srgb,var(--on-primary)_90%,transparent)]">
                   {copy.ctaButton}
                 </Link>
                 <Link
                   href="/seeker-registration"
-                  className="btn border border-white/35 bg-white/10 text-white hover:bg-white/20"
+                  className="btn border border-[color:color-mix(in_srgb,var(--on-primary)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--on-primary)_10%,transparent)] text-[color:var(--on-primary)] hover:bg-[color:color-mix(in_srgb,var(--on-primary)_20%,transparent)]"
                 >
                   {copy.ctaSecondary}
                 </Link>

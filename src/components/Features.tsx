@@ -43,8 +43,8 @@ const Features = () => {
     <section className="relative w-full overflow-hidden bg-[color:var(--surface)] py-[clamp(72px,9vh,104px)]">
       <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
         {/* Decorative elements */}
-        <div className="pointer-events-none absolute left-10 top-12 hidden h-40 w-40 rounded-full bg-[color:var(--accent-200)]/40 blur-3xl lg:block"></div>
-        <div className="pointer-events-none absolute bottom-12 right-10 hidden h-44 w-44 rounded-full bg-[color:var(--surface-3)]/60 blur-3xl lg:block"></div>
+        <div className="pointer-events-none absolute left-10 top-12 hidden h-40 w-40 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] blur-3xl lg:block"></div>
+        <div className="pointer-events-none absolute bottom-12 right-10 hidden h-44 w-44 rounded-full bg-[color:color-mix(in_srgb,var(--surface-3)_60%,transparent)] blur-3xl lg:block"></div>
 
         {/* Title */}
         <div className="relative z-10 mb-14 text-center">
@@ -66,7 +66,7 @@ const Features = () => {
           {localizedFeatures.map((feature, index) => (
             <Reveal key={feature.title} delay={index * 80}>
               <div className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel md:p-7">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[color:var(--accent)]/30 bg-[linear-gradient(135deg,var(--accent-200),var(--surface-2))] text-[color:var(--primary)] transition-transform duration-300 group-hover:scale-105 dark:text-[color:var(--accent)]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[color:color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[linear-gradient(135deg,var(--accent-200),var(--surface-2))] text-[color:var(--primary)] transition-transform duration-300 group-hover:scale-105 dark:text-[color:var(--accent)]">
                   <span className="block h-[26px] w-[26px] [&_svg]:h-full [&_svg]:w-full">{FEATURE_ICONS[feature.icon]}</span>
                 </div>
                 <h3 className="mt-5 text-[19px] font-semibold leading-snug text-[color:var(--ink)]">

@@ -111,7 +111,7 @@ export default function OutreachPage() {
               key={value}
               type="button"
               onClick={() => setAudience(value)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold ${audience === value ? 'bg-[color:var(--primary)] text-white' : 'border border-[color:var(--border)] text-[color:var(--ink)]'}`}
+              className={`rounded-full px-4 py-2 text-sm font-semibold ${audience === value ? 'bg-[color:var(--primary)] text-[color:var(--on-primary)]' : 'border border-[color:var(--border)] text-[color:var(--ink)]'}`}
             >
               {value === 'seekers' ? 'Seekers only' : value === 'users' ? 'Users only' : 'Everyone'}
             </button>
@@ -214,7 +214,7 @@ export default function OutreachPage() {
             {statusMessage ? <p className="text-sm text-[color:var(--muted)]">{statusMessage}</p> : null}
           </div>
 
-          <div className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 p-5">
+          <div className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_65%,transparent)] p-5">
             <h2 className="text-xl font-semibold text-[color:var(--ink)]">Quick communication links</h2>
             <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
               Use these when you want to move faster with manual follow-up while keeping the audience segment fixed.

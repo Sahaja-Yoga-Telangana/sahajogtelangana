@@ -98,7 +98,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ================= MAIN CONTENT ================= */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Top Bar */}
-        <header className="md:hidden border-b border-[color:var(--border)] bg-[color:var(--surface)]/90 px-4 py-3 backdrop-blur-sm flex items-center gap-3">
+        <header className="md:hidden border-b border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_90%,transparent)] px-4 py-3 backdrop-blur-sm flex items-center gap-3">
           <button
             onClick={() => setOpen(true)}
             className="text-[color:var(--ink)]"

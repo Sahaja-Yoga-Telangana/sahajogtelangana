@@ -39,7 +39,7 @@ export default function HomeClient({
             <span className="font-display text-[clamp(28px,3vw,38px)] italic text-[color:var(--border-strong)]">
               {word}
             </span>
-            <span className="h-2 w-2 rotate-45 bg-[color:var(--accent)]/50" aria-hidden />
+            <span className="h-2 w-2 rotate-45 bg-[color:color-mix(in_srgb,var(--accent)_50%,transparent)]" aria-hidden />
           </span>
         ))}
         speed="40s"

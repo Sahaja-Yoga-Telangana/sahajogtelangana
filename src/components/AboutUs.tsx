@@ -13,7 +13,7 @@ const AboutUs = () => {
           <div className="bg-[color:var(--surface)] shadow-md rounded-lg overflow-hidden">
             <div className="p-6">
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:var(--accent-200)]/40 p-1">
+                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] p-1">
                   <Image 
                     src="/shri-mataji2.jpg" 
                     alt="Shri Mataji at Chhindwara" 
@@ -53,7 +53,7 @@ const AboutUs = () => {
           <div className="bg-[color:var(--surface)] shadow-md rounded-lg overflow-hidden">
             <div className="p-6">
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:var(--accent-200)]/40 p-1">
+                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] p-1">
                   <Image 
                     src="/shri-mataji5.jpg" 
                     alt="Shri Mataji Meditation" 

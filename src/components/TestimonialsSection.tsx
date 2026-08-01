@@ -116,7 +116,7 @@ export default function TestimonialsSection({
                 <button
                   type="button"
                   onClick={() => setActiveIndex(testimonials.findIndex((item) => item._id === testimonial._id))}
-                  className="w-full rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)]/92 p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:bg-[color:var(--surface)] hover:shadow-panel"
+                  className="w-full rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:bg-[color:var(--surface)] hover:shadow-panel"
                 >
                   <p className="line-clamp-4 text-[14.5px] leading-7 text-[color:var(--muted)]">{testimonial.experience}</p>
                   <div className="mt-4">
@@ -140,7 +140,7 @@ export default function TestimonialsSection({
                 aria-label={`Show testimonial ${index + 1}`}
                 onClick={() => setActiveIndex(index)}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
-                  index === activeIndex ? 'w-8 bg-[color:var(--accent)]' : 'w-2.5 bg-[color:var(--border-strong)] hover:bg-[color:var(--accent)]/50'
+                  index === activeIndex ? 'w-8 bg-[color:var(--accent)]' : 'w-2.5 bg-[color:var(--border-strong)] hover:bg-[color:color-mix(in_srgb,var(--accent)_50%,transparent)]'
                 }`}
               />
             ))}
@@ -175,7 +175,7 @@ function LoginPrompt({ onClose }: { onClose: () => void }) {
   const t = useTranslations();
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[color:var(--primary-700)]/45 px-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[color:color-mix(in_srgb,var(--primary-700)_45%,transparent)] px-4 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-7 shadow-pop">
         <p className="eyebrow">{t('testimonials.login_required')}</p>
         <h3 className="mt-3 text-2xl font-display text-[color:var(--ink)]">{t('testimonials.login_title')}</h3>

@@ -64,12 +64,12 @@ export default async function RequestEventPageWrapper() {
     <YogiDashboardShell memberName={session.user.name || 'Sahaja Yogi'} activeKey="dashboard">
       <div className="bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-2)_66%,transparent),var(--bg)_24%,var(--bg))] px-4 py-8 md:px-0 md:py-4">
         <div className="mx-auto max-w-4xl">
-          <section className="mb-8 rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/96 p-7 shadow-soft md:p-10">
+          <section className="mb-8 rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_96%,transparent)] p-7 shadow-soft md:p-10">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted)]">{copy.eyebrow}</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)] md:text-5xl">{copy.title}</h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-[color:var(--muted)] md:text-base">{copy.body}</p>
 
-            <div className="mt-6 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/55 p-5">
+            <div className="mt-6 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_55%,transparent)] p-5">
               <h2 className="text-xl font-semibold text-[color:var(--ink)]">{copy.instructionTitle}</h2>
               <ul className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">
                 {copy.instructions.map((item) => (

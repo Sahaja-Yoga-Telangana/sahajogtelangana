@@ -160,7 +160,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
   return (
     <div className="mx-auto max-w-6xl px-4 lg:px-6">
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[radial-gradient(70%_120%_at_12%_0%,color-mix(in_srgb,var(--accent)_9%,transparent),transparent_55%),linear-gradient(135deg,color-mix(in_srgb,var(--surface)_94%,transparent),color-mix(in_srgb,var(--surface-2)_86%,transparent))] px-6 py-10 shadow-card md:px-10 md:py-12">
-        <div aria-hidden className="absolute -right-8 -top-8 h-28 w-28 rotate-45 border border-[color:var(--accent)]/25" />
+        <div aria-hidden className="absolute -right-8 -top-8 h-28 w-28 rotate-45 border border-[color:color-mix(in_srgb,var(--accent)_25%,transparent)]" />
         <p className="eyebrow">{copy.finder}</p>
         <h1 className="mt-3 font-display text-[clamp(28px,3.4vw,40px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
           {copy.title}
@@ -169,11 +169,11 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
           {copy.welcome}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-4 py-1.5 text-[13px] font-semibold text-[color:var(--accent)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_10%,transparent)] px-4 py-1.5 text-[13px] font-semibold text-[color:var(--accent)]">
             <span className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]" aria-hidden />
             {copy.always_free}
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-4 py-1.5 text-[13px] font-medium text-[color:var(--muted)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-4 py-1.5 text-[13px] font-medium text-[color:var(--muted)]">
             {query.trim() ? `${filteredCenters.length} / ` : ""}{centers.length} {copy.centers_count}
           </span>
         </div>
@@ -209,7 +209,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
             onClick={() => setQuery("")}
             className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
               query.trim() === ""
-                ? "bg-[color:var(--primary)] text-white"
+                ? "bg-[color:var(--primary)] text-[color:var(--on-primary)]"
                 : "border border-[color:var(--border)] text-[color:var(--muted)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
             }`}
           >
@@ -222,7 +222,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
               onClick={() => setQuery(zone)}
               className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 query.trim().toLowerCase() === zone.toLowerCase()
-                  ? "bg-[color:var(--primary)] text-white"
+                  ? "bg-[color:var(--primary)] text-[color:var(--on-primary)]"
                   : "border border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--muted)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
               }`}
             >
@@ -234,7 +234,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
 
       {filteredCenters.length === 0 ? (
         <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] py-20 text-center">
-          <span className="mx-auto block h-2.5 w-2.5 rotate-45 bg-[color:var(--accent)]/60" aria-hidden />
+          <span className="mx-auto block h-2.5 w-2.5 rotate-45 bg-[color:color-mix(in_srgb,var(--accent)_60%,transparent)]" aria-hidden />
           <p className="mt-4 text-[color:var(--muted)]">{copy.no_results}</p>
         </div>
       ) : (
@@ -261,7 +261,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
                       disabled={pendingKey === `${center._id}-joined`}
                       className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors disabled:opacity-60 ${
                         joined
-                          ? "bg-[color:var(--primary)] text-white"
+                          ? "bg-[color:var(--primary)] text-[color:var(--on-primary)]"
                           : "border border-[color:var(--border)] text-[color:var(--ink)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
                       }`}
                     >

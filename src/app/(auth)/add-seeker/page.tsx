@@ -178,7 +178,7 @@ export default function AddSeekerPage() {
       <section className="relative overflow-hidden py-12 md:py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_52%,transparent),_transparent_42%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_72%,transparent),_var(--bg)_62%,_var(--bg))]" />
         <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
-          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft backdrop-blur-sm md:p-8">
+          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft backdrop-blur-sm md:p-8">
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('add_seeker.eyebrow')}</p>
@@ -199,7 +199,7 @@ export default function AddSeekerPage() {
                   </p>
                 </div>
 
-                <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/76 p-5">
+                <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_76%,transparent)] p-5">
                   <p className="text-sm font-semibold text-[color:var(--ink)]">{t('add_seeker.note_title')}</p>
                   <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
                     {t('add_seeker.note_body')}
@@ -210,14 +210,14 @@ export default function AddSeekerPage() {
 
             <div className="mt-8">
               {successMessage ? (
-                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:var(--success)]/30 bg-[color:var(--success)]/10 px-4 py-3 text-sm text-[color:var(--success)]">
+                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:color-mix(in_srgb,var(--success)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--success)_10%,transparent)] px-4 py-3 text-sm text-[color:var(--success)]">
                   <FiCheckCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                   <p>{successMessage}</p>
                 </div>
               ) : null}
 
               {errorMessage ? (
-                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:var(--danger)]/30 bg-[color:var(--danger)]/10 px-4 py-3 text-sm text-[color:var(--danger)]">
+                <div className="mb-4 flex items-start gap-3 rounded-[20px] border border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] px-4 py-3 text-sm text-[color:var(--danger)]">
                   <FiAlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                   <p>{errorMessage}</p>
                 </div>
@@ -239,7 +239,7 @@ export default function AddSeekerPage() {
                           <button
                             type="button"
                             onClick={() => removeRow(index)}
-                            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--danger)]/40 bg-[color:var(--danger)]/10 px-4 py-2 text-sm font-semibold text-[color:var(--danger)] transition-colors hover:bg-[color:var(--danger)]/15"
+                            className="inline-flex items-center gap-2 rounded-full border border-[color:color-mix(in_srgb,var(--danger)_40%,transparent)] bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] px-4 py-2 text-sm font-semibold text-[color:var(--danger)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--danger)_15%,transparent)]"
                           >
                             <FiMinusCircle className="h-4 w-4" aria-hidden="true" />
                             {t('add_seeker.remove')}
@@ -292,7 +292,7 @@ export default function AddSeekerPage() {
                               onClick={() => handleInputChange(index, 'preferredLanguage', lang)}
                               className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
                                 seeker.preferredLanguage === lang
-                                  ? 'border-[color:var(--primary)] bg-[color:var(--primary)] text-white'
+                                  ? 'border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--on-primary)]'
                                   : 'border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--muted)] hover:bg-[color:var(--surface)]'
                               }`}
                             >
@@ -318,7 +318,7 @@ export default function AddSeekerPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loading && <LoadingSpinner />}
                     {loading ? t('add_seeker.submitting') : t('add_seeker.save')}

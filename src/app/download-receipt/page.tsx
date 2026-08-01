@@ -228,7 +228,7 @@ export default function DownloadReceipt() {
 
           {registrations && registrations.length > 0 && (
             <div className="mb-8">
-              <div className="bg-[color:var(--accent-200)]/35 border border-[color:var(--primary)]/30 text-[color:var(--primary)] rounded-lg p-6 mb-4">
+              <div className="bg-[color:color-mix(in_srgb,var(--accent-200)_35%,transparent)] border border-[color:color-mix(in_srgb,var(--primary)_30%,transparent)] text-[color:var(--primary)] rounded-lg p-6 mb-4">
                 <h3 className="text-xl font-bold text-[color:var(--primary)] text-center mb-4">Receipt Found!</h3>
                 <p className="text-center mb-6">Your registration receipt is available below. You can download or print it for your records.</p>
                 
@@ -365,7 +365,7 @@ export default function DownloadReceipt() {
                   
                   <button 
                     onClick={handleDownloadPDF} 
-                    className="btn bg-[color:var(--accent)] text-white hover:bg-[color:var(--accent-600)]"
+                    className="btn bg-[color:var(--accent)] text-[color:var(--on-primary)] hover:bg-[color:var(--accent-600)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -393,7 +393,7 @@ export default function DownloadReceipt() {
                         <button
                           onClick={handleSendEmail}
                           disabled={sendingEmail || emailSent}
-                          className={`btn rounded-l-none whitespace-nowrap bg-[color:var(--accent)] text-white hover:bg-[color:var(--accent-600)] disabled:bg-[color:var(--border)]`}
+                          className={`btn rounded-l-none whitespace-nowrap bg-[color:var(--accent)] text-[color:var(--on-primary)] hover:bg-[color:var(--accent-600)] disabled:bg-[color:var(--border)]`}
                         >
                           {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                         </button>

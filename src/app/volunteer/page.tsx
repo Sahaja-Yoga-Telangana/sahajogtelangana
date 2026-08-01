@@ -134,9 +134,9 @@ export default function VolunteerRequestPage() {
 
           {/* ---- Refer a Yogi (Volunteers only) ---- */}
           {isVolunteerOrAdmin && (
-            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
               <div className="flex items-center gap-3 mb-1">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--primary)]/10">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                   <FiUserPlus className="h-5 w-5 text-[color:var(--primary)]" />
                 </div>
                 <div>
@@ -151,7 +151,7 @@ export default function VolunteerRequestPage() {
               <button
                 onClick={handleGenerate}
                 disabled={generating}
-                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-6 py-2.5 text-sm font-semibold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {generating ? (
                   <LoadingSpinner />
@@ -188,7 +188,7 @@ export default function VolunteerRequestPage() {
                     {invites.map((inv) => (
                       <div
                         key={inv._id}
-                        className="flex items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/60 px-4 py-2.5"
+                        className="flex items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_60%,transparent)] px-4 py-2.5"
                       >
                         <div>
                           <span className={`inline-block h-2 w-2 rounded-full mr-2 ${
@@ -217,10 +217,10 @@ export default function VolunteerRequestPage() {
           )}
 
           {/* ---- Volunteer Interest Form ---- */}
-          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
             {submitted ? (
               <div className="animate-fade-in text-center py-8">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--success)]/12 text-[color:var(--success)]">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--success)_12%,transparent)] text-[color:var(--success)]">
                   <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -270,7 +270,7 @@ export default function VolunteerRequestPage() {
                           key={interest}
                           type="button"
                           onClick={() => toggleInterest(interest)}
-                          className={`rounded-full px-4 py-2 text-sm font-semibold ${form.interests.includes(interest) ? 'bg-[color:var(--primary)] text-white' : 'border border-[color:var(--border)] text-[color:var(--ink)]'}`}
+                          className={`rounded-full px-4 py-2 text-sm font-semibold ${form.interests.includes(interest) ? 'bg-[color:var(--primary)] text-[color:var(--on-primary)]' : 'border border-[color:var(--border)] text-[color:var(--ink)]'}`}
                         >
                           {interest}
                         </button>

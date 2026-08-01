@@ -223,9 +223,9 @@ export default function UploadSeekersPage() {
       <main>
         <section className="relative overflow-hidden py-8 md:py-12">
           <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--primary)]/10">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                   <FiFileText className="text-[color:var(--primary)]" size={24} />
                 </div>
                 <div>
@@ -240,8 +240,8 @@ export default function UploadSeekersPage() {
                 <div
                   className={`mb-6 flex items-start gap-3 rounded-[20px] border px-4 py-3 text-sm ${
                     messageType === 'success'
-                      ? 'border-[color:var(--success)]/30 bg-[color:var(--success)]/10 text-[color:var(--success)]'
-                      : 'border-[color:var(--danger)]/30 bg-[color:var(--danger)]/10 text-[color:var(--danger)]'
+                      ? 'border-[color:color-mix(in_srgb,var(--success)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--success)_10%,transparent)] text-[color:var(--success)]'
+                      : 'border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] text-[color:var(--danger)]'
                   }`}
                 >
                   {messageType === 'success' ? (
@@ -256,7 +256,7 @@ export default function UploadSeekersPage() {
               {/* File Upload Area */}
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="cursor-pointer border-2 border-dashed border-[color:var(--border)] rounded-2xl p-10 text-center transition-colors hover:border-[color:var(--primary)]/40"
+                className="cursor-pointer border-2 border-dashed border-[color:var(--border)] rounded-2xl p-10 text-center transition-colors hover:border-[color:color-mix(in_srgb,var(--primary)_40%,transparent)]"
               >
                 <input
                   ref={fileInputRef}
@@ -277,7 +277,7 @@ export default function UploadSeekersPage() {
               </div>
 
               {isLoading && (
-                <div className="mt-6 flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/50 p-8">
+                <div className="mt-6 flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_50%,transparent)] p-8">
                   <div className="h-6 w-6 animate-spin rounded-full border-2 border-[color:var(--primary)] border-t-transparent" />
                   <p className="text-sm text-[color:var(--muted)]">Processing file...</p>
                 </div>
@@ -345,7 +345,7 @@ export default function UploadSeekersPage() {
                               </button>
                               <button
                                 onClick={() => handleDelete(seeker.id)}
-                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[color:var(--danger)]/30 text-[color:var(--danger)] hover:bg-[color:var(--danger)]/10"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] text-[color:var(--danger)] hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)]"
                               >
                                 <FiTrash2 size={14} />
                               </button>

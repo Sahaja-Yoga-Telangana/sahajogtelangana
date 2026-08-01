@@ -112,14 +112,14 @@ export default async function AdminDashboard() {
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-5">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_85%,transparent)] p-5">
               <div className={cardIconClasses}>
                 <MdDashboard size={24} />
               </div>
               <p className="mt-4 text-sm font-semibold text-[color:var(--ink)]">Signed in as</p>
               <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{session?.user?.email ?? 'Admin user'}</p>
             </div>
-            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-5">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_85%,transparent)] p-5">
               <p className="text-sm font-semibold text-[color:var(--ink)]">Quick start</p>
               <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
                 Use the cards below to jump into the sections with the highest operational activity.

@@ -17,7 +17,7 @@ const Guide = () => {
         {/* Shri Mataji */}
         <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <Reveal variant="scale" className="relative order-2 lg:order-1">
-            <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:var(--accent-200)]/60 blur-3xl" />
+            <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_60%,transparent)] blur-3xl" />
             <div className="arch relative mx-auto h-[420px] w-[300px] overflow-hidden border border-[color:var(--border)] bg-[color:var(--surface)] shadow-panel md:h-[500px] md:w-[360px]">
               <Image
                 src="/maaaa.jpg"
@@ -26,7 +26,7 @@ const Guide = () => {
                 sizes="(max-width: 768px) 300px, 360px"
                 className="object-cover"
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:var(--primary-700)]/25 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:color-mix(in_srgb,var(--primary-700)_25%,transparent)] via-transparent to-transparent" />
             </div>
             <div className="mx-auto -mt-2 flex h-12 w-36 items-center justify-center rounded-b-[20px] border border-t-0 border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">
               <p className="eyebrow !tracking-[0.28em]">Shri Mataji</p>
@@ -63,7 +63,7 @@ const Guide = () => {
               sizes="100vw"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[color:var(--primary-700)]/85 via-[color:var(--primary-700)]/60 to-[color:var(--primary-700)]/35" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[color:color-mix(in_srgb,var(--primary-700)_85%,transparent)] via-[color:color-mix(in_srgb,var(--primary-700)_60%,transparent)] to-[color:color-mix(in_srgb,var(--primary-700)_35%,transparent)]" />
           </div>
 
           {/* Overlapping content card */}

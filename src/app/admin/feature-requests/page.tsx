@@ -109,20 +109,20 @@ export default function AdminFeatureRequestsPage() {
               <Detail label="Category" value={request.category || 'Not specified'} />
             </div>
 
-            <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+            <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Description</p>
               <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.description}</p>
             </div>
 
             {request.useCase ? (
-              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Use case</p>
                 <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.useCase}</p>
               </div>
             ) : null}
 
             {request.adminNotes ? (
-              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Admin notes</p>
                 <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.adminNotes}</p>
               </div>

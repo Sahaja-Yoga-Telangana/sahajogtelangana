@@ -142,7 +142,7 @@ export default function ProgramRequestsPage() {
             </div>
 
             {req.additionalRemarks && (
-              <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+              <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Additional remarks</p>
                 <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{req.additionalRemarks}</p>
               </div>

@@ -145,12 +145,12 @@ export default function SignUp() {
       <div className="grid flex-grow grid-cols-1 lg:grid-cols-2">
         {/* Left Sanctum Panel */}
         <div className="relative hidden overflow-hidden bg-[linear-gradient(160deg,var(--surface-2),var(--bg)_60%)] lg:flex lg:items-center lg:justify-center">
-          <div className="pointer-events-none absolute -left-20 top-16 h-72 w-72 rounded-full bg-[color:var(--accent-200)]/50 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-[color:var(--primary-200)]/40 blur-3xl" />
+          <div className="pointer-events-none absolute -left-20 top-16 h-72 w-72 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_50%,transparent)] blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-[color:color-mix(in_srgb,var(--primary-200)_40%,transparent)] blur-3xl" />
           <div className="relative px-10 text-center">
             <div className="arch relative mx-auto h-[440px] w-[320px] overflow-hidden border border-[color:var(--border)] bg-[color:var(--surface)] shadow-panel">
               <Image src="/pune.jpeg" alt="" fill sizes="320px" className="object-cover" />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:var(--primary-700)]/30 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:color-mix(in_srgb,var(--primary-700)_30%,transparent)] via-transparent to-transparent" />
             </div>
             <div className="mx-auto -mt-2 flex h-12 w-40 items-center justify-center rounded-b-[20px] border border-t-0 border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">
               <p className="eyebrow !tracking-[0.3em]">Sahaja Yoga</p>

@@ -66,7 +66,7 @@ const Hero = () => {
             <div className="pointer-events-none absolute right-1/2 top-8 h-[420px] w-[320px] translate-x-1/2 rounded-full bg-[color:var(--accent-200)] blur-3xl lg:right-4 lg:translate-x-0" />
 
             {/* Thin orbit ring */}
-            <div className="pointer-events-none absolute -right-6 top-12 hidden h-40 w-40 rounded-full border border-[color:var(--accent)]/40 lg:block" />
+            <div className="pointer-events-none absolute -right-6 top-12 hidden h-40 w-40 rounded-full border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] lg:block" />
 
             <Parallax strength={18} className="relative">
               <div className="arch relative h-[440px] w-[330px] overflow-hidden border border-[color:var(--border)] bg-[color:var(--surface-2)] shadow-pop md:h-[520px] md:w-[390px]">
@@ -78,7 +78,7 @@ const Hero = () => {
                   sizes="(max-width: 768px) 330px, 390px"
                   className="object-cover"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:var(--primary-700)]/20 via-transparent to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:color-mix(in_srgb,var(--primary-700)_20%,transparent)] via-transparent to-transparent" />
               </div>
               {/* Arch base plaque */}
               <div className="mx-auto -mt-2 flex h-14 w-40 items-center justify-center rounded-b-[20px] border border-t-0 border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">

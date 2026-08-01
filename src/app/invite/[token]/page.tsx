@@ -187,7 +187,7 @@ export default function InvitePage() {
       case 'ready':
         return (
           <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
               <FiUserPlus className="h-8 w-8 text-[color:var(--primary)]" />
             </div>
             <h1 className="font-display text-[clamp(26px,3vw,34px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
@@ -208,7 +208,7 @@ export default function InvitePage() {
                 <div className="mt-8">
                   <button
                     onClick={() => signIn(undefined, { callbackUrl: `/invite/${token}` })}
-                    className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)]"
+                    className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)]"
                   >
                     <FiLogIn className="h-4 w-4" />
                     Sign in to accept
@@ -271,7 +271,7 @@ export default function InvitePage() {
                         onClick={() => toggleInterest(item)}
                         className={`rounded-full px-4 py-2 text-sm font-semibold ${
                           interests.includes(item)
-                            ? 'bg-[color:var(--primary)] text-white'
+                            ? 'bg-[color:var(--primary)] text-[color:var(--on-primary)]'
                             : 'border border-[color:var(--border)] text-[color:var(--ink)]'
                         }`}
                       >
@@ -288,7 +288,7 @@ export default function InvitePage() {
                 <button
                   onClick={handleAccept}
                   disabled={accepting}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {accepting && <LoadingSpinner />}
                   {accepting ? 'Accepting...' : 'Accept & Become a Volunteer'}

@@ -193,9 +193,9 @@ export default function ScanPage() {
       <main>
         <section className="relative overflow-hidden py-8 md:py-12">
           <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+            <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--primary)]/10">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                   <FiCamera className="text-[color:var(--primary)]" size={24} />
                 </div>
                 <div>
@@ -210,8 +210,8 @@ export default function ScanPage() {
                 <div
                   className={`mb-6 flex items-start gap-3 rounded-[20px] border px-4 py-3 text-sm ${
                     messageType === 'success'
-                      ? 'border-[color:var(--success)]/30 bg-[color:var(--success)]/10 text-[color:var(--success)]'
-                      : 'border-[color:var(--danger)]/30 bg-[color:var(--danger)]/10 text-[color:var(--danger)]'
+                      ? 'border-[color:color-mix(in_srgb,var(--success)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--success)_10%,transparent)] text-[color:var(--success)]'
+                      : 'border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] text-[color:var(--danger)]'
                   }`}
                 >
                   {messageType === 'success' ? (
@@ -228,7 +228,7 @@ export default function ScanPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <button
                     onClick={() => cameraInputRef.current?.click()}
-                    className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-[color:var(--border)] p-10 transition-colors hover:border-[color:var(--primary)]/40"
+                    className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-[color:var(--border)] p-10 transition-colors hover:border-[color:color-mix(in_srgb,var(--primary)_40%,transparent)]"
                   >
                     <input
                       ref={cameraInputRef}
@@ -238,7 +238,7 @@ export default function ScanPage() {
                       onChange={handleCameraCapture}
                       className="hidden"
                     />
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                       <FiCamera className="text-[color:var(--primary)]" size={28} />
                     </div>
                     <div className="text-center">
@@ -249,7 +249,7 @@ export default function ScanPage() {
 
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-[color:var(--border)] p-10 transition-colors hover:border-[color:var(--primary)]/40"
+                    className="flex flex-col items-center gap-4 rounded-2xl border-2 border-dashed border-[color:var(--border)] p-10 transition-colors hover:border-[color:color-mix(in_srgb,var(--primary)_40%,transparent)]"
                   >
                     <input
                       ref={fileInputRef}
@@ -258,7 +258,7 @@ export default function ScanPage() {
                       onChange={handleImageUpload}
                       className="hidden"
                     />
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--primary)]/10">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]">
                       <FiUpload className="text-[color:var(--primary)]" size={28} />
                     </div>
                     <div className="text-center">
@@ -279,7 +279,7 @@ export default function ScanPage() {
 
               {/* Scanning Indicator */}
               {isScanning && (
-                <div className="flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/50 p-10">
+                <div className="flex items-center justify-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_50%,transparent)] p-10">
                   <div className="h-8 w-8 animate-spin rounded-full border-2 border-[color:var(--primary)] border-t-transparent" />
                   <div>
                     <p className="font-medium text-[color:var(--ink)]">Running AI OCR page scanner...</p>
@@ -365,7 +365,7 @@ export default function ScanPage() {
                               </button>
                               <button
                                 onClick={() => handleDelete(seeker.id)}
-                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[color:var(--danger)]/30 text-[color:var(--danger)] hover:bg-[color:var(--danger)]/10"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[color:color-mix(in_srgb,var(--danger)_30%,transparent)] text-[color:var(--danger)] hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)]"
                               >
                                 <FiTrash2 size={14} />
                               </button>

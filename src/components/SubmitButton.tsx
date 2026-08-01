@@ -19,7 +19,7 @@ export default function SubmitButton({
   disabled = false,
   onClick,
   type = 'submit',
-  className = 'w-full rounded-full px-4 py-2.5 text-white font-semibold transition',
+  className = 'w-full rounded-full px-4 py-2.5 text-[color:var(--on-primary)] font-semibold transition',
 }: SubmitButtonProps) {
   return (
     <button

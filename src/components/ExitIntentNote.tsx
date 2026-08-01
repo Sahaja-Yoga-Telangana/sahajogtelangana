@@ -146,7 +146,7 @@ export default function ExitIntentNote() {
             </p>
             <button
               onClick={close}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-white font-medium hover:bg-[color:var(--primary-600)]"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-[color:var(--on-primary)] font-medium hover:bg-[color:var(--primary-600)]"
             >
               Close
             </button>
@@ -206,7 +206,7 @@ export default function ExitIntentNote() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm sm:text-base text-white font-medium hover:bg-[color:var(--primary-600)] disabled:opacity-60"
+                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm sm:text-base text-[color:var(--on-primary)] font-medium hover:bg-[color:var(--primary-600)] disabled:opacity-60"
                 >
                   {loading ? 'Sending...' : 'Share a Thought'}
                 </button>

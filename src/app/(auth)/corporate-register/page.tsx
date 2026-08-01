@@ -261,7 +261,7 @@ export default function CorporateRegisterPage() {
 
           <Reveal delay={140}>
             <div className="relative">
-              <div aria-hidden className="absolute -right-5 -top-5 h-24 w-24 rotate-45 border border-[color:var(--accent)]/30" />
+              <div aria-hidden className="absolute -right-5 -top-5 h-24 w-24 rotate-45 border border-[color:color-mix(in_srgb,var(--accent)_30%,transparent)]" />
               <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-panel">
                 <Image
                   src="/corporate.jpg"
@@ -271,7 +271,7 @@ export default function CorporateRegisterPage() {
                   className="h-full w-full rounded-[var(--radius-lg)] object-cover"
                 />
               </div>
-              <div aria-hidden className="absolute -bottom-4 -left-4 -z-10 h-28 w-28 rounded-[var(--radius-md)] border border-[color:var(--accent)]/40" />
+              <div aria-hidden className="absolute -bottom-4 -left-4 -z-10 h-28 w-28 rounded-[var(--radius-md)] border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)]" />
             </div>
           </Reveal>
         </div>
@@ -314,8 +314,8 @@ export default function CorporateRegisterPage() {
       {/* ================= QUOTE ================= */}
       <section className="mx-auto max-w-[900px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
         <Reveal>
-          <blockquote className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--surface-2)_92%,transparent),color-mix(in_srgb,var(--surface)_96%,transparent))] p-8 shadow-card md:p-12">
-            <span aria-hidden className="pointer-events-none absolute -left-2 -top-8 select-none font-display text-[120px] leading-none text-[color:var(--accent)]/25">“</span>
+          <blockquote className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--surface-2)_92%,transparent),color-mix(in_srgb,var(--surface)_96%,transparent))] p-8 shadow-card md:p-12">
+            <span aria-hidden className="pointer-events-none absolute -left-2 -top-8 select-none font-display text-[120px] leading-none text-[color:color-mix(in_srgb,var(--accent)_25%,transparent)]">“</span>
             <p className="relative font-display text-[clamp(20px,2.4vw,27px)] leading-[1.45] tracking-[-0.01em] text-[color:var(--ink)]">
               {copy.quote}
             </p>
@@ -351,7 +351,7 @@ export default function CorporateRegisterPage() {
       {/* ================= CUSTOMIZED SESSIONS ================= */}
       <section className="mx-auto max-w-[900px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
         <Reveal>
-          <div className="rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[color:var(--surface-2)]/70 p-8 shadow-card md:p-10">
+          <div className="rounded-[var(--radius-xl)] border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-8 shadow-card md:p-10">
             <p className="eyebrow">Tailored Sessions</p>
             <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
               {copy.customTitle}
@@ -506,7 +506,7 @@ function Input({
 function InfoCard({ icon: Icon, title, text }: { icon: any; title: string; text: string }) {
   return (
     <div className="h-full rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
-      <div className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
+      <div className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_10%,transparent)] text-[color:var(--accent)]">
         <Icon className="h-5 w-5" aria-hidden />
       </div>
       <h3 className="mt-5 font-display text-[19px] leading-snug text-[color:var(--ink)]">{title}</h3>

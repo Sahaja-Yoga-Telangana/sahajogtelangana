@@ -133,7 +133,7 @@ export default function SeekerRegistrationPage() {
       <section className="mx-auto grid max-w-6xl gap-8 px-5 py-10 md:px-8 md:py-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <aside className="lg:sticky lg:top-28 order-2 lg:order-none">
           <div className="rounded-[8px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft md:p-8">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-[color:var(--primary)] text-white">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-[color:var(--primary)] text-[color:var(--on-primary)]">
               <FiHeart className="h-5 w-5" aria-hidden="true" />
             </div>
             <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
@@ -264,7 +264,7 @@ export default function SeekerRegistrationPage() {
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] bg-[color:var(--primary)] px-5 py-3 text-base font-semibold text-white transition hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] bg-[color:var(--primary)] px-5 py-3 text-base font-semibold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
             >
               {status === 'submitting' ? <LoadingSpinner /> : <FiSend className="h-4 w-4" aria-hidden="true" />}
               {status === 'submitting' ? 'Submitting...' : 'Submit my details'}

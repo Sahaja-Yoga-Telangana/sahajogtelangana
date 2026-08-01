@@ -66,7 +66,7 @@ export default async function AnalyticsPage() {
           <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Top events by registrations</h2>
           <div className="mt-5 space-y-4">
             {registrationsByEvent.map((entry: any) => (
-              <div key={entry._id} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+              <div key={entry._id} className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-semibold text-[color:var(--ink)]">{entry._id}</p>
                   <span className="text-sm text-[color:var(--muted)]">{entry.count} registrations</span>
@@ -80,7 +80,7 @@ export default async function AnalyticsPage() {
           <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Seekers by source</h2>
           <div className="mt-5 space-y-4">
             {seekersBySource.map((entry: any) => (
-              <div key={entry._id || 'Unknown'} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+              <div key={entry._id || 'Unknown'} className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-semibold text-[color:var(--ink)]">{entry._id || 'Unknown'}</p>
                   <span className="text-sm text-[color:var(--muted)]">{entry.count} seekers</span>

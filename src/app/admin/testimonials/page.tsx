@@ -161,7 +161,7 @@ export default function AdminTestimonialsPage() {
                 </div>
               </div>
 
-              <div className="mt-5 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4 text-sm leading-7 text-[color:var(--ink)] whitespace-pre-wrap">
+              <div className="mt-5 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4 text-sm leading-7 text-[color:var(--ink)] whitespace-pre-wrap">
                 {testimonial.experience}
               </div>
             </article>

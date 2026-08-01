@@ -78,9 +78,9 @@ const content = {
 
 const heroButtonBase = 'inline-flex min-h-[52px] items-center justify-center whitespace-nowrap rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 ease-out shadow-sm';
 const heroButtonVariants = {
-  primary: `${heroButtonBase} bg-[color:var(--primary)] text-white hover:-translate-y-0.5 hover:bg-[color:var(--primary-600)] hover:shadow-soft`,
-  secondary: `${heroButtonBase} border border-[color:var(--border)] bg-[color:var(--surface)]/92 text-[color:var(--ink)] hover:-translate-y-0.5 hover:bg-[color:var(--surface-2)] hover:shadow-soft`,
-  tertiary: `${heroButtonBase} border border-[color:var(--focus)] bg-[color:var(--surface-2)]/72 text-[color:var(--ink)] hover:-translate-y-0.5 hover:bg-[color:var(--surface)]/92 hover:shadow-soft`,
+  primary: `${heroButtonBase} bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:-translate-y-0.5 hover:bg-[color:var(--primary-600)] hover:shadow-soft`,
+  secondary: `${heroButtonBase} border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--ink)] hover:-translate-y-0.5 hover:bg-[color:var(--surface-2)] hover:shadow-soft`,
+  tertiary: `${heroButtonBase} border border-[color:var(--focus)] bg-[color:color-mix(in_srgb,var(--surface-2)_72%,transparent)] text-[color:var(--ink)] hover:-translate-y-0.5 hover:bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] hover:shadow-soft`,
 };
 
 export const dynamic = 'force-dynamic';
@@ -120,12 +120,12 @@ export default function MeditatePage() {
   return (
     <main className="bg-[color:var(--bg)]">
       <SeoJsonLd json={[{ '@context': 'https://schema.org', '@type': 'WebPage', name: copy.heroTitle, url: absoluteUrl('/meditate'), description: copy.heroBody }]} />
-      <section className="relative overflow-hidden"><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_55%,transparent),_transparent_42%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_76%,transparent),_var(--bg)_58%,_var(--bg))]" /><div className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-24"><div><p className="eyebrow">{copy.heroEyebrow}</p><MaskedReveal as="h1" delay={60} text={copy.heroTitle} className="mt-5 text-[clamp(30px,4vw,46px)] font-display leading-[1.1] tracking-[-0.02em] text-[color:var(--ink)]" /><p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--muted)] md:text-lg">{copy.heroBody}</p><div className="mt-8 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2"><div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-4 py-4 backdrop-blur-sm">{copy.need}</div><div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-4 py-4 backdrop-blur-sm">{copy.rhythm}</div></div></div><div className="relative mx-auto w-full max-w-[460px]"><div className="absolute inset-6 rounded-[32px] bg-[radial-gradient(circle_at_top,_color-mix(in_srgb,var(--accent)_28%,transparent),_transparent_58%)] blur-2xl" /><div className="relative overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/76 p-3 shadow-soft backdrop-blur-sm"><Image src="/meditate-hero.png" alt="Calm meditation illustration" width={1200} height={850} className="h-auto w-full rounded-[24px] object-cover" priority /></div></div></div></section>
+      <section className="relative overflow-hidden"><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_55%,transparent),_transparent_42%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_76%,transparent),_var(--bg)_58%,_var(--bg))]" /><div className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-24"><div><p className="eyebrow">{copy.heroEyebrow}</p><MaskedReveal as="h1" delay={60} text={copy.heroTitle} className="mt-5 text-[clamp(30px,4vw,46px)] font-display leading-[1.1] tracking-[-0.02em] text-[color:var(--ink)]" /><p className="mt-6 max-w-2xl text-base leading-8 text-[color:var(--muted)] md:text-lg">{copy.heroBody}</p><div className="mt-8 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2"><div className="rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-4 py-4 backdrop-blur-sm">{copy.need}</div><div className="rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-4 py-4 backdrop-blur-sm">{copy.rhythm}</div></div></div><div className="relative mx-auto w-full max-w-[460px]"><div className="absolute inset-6 rounded-[32px] bg-[radial-gradient(circle_at_top,_color-mix(in_srgb,var(--accent)_28%,transparent),_transparent_58%)] blur-2xl" /><div className="relative overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_76%,transparent)] p-3 shadow-soft backdrop-blur-sm"><Image src="/meditate-hero.png" alt="Calm meditation illustration" width={1200} height={850} className="h-auto w-full rounded-[24px] object-cover" priority /></div></div></div></section>
       <section className="pb-4">
         <JourneyHubEntry sourcePage="meditate" autoOpen />
       </section>
       <DailyTalkOfTheDay eyebrow={copy.talkHeader[0]} title={copy.talkHeader[1]} description={copy.talkHeader[2]} />
-      <section className="py-16"><div className="mx-auto max-w-6xl px-6 lg:px-8"><div className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_90%,transparent))] p-6 shadow-sm md:p-8"><div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start"><div><SectionHeader eyebrow={copy.subtleHeader[0]} title={copy.subtleHeader[1]} description={copy.subtleHeader[2]} /><div className="mt-8 space-y-6">{copy.subtleChannels.map((channel) => <div key={channel[0]} className="border-t border-[color:var(--border)] pt-6 first:border-t-0 first:pt-0"><h3 className="font-display text-[22px] font-medium text-[color:var(--ink)]">{channel[0]}</h3><p className="mt-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{channel[1]}</p></div>)}</div></div><div className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] p-4 shadow-soft md:p-5"><Image src="/subtle-system.png" alt="Nadis and chakras subtle system diagram" width={1800} height={1800} className="h-auto w-full rounded-[24px] bg-[color:var(--surface)]/80" /></div></div></div></div></section>
+      <section className="py-16"><div className="mx-auto max-w-6xl px-6 lg:px-8"><div className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_90%,transparent))] p-6 shadow-sm md:p-8"><div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start"><div><SectionHeader eyebrow={copy.subtleHeader[0]} title={copy.subtleHeader[1]} description={copy.subtleHeader[2]} /><div className="mt-8 space-y-6">{copy.subtleChannels.map((channel) => <div key={channel[0]} className="border-t border-[color:var(--border)] pt-6 first:border-t-0 first:pt-0"><h3 className="font-display text-[22px] font-medium text-[color:var(--ink)]">{channel[0]}</h3><p className="mt-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{channel[1]}</p></div>)}</div></div><div className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] p-4 shadow-soft md:p-5"><Image src="/subtle-system.png" alt="Nadis and chakras subtle system diagram" width={1800} height={1800} className="h-auto w-full rounded-[24px] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)]" /></div></div></div></div></section>
             <section id="daily-steps" className="scroll-mt-24 py-[clamp(56px,7vh,80px)]">
         <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
           <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface)_90%,transparent),color-mix(in_srgb,var(--surface-2)_96%,transparent))] p-6 shadow-card md:p-10">
@@ -133,7 +133,7 @@ export default function MeditatePage() {
               <div className="grid items-center gap-6 lg:grid-cols-[1fr_290px] xl:grid-cols-[1fr_340px]">
                 <div>
                   <SectionHeader eyebrow={copy.stepsHeader[0]} title={copy.stepsHeader[1]} description={copy.stepsHeader[2]} />
-                  <p className="mt-5 max-w-2xl rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface)]/86 px-4 py-3 text-[14.5px] leading-7 text-[color:var(--muted)]">
+                  <p className="mt-5 max-w-2xl rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_86%,transparent)] px-4 py-3 text-[14.5px] leading-7 text-[color:var(--muted)]">
                     {copy.stepsMatajiNote}
                   </p>
                 </div>
@@ -148,26 +148,26 @@ export default function MeditatePage() {
             <div className="mt-10 grid gap-6 lg:grid-cols-3">
               {copy.steps.map((step, index) => (
                 <Reveal key={step[0]} delay={index * 90}>
-                  <article className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)]/92 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-panel">
+                  <article className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-panel">
                     <div className="border-b border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-2)_94%,transparent),color-mix(in_srgb,var(--surface)_96%,transparent))] p-4">
                       <div className="flex items-center gap-3">
-                        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] font-display text-sm font-medium text-white shadow-soft">
+                        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] font-display text-sm font-medium text-[color:var(--on-primary)] shadow-soft">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <h3 className="font-display text-xl font-medium leading-snug text-[color:var(--ink)]">{step[0]}</h3>
                       </div>
                     </div>
                     <div className="flex flex-1 flex-col p-4 md:p-5">
-                      <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)]/72 p-3">
-                        <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--surface)] font-display text-[13px] font-medium text-[color:var(--accent)] shadow-card transition-transform duration-300 group-hover:scale-110">
+                      <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_72%,transparent)] p-3">
+                        <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[color:var(--surface)] font-display text-[13px] font-medium text-[color:var(--accent)] shadow-card transition-transform duration-300 group-hover:scale-110">
                           {index + 1}
                         </div>
                         <Image src={step[2]} alt={step[0]} width={900} height={900} className="h-auto w-full rounded-[var(--radius-md)] object-contain transition-transform duration-500 group-hover:scale-[1.04]" />
                       </div>
                       <p className="mt-5 text-[14.5px] leading-[1.75] text-[color:var(--muted)]">{step[1]}</p>
-                      <div className="mt-5 flex-1 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                      <div className="mt-5 flex-1 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                         <p className="text-[14.5px] leading-7 text-[color:var(--ink)]">{step[3]}</p>
-                        <p className="mt-4 rounded-[var(--radius-sm)] bg-[color:var(--primary)] px-4 py-3 text-sm font-medium leading-7 text-white shadow-card transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
+                        <p className="mt-4 rounded-[var(--radius-sm)] bg-[color:var(--primary)] px-4 py-3 text-sm font-medium leading-7 text-[color:var(--on-primary)] shadow-card transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
                           {step[4]}
                         </p>
                       </div>
