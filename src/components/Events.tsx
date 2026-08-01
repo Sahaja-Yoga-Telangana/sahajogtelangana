@@ -51,8 +51,13 @@ export default function Events() {
     <section id="other-events" className="py-12">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <div className="mb-10 flex flex-col gap-3 text-center">
-          <h2 className="text-3xl font-semibold text-[color:var(--ink)]">More Events</h2>
-          <p className="text-[color:var(--muted)]">Thoughtfully presented event cards with all the essentials up front.</p>
+          <p className="eyebrow">Events</p>
+          <h2 className="font-display text-[clamp(26px,3.2vw,36px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
+            More Events
+          </h2>
+          <p className="mx-auto max-w-md text-[color:var(--muted)]">
+            Thoughtfully presented event cards with all the essentials up front.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">

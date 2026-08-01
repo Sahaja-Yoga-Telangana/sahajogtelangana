@@ -158,8 +158,11 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
   return (
     <div className="mx-auto max-w-6xl px-4 lg:px-6">
       <div className="py-8">
-        <h1 className="text-3xl font-semibold text-[color:var(--ink)]">{copy.title}</h1>
-        <p className="mt-1.5 text-base leading-relaxed text-[color:var(--muted)]">
+        <p className="eyebrow">{copy.finder}</p>
+        <h1 className="mt-3 font-display text-[clamp(28px,3.4vw,40px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
+          {copy.title}
+        </h1>
+        <p className="mt-2.5 max-w-2xl text-base leading-relaxed text-[color:var(--muted)]">
           {copy.welcome}
         </p>
       </div>

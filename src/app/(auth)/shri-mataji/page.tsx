@@ -1,10 +1,30 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { getRequestLocale } from '@/lib/serverLocale';
+import SeoJsonLd from '@/components/SeoJsonLd';
+import Reveal from '@/components/motion/Reveal';
+import MaskedReveal from '@/components/motion/MaskedReveal';
 
 const content = {
   en: {
     eyebrow: 'The Founder',
     title: 'Shri Mataji Nirmala Devi',
+    heroIntro:
+      'Founder of Sahaja Yoga, humanitarian, and guide to millions — she devoted her life to awakening the innate spiritual potential within every person.',
+    ctaMeditate: 'Meditate With Her',
+    eyebrows: {
+      founder: 'The Founder',
+      master: 'The Master',
+      humanity: 'Compassion',
+      life: 'Her Circle',
+      early: '1923 — Birth',
+      founding: '1970 — The Founding',
+      sharing: 'London',
+      vision: 'The World',
+      education: 'Service',
+      health: 'Care',
+      creativity: 'The Arts',
+    },
     sections: {
       founderTitle: 'Founder of Sahaja Yoga',
       founder: [
@@ -60,6 +80,22 @@ const content = {
   te: {
     eyebrow: 'స్థాపకురాలు',
     title: 'శ్రీ మాతాజీ నిర్మలా దేవి',
+    heroIntro:
+      'సహజ యోగ స్థాపకురాలు, మానవతావాది, మిలియన్ల మందికి మార్గదర్శిని — ప్రతి వ్యక్తిలోని సహజ ఆధ్యాత్మిక సామర్థ్యాన్ని మేల్కొలిపేందుకు ఆమె జీవితాన్ని అంకితం చేశారు.',
+    ctaMeditate: 'ఆమెతో ధ్యానం చేయండి',
+    eyebrows: {
+      founder: 'స్థాపకురాలు',
+      master: 'గురువు',
+      humanity: 'కరుణ',
+      life: 'ఆమె సర్కిల్',
+      early: '1923 — జననం',
+      founding: '1970 — ఆవిర్భావం',
+      sharing: 'లండన్',
+      vision: 'ప్రపంచం',
+      education: 'సేవ',
+      health: 'సంరక్షణ',
+      creativity: 'కళలు',
+    },
     sections: {
       founderTitle: 'సహజ యోగ స్థాపకురాలు',
       founder: [
@@ -114,26 +150,261 @@ const content = {
   },
 } as const;
 
+function DisplayHeading({ children }: { children: string }) {
+  return (
+    <h2 className="mt-4 text-[clamp(24px,2.8vw,32px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+      {children}
+    </h2>
+  );
+}
+
 export default function ShriMatajiPage() {
   const locale = getRequestLocale();
-  const copy = content[locale].sections;
+  const c = content[locale];
+  const copy = c.sections;
 
   return (
-    <div className="bg-[color:var(--bg)] text-[color:var(--muted)]">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-14">
-        <p className="text-sm uppercase tracking-[0.3em] text-center text-[color:var(--muted)]">{content[locale].eyebrow}</p>
-        <h1 className="text-4xl md:text-5xl font-semibold text-center text-[color:var(--ink)] mb-10">{content[locale].title}</h1>
-        <section className="mb-16"><div className="flex flex-col md:flex-row items-center gap-10"><div className="md:w-1/2"><Image src="/maa-wide.jpg" alt="Shri Mataji Nirmala Devi" width={640} height={420} className="rounded-2xl shadow-soft" priority /></div><div className="md:w-1/2"><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.founderTitle}</h2>{copy.founder.map((p) => <p key={p} className="mb-4">{p}</p>)}</div></div></section>
-        <section className="mb-16"><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4 text-center">{copy.masterTitle}</h2><p className="mb-4 text-center max-w-3xl mx-auto">{copy.master}</p><div className="mt-8 max-w-4xl mx-auto"><div className="rounded-2xl overflow-hidden border border-[color:var(--border)] shadow-soft bg-[color:var(--surface)]"><Image src="/maa-landscape.jpg" alt="Shri Mataji Nirmala Devi smiling" width={1200} height={700} className="w-full h-auto object-cover" /></div></div></section>
-        <section className="mb-16 grid md:grid-cols-2 gap-10"><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.humanityTitle}</h2>{copy.humanity.map((p) => <p key={p} className="mb-4">{p}</p>)}</div><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.lifeTitle}</h2>{copy.life.map((p) => <p key={p} className="mb-4">{p}</p>)}</div></section>
-        <section className="mb-16"><div className="grid md:grid-cols-2 gap-10 items-center"><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.earlyTitle}</h2>{copy.early.map((p) => <p key={p} className="mb-4">{p}</p>)}</div><div className="rounded-2xl overflow-hidden border border-[color:var(--border)] shadow-soft bg-[color:var(--surface)]"><Image src="/maa-wide2.jpg" alt="Shri Mataji Nirmala Devi" width={1200} height={700} className="w-full h-auto object-cover" /></div></div></section>
-        <section className="mb-16"><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.foundingTitle}</h2>{copy.founding.map((p) => <p key={p} className="mb-4">{p}</p>)}</section>
-        <section className="mb-16 grid md:grid-cols-2 gap-10"><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.sharingTitle}</h2><p className="mb-4">{copy.sharing}</p></div><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.visionTitle}</h2><p className="mb-4">{copy.vision}</p></div></section>
-        <section className="mb-16"><div className="grid md:grid-cols-2 gap-10 items-center"><div><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.educationTitle}</h2>{copy.education.map((p) => <p key={p} className="mb-4">{p}</p>)}</div><div className="rounded-2xl overflow-hidden border border-[color:var(--border)] shadow-soft bg-[color:var(--surface)]"><Image src="/maa-landscape2.jpg" alt="Shri Mataji Nirmala Devi smiling" width={1200} height={700} className="w-full h-auto object-cover" /></div></div></section>
-        <section className="mb-16"><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.healthTitle}</h2>{copy.health.map((p) => <p key={p} className="mb-4">{p}</p>)}</section>
-        <section className="mb-16"><h2 className="text-2xl font-semibold text-[color:var(--ink)] mb-4">{copy.creativityTitle}</h2><p className="mb-4">{copy.creativity}</p></section>
-        <section className="text-center"><blockquote className="italic text-[color:var(--muted)]">“{copy.quote}”</blockquote><p className="mt-2 text-sm text-[color:var(--muted)]">— Shri Mataji Nirmala Devi</p></section>
-      </div>
-    </div>
+    <main className="bg-[color:var(--bg)] text-[color:var(--muted)]">
+      <SeoJsonLd
+        json={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Shri Mataji Nirmala Devi',
+            description: copy.founderTitle,
+          },
+        ]}
+      />
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_55%,transparent),_transparent_45%)]" />
+        <div className="relative mx-auto max-w-[1200px] px-[var(--gutter)] py-[clamp(64px,8vh,96px)] text-center">
+          <p className="eyebrow">{c.eyebrow}</p>
+          <MaskedReveal
+            as="h1"
+            delay={60}
+            text={c.title}
+            className="mx-auto mt-5 max-w-3xl text-[clamp(34px,4.6vw,52px)] font-display leading-[1.08] tracking-[-0.02em] text-[color:var(--ink)]"
+          />
+          <p className="mx-auto mt-6 max-w-2xl text-[16.5px] leading-[1.8] text-[color:var(--muted)]">
+            {c.heroIntro}
+          </p>
+          <Link href="/meditate" className="btn btn-primary mt-8">
+            {c.ctaMeditate}
+          </Link>
+        </div>
+      </section>
+
+      {/* Founder + portrait */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="scale">
+            <div className="relative mx-auto max-w-md">
+              <div className="pointer-events-none absolute -left-8 -top-8 h-40 w-40 rounded-full bg-[color:var(--accent-200)]/50 blur-3xl" />
+              <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+                <Image
+                  src="/maa-wide.jpg"
+                  alt="Shri Mataji Nirmala Devi"
+                  width={640}
+                  height={420}
+                  className="aspect-[10/7] w-full object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </Reveal>
+          <Reveal variant="slide-right" delay={100}>
+            <div>
+              <p className="eyebrow">{c.eyebrows.founder}</p>
+              <DisplayHeading>{copy.founderTitle}</DisplayHeading>
+              <div className="mt-6 space-y-4">
+                {copy.founder.map((p) => (
+                  <p key={p} className="text-[15.5px] leading-[1.8]">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Master + landscape */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
+          <Reveal>
+            <div className="mx-auto mb-10 max-w-2xl text-center">
+              <p className="eyebrow">{c.eyebrows.master}</p>
+              <DisplayHeading>{copy.masterTitle}</DisplayHeading>
+              <p className="mt-5 text-[15.5px] leading-[1.8]">{copy.master}</p>
+            </div>
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/maa-landscape.jpg"
+                alt="Shri Mataji Nirmala Devi smiling"
+                width={1200}
+                height={700}
+                className="aspect-[16/9] w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Humanity + life */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-[var(--gutter)] md:grid-cols-2">
+          <Reveal variant="slide-left">
+            <p className="eyebrow">{c.eyebrows.humanity}</p>
+            <DisplayHeading>{copy.humanityTitle}</DisplayHeading>
+            <div className="mt-5 space-y-4">
+              {copy.humanity.map((p) => (
+                <p key={p} className="text-[15.5px] leading-[1.8]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal variant="slide-right" delay={100}>
+            <p className="eyebrow">{c.eyebrows.life}</p>
+            <DisplayHeading>{copy.lifeTitle}</DisplayHeading>
+            <div className="mt-5 space-y-4">
+              {copy.life.map((p) => (
+                <p key={p} className="text-[15.5px] leading-[1.8]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Early years + portrait */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="slide-left">
+            <p className="eyebrow">{c.eyebrows.early}</p>
+            <DisplayHeading>{copy.earlyTitle}</DisplayHeading>
+            <div className="mt-5 space-y-4">
+              {copy.early.map((p) => (
+                <p key={p} className="text-[15.5px] leading-[1.8]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal variant="scale" delay={100}>
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/maa-wide2.jpg"
+                alt="Shri Mataji Nirmala Devi"
+                width={1200}
+                height={700}
+                className="aspect-[16/9] w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Founding + quote */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
+          <Reveal>
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <p className="eyebrow">{c.eyebrows.founding}</p>
+              <DisplayHeading>{copy.foundingTitle}</DisplayHeading>
+              <div className="mt-5 space-y-4 text-left">
+                {copy.founding.map((p) => (
+                  <p key={p} className="text-[15.5px] leading-[1.8]">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <figure className="relative mx-auto max-w-2xl border-y border-[color:var(--border)] py-10 text-center">
+              <span className="font-display text-[56px] leading-none text-[color:var(--accent)]" aria-hidden>
+                “
+              </span>
+              <blockquote className="font-display text-[clamp(22px,2.6vw,30px)] italic leading-[1.4] text-[color:var(--ink)]">
+                {copy.quote}
+              </blockquote>
+              <figcaption className="mt-4 text-sm uppercase tracking-[0.22em] text-[color:var(--muted)]">
+                — Shri Mataji Nirmala Devi
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Sharing + vision */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-[var(--gutter)] md:grid-cols-2">
+          <Reveal variant="slide-left">
+            <p className="eyebrow">{c.eyebrows.sharing}</p>
+            <DisplayHeading>{copy.sharingTitle}</DisplayHeading>
+            <p className="mt-5 text-[15.5px] leading-[1.8]">{copy.sharing}</p>
+          </Reveal>
+          <Reveal variant="slide-right" delay={100}>
+            <p className="eyebrow">{c.eyebrows.vision}</p>
+            <DisplayHeading>{copy.visionTitle}</DisplayHeading>
+            <p className="mt-5 text-[15.5px] leading-[1.8]">{copy.vision}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Education + landscape */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="slide-left">
+            <p className="eyebrow">{c.eyebrows.education}</p>
+            <DisplayHeading>{copy.educationTitle}</DisplayHeading>
+            <div className="mt-5 space-y-4">
+              {copy.education.map((p) => (
+                <p key={p} className="text-[15.5px] leading-[1.8]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal variant="scale" delay={100}>
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/maa-landscape2.jpg"
+                alt="Shri Mataji Nirmala Devi smiling"
+                width={1200}
+                height={700}
+                className="aspect-[16/9] w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Health + creativity */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-[var(--gutter)] md:grid-cols-2">
+          <Reveal variant="slide-left">
+            <p className="eyebrow">{c.eyebrows.health}</p>
+            <DisplayHeading>{copy.healthTitle}</DisplayHeading>
+            <div className="mt-5 space-y-4">
+              {copy.health.map((p) => (
+                <p key={p} className="text-[15.5px] leading-[1.8]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal variant="slide-right" delay={100}>
+            <p className="eyebrow">{c.eyebrows.creativity}</p>
+            <DisplayHeading>{copy.creativityTitle}</DisplayHeading>
+            <p className="mt-5 text-[15.5px] leading-[1.8]">{copy.creativity}</p>
+          </Reveal>
+        </div>
+      </section>
+    </main>
   );
 }

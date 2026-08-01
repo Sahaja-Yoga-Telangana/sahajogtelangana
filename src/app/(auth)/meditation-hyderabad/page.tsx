@@ -154,7 +154,7 @@ export default function MeditationHyderabadPage() {
       </section>
 
       <section className="max-w-5xl mx-auto px-6 mt-14">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)]">{copy.faqTitle}</h2>
+        <h2 className="font-display text-[clamp(24px,2.8vw,32px)] font-medium leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">{copy.faqTitle}</h2>
         <div className="mt-6 space-y-4 text-[color:var(--muted)]">
           {copy.faqs.map(([question, answer], index) => (
             <div key={question}>
@@ -175,7 +175,7 @@ export default function MeditationHyderabadPage() {
 
       <section className="max-w-5xl mx-auto px-6 mt-14">
         <div className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
-          <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)]">{copy.exploreTitle}</h2>
+          <h2 className="font-display text-[clamp(24px,2.8vw,32px)] font-medium leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">{copy.exploreTitle}</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {copy.exploreLinks.map(([label, href]) => (
               <Link
