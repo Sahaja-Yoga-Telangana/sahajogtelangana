@@ -158,7 +158,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
   );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 lg:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-4 pt-6 lg:px-6 lg:pt-8">
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[radial-gradient(70%_120%_at_12%_0%,color-mix(in_srgb,var(--accent)_9%,transparent),transparent_55%),linear-gradient(135deg,color-mix(in_srgb,var(--surface)_94%,transparent),color-mix(in_srgb,var(--surface-2)_86%,transparent))] px-6 py-10 shadow-card md:px-10 md:py-12">
         <div aria-hidden className="absolute -right-8 -top-8 h-28 w-28 rotate-45 border border-[color:color-mix(in_srgb,var(--accent)_25%,transparent)]" />
         <p className="eyebrow">{copy.finder}</p>
@@ -179,7 +179,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
         </div>
       </div>
 
-      <div className="relative mb-6">
+      <div className="relative mb-6 mt-6">
         <svg
           className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2"
           width="18"
@@ -197,7 +197,7 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="admin-input w-full py-3 pl-12 pr-4"
+          className="admin-input admin-input-with-icon w-full"
           placeholder={copy.search}
         />
       </div>

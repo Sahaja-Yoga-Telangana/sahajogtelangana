@@ -616,6 +616,10 @@ a[href*='wa.me/'] {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 26%, transparent);
   }
 
+  .admin-input-with-icon {
+    padding-left: 3rem;
+  }
+
   .request-event-form .admin-input {
     background: color-mix(in srgb, var(--surface) 94%, var(--surface-2));
     border-color: color-mix(in srgb, var(--border) 86%, var(--surface-3));
