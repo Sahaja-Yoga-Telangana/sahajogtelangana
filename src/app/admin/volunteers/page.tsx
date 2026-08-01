@@ -229,7 +229,7 @@ export default function VolunteersPage() {
                 <p className="mt-2 text-sm text-[color:var(--muted)]">{volunteer.email}</p>
                 <p className="mt-1 text-sm text-[color:var(--muted)]">{volunteer.city || 'City not set'}</p>
               </div>
-              <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${volunteer.isActive === false ? 'bg-red-500/10 text-red-700 dark:text-red-300' : 'bg-green-500/10 text-green-700 dark:text-green-300'}`}>
+              <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${volunteer.isActive === false ? 'bg-[color:color-mix(in_srgb,var(--danger)_15%,transparent)] text-[color:var(--danger)]' : 'bg-[color:color-mix(in_srgb,var(--success)_15%,transparent)] text-[color:var(--success)]'}`}>
                 {volunteer.isActive === false ? 'Inactive' : 'Active'}
               </span>
             </div>
@@ -241,7 +241,7 @@ export default function VolunteersPage() {
             </div>
             <div className="mt-5 flex gap-3">
               <button type="button" onClick={() => handleEdit(volunteer)} className="admin-btn-secondary">Edit</button>
-              <button type="button" onClick={() => handleDelete(volunteer._id)} className="inline-flex items-center justify-center rounded-full border border-red-300/70 px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50 dark:text-red-300">
+              <button type="button" onClick={() => handleDelete(volunteer._id)} className="inline-flex items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--danger)_35%,transparent)] px-4 py-2 text-sm font-semibold text-[color:var(--danger)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)]">
                 Delete
               </button>
             </div>

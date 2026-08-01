@@ -330,10 +330,10 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 
 function StatusBadge({ paymentState }: { paymentState: ReceiptGroup['paymentState'] }) {
   const palette = paymentState === 'paid'
-    ? 'bg-green-500/10 text-green-700 dark:text-green-300'
+    ? 'bg-[color:color-mix(in_srgb,var(--success)_15%,transparent)] text-[color:var(--success)]'
     : paymentState === 'free'
-      ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300'
-      : 'bg-amber-500/10 text-amber-700 dark:text-amber-300';
+      ? 'bg-[color:color-mix(in_srgb,var(--primary)_15%,transparent)] text-[color:var(--primary)]'
+      : 'bg-[color:color-mix(in_srgb,var(--accent)_15%,transparent)] text-[color:var(--accent)]';
 
   return (
     <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${palette}`}>

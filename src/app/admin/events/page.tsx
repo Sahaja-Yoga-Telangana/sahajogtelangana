@@ -240,7 +240,7 @@ export default function AdminEvents() {
                       type="button"
                       onClick={() => handleDelete(event._id)}
                       disabled={deletingId === event._id}
-                      className="inline-flex items-center justify-center rounded-full border border-red-300/70 px-3 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60 dark:text-red-300"
+                      className="inline-flex items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--danger)_35%,transparent)] px-3 py-2 text-xs font-semibold text-[color:var(--danger)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] disabled:opacity-60"
                     >
                       {deletingId === event._id ? 'Deleting...' : 'Delete'}
                     </button>

@@ -585,7 +585,13 @@ a[href*='wa.me/'] {
   .admin-sidebar {
     background:
       linear-gradient(180deg, color-mix(in srgb, var(--primary-600) 92%, black 8%), color-mix(in srgb, var(--primary) 88%, black 12%));
-    color: white;
+    color: var(--on-primary);
+  }
+
+  .admin-input-sm {
+    min-height: 34px;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8125rem;
   }
 
   .admin-card {

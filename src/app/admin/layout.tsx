@@ -53,17 +53,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* ================= SIDEBAR ================= */}
       <aside
-        className={`admin-sidebar fixed md:sticky md:top-0 z-40 flex h-screen w-72 flex-col overflow-hidden border-r border-white/10 text-white transform transition-transform duration-300
+        className={`admin-sidebar fixed md:sticky md:top-0 z-40 flex h-screen w-72 flex-col overflow-hidden border-r border-[color:color-mix(in_srgb,var(--on-primary)_10%,transparent)] text-[color:var(--on-primary)] transform transition-transform duration-300
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+        <div className="flex items-center justify-between border-b border-[color:color-mix(in_srgb,var(--on-primary)_10%,transparent)] px-5 py-5">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.24em] text-white/60">Sahaja Yoga</p>
+            <p className="text-[11px] uppercase tracking-[0.24em] text-[color:color-mix(in_srgb,var(--on-primary)_60%,transparent)]">Sahaja Yoga</p>
             <h1 className="mt-1 text-xl font-semibold">Admin Panel</h1>
           </div>
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-[color:var(--on-primary)]"
             onClick={() => setOpen(false)}
           >
             <MdClose size={26} />
@@ -83,8 +83,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition
                   ${
                     active
-                      ? 'bg-white/90 text-[color:var(--primary-600)] font-semibold shadow-soft'
-                      : 'text-white/82 hover:bg-white/10 hover:text-white'
+                      ? 'bg-[color:color-mix(in_srgb,var(--on-primary)_90%,transparent)] text-[color:var(--primary-600)] font-semibold shadow-soft'
+                      : 'text-[color:color-mix(in_srgb,var(--on-primary)_82%,transparent)] hover:bg-[color:color-mix(in_srgb,var(--on-primary)_10%,transparent)] hover:text-[color:var(--on-primary)]'
                   }`}
               >
                 {item.icon}
