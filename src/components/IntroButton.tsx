@@ -7,7 +7,7 @@ import { useTranslations } from '@/app/provider/localeProvider';
 
 const BOOKLETS = [
   { lang: 'Hindi', file: 'hindi-booklet.pdf', glyph: 'अ' },
-  { lang: 'English', file: 'eng-booklet.pdf', glyph: 'ॐ' },
+  { lang: 'English', file: 'eng-booklet.pdf', glyph: 'A' },
   { lang: 'Telugu', file: 'telugu-booklet.pdf', glyph: 'అ' },
 ];
 
