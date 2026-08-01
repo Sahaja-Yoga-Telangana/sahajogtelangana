@@ -126,7 +126,59 @@ export default function MeditatePage() {
       </section>
       <DailyTalkOfTheDay eyebrow={copy.talkHeader[0]} title={copy.talkHeader[1]} description={copy.talkHeader[2]} />
       <section className="py-16"><div className="mx-auto max-w-6xl px-6 lg:px-8"><div className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,_color-mix(in_srgb,var(--surface)_94%,transparent),_color-mix(in_srgb,var(--surface-2)_90%,transparent))] p-6 shadow-sm md:p-8"><div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start"><div><SectionHeader eyebrow={copy.subtleHeader[0]} title={copy.subtleHeader[1]} description={copy.subtleHeader[2]} /><div className="mt-8 space-y-6">{copy.subtleChannels.map((channel) => <div key={channel[0]} className="border-t border-[color:var(--border)] pt-6 first:border-t-0 first:pt-0"><h3 className="font-display text-[22px] font-medium text-[color:var(--ink)]">{channel[0]}</h3><p className="mt-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{channel[1]}</p></div>)}</div></div><div className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] p-4 shadow-soft md:p-5"><Image src="/subtle-system.png" alt="Nadis and chakras subtle system diagram" width={1800} height={1800} className="h-auto w-full rounded-[24px] bg-[color:var(--surface)]/80" /></div></div></div></div></section>
-      <section id="daily-steps" className="scroll-mt-24 py-16"><div className="mx-auto max-w-6xl px-6 lg:px-8"><div className="rounded-[36px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_90%,transparent),_color-mix(in_srgb,var(--surface-2)_96%,transparent))] p-6 shadow-sm md:p-10"><div className="grid gap-6 lg:grid-cols-[1fr_290px] lg:items-center xl:grid-cols-[1fr_340px]"><div><SectionHeader eyebrow={copy.stepsHeader[0]} title={copy.stepsHeader[1]} description={copy.stepsHeader[2]} /><p className="mt-5 max-w-2xl rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface)]/86 px-4 py-3 text-sm leading-7 text-[color:var(--muted)] md:text-base">{copy.stepsMatajiNote}</p></div><div className="mx-auto w-full max-w-[220px] sm:max-w-[240px] lg:max-w-[280px] xl:max-w-[320px]"><div className="overflow-hidden rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-soft"><Image src="/maaa-with-hand.jpg" alt="Shri Mataji portrait for meditation practice" width={900} height={1200} className="h-auto w-full rounded-[22px] object-cover" /></div></div></div><div className="mt-10 grid gap-6 lg:grid-cols-3">{copy.steps.map((step, index) => <article key={step[0]} className="group overflow-hidden rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)]/92 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-soft"><div className="border-b border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_94%,transparent),_color-mix(in_srgb,var(--surface)_96%,transparent))] p-4"><div className="flex items-center gap-3"><span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] font-display text-sm font-medium text-white shadow-soft">{String(index + 1).padStart(2, '0')}</span><div><h3 className="font-display text-xl font-medium text-[color:var(--ink)]">{step[0]}</h3></div></div></div><div className="p-4 md:p-5"><div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/72 p-3"><Image src={step[2]} alt={step[0]} width={900} height={900} className="h-auto w-full rounded-[18px] object-contain" /></div><p className="mt-5 text-sm leading-7 text-[color:var(--muted)] md:text-base">{step[1]}</p><div className="mt-5 rounded-[22px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4"><p className="text-sm leading-7 text-[color:var(--ink)] md:text-base">{step[3]}</p><p className="mt-4 rounded-2xl bg-[color:var(--primary)] px-4 py-3 text-sm font-medium leading-7 text-white shadow-sm md:text-base">{step[4]}</p></div></div></article>)}</div></div></div></section>
+            <section id="daily-steps" className="scroll-mt-24 py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
+          <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface)_90%,transparent),color-mix(in_srgb,var(--surface-2)_96%,transparent))] p-6 shadow-card md:p-10">
+            <Reveal>
+              <div className="grid items-center gap-6 lg:grid-cols-[1fr_290px] xl:grid-cols-[1fr_340px]">
+                <div>
+                  <SectionHeader eyebrow={copy.stepsHeader[0]} title={copy.stepsHeader[1]} description={copy.stepsHeader[2]} />
+                  <p className="mt-5 max-w-2xl rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface)]/86 px-4 py-3 text-[14.5px] leading-7 text-[color:var(--muted)]">
+                    {copy.stepsMatajiNote}
+                  </p>
+                </div>
+                <div className="mx-auto w-full max-w-[220px] sm:max-w-[240px] lg:max-w-[280px] xl:max-w-[320px]">
+                  <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-soft">
+                    <Image src="/maaa-with-hand.jpg" alt="Shri Mataji portrait for meditation practice" width={900} height={1200} className="h-auto w-full rounded-[var(--radius-md)] object-cover" />
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="mt-10 grid gap-6 lg:grid-cols-3">
+              {copy.steps.map((step, index) => (
+                <Reveal key={step[0]} delay={index * 90}>
+                  <article className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)]/92 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-panel">
+                    <div className="border-b border-[color:var(--border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-2)_94%,transparent),color-mix(in_srgb,var(--surface)_96%,transparent))] p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] font-display text-sm font-medium text-white shadow-soft">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <h3 className="font-display text-xl font-medium leading-snug text-[color:var(--ink)]">{step[0]}</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-4 md:p-5">
+                      <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)]/72 p-3">
+                        <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--surface)] font-display text-[13px] font-medium text-[color:var(--accent)] shadow-card transition-transform duration-300 group-hover:scale-110">
+                          {index + 1}
+                        </div>
+                        <Image src={step[2]} alt={step[0]} width={900} height={900} className="h-auto w-full rounded-[var(--radius-md)] object-contain transition-transform duration-500 group-hover:scale-[1.04]" />
+                      </div>
+                      <p className="mt-5 text-[14.5px] leading-[1.75] text-[color:var(--muted)]">{step[1]}</p>
+                      <div className="mt-5 flex-1 rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                        <p className="text-[14.5px] leading-7 text-[color:var(--ink)]">{step[3]}</p>
+                        <p className="mt-4 rounded-[var(--radius-sm)] bg-[color:var(--primary)] px-4 py-3 text-sm font-medium leading-7 text-white shadow-card transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
+                          {step[4]}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="py-16"><div className="mx-auto max-w-6xl px-6 lg:px-8"><div className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_88%,transparent),_color-mix(in_srgb,var(--surface-2)_95%,transparent))] p-6 shadow-sm md:p-10"><SectionHeader eyebrow={copy.resourcesHeader[0]} title={copy.resourcesHeader[1]} description={copy.resourcesHeader[2]} /><div className="mt-10 grid gap-6 lg:grid-cols-3">{featureCards.map((card) => <FeatureCard key={card.title} {...card} />)}</div></div></div></section>
     </main>
   );

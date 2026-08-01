@@ -5,9 +5,12 @@ import { useRouter } from 'next/navigation';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Image from 'next/image';
+import { FiActivity, FiFeather, FiCompass, FiSun } from 'react-icons/fi';
 import { useLocale } from '@/app/provider/localeProvider';
 import CityPicker from '@/components/CityPicker';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import Reveal from '@/components/motion/Reveal';
+import CountUp from '@/components/motion/CountUp';
 
 const content = {
   en: {
@@ -20,9 +23,17 @@ const content = {
       'Suitable for all roles and seniority levels',
       'On-site and online sessions available',
     ],
+    stats: [
+      ['30+', 'Years of service'],
+      ['25+', 'Countries reached'],
+      ['300+', 'Organizations hosted'],
+      ['100%', 'Free of cost'],
+    ],
     whyTitle: 'Why Meditation Matters in the Workplace',
     whyBody:
       'Modern workplaces often involve high expectations, tight deadlines, and constant change. Unexpected situations and unclear demands can increase stress, anxiety, and insecurity among employees. Sahaja Yoga Meditation helps individuals remain calm, balanced, and clear-headed, enabling better responses to workplace challenges.',
+    quote:
+      'A calm mind is a company’s greatest asset — it multiplies clarity, compassion, and care across every team.',
     benefitsTitle: 'Benefits of Sahaja Yoga Meditation for Your Organization',
     benefitsBody:
       'Meditation improves not just individual well-being, but also team dynamics, leadership effectiveness, and organizational culture.',
@@ -45,6 +56,11 @@ const content = {
     formTitle: 'Request a Corporate Meditation Session',
     formBody:
       'Share your details below and our team will connect with you to understand your requirements. There is no obligation.',
+    formSections: {
+      organization: 'Organization',
+      contact: 'Contact Person',
+      address: 'Office Address',
+    },
     labels: {
       companyName: 'Company Name',
       contactName: 'Contact Person Name',
@@ -80,9 +96,17 @@ const content = {
       'అన్ని హోదాలు మరియు స్థాయిల వారికి అనువైనది',
       'ఆన్‌సైట్ మరియు ఆన్‌లైన్ సెషన్లు అందుబాటులో ఉన్నాయి',
     ],
+    stats: [
+      ['30+', 'సంవత్సరాల సేవ'],
+      ['25+', 'దేశాలకు చేరినది'],
+      ['300+', 'సంస్థలు'],
+      ['100%', 'పూర్తిగా ఉచితం'],
+    ],
     whyTitle: 'కార్యాలయంలో ధ్యానం ఎందుకు ముఖ్యము',
     whyBody:
       'ఆధునిక కార్యాలయాల్లో అధిక అంచనాలు, కఠిన గడువులు, నిరంతర మార్పులు సాధారణం. ఆకస్మిక పరిస్థితులు ఉద్యోగుల్లో ఒత్తిడి, ఆందోళన, అస్థిరతను పెంచవచ్చు. సహజ యోగ ధ్యానం వారిని ప్రశాంతంగా, సమతుల్యంగా, స్పష్టతతో ఉంచి మంచి ప్రతిస్పందనకు సహాయపడుతుంది.',
+    quote:
+      'ప్రశాంత మనస్సు సంస్థకు గొప్ప సంపద — అది స్పష్టత, దయ, శ్రద్ధను ప్రతి బృందానికి పెంచుతుంది.',
     benefitsTitle: 'మీ సంస్థకు సహజ యోగ ధ్యాన ప్రయోజనాలు',
     benefitsBody:
       'ధ్యానం వ్యక్తిగత శ్రేయస్సుతో పాటు టీమ్ సమన్వయం, నాయకత్వ ప్రభావం, సంస్థ సంస్కృతినీ మెరుగుపరుస్తుంది.',
@@ -105,6 +129,11 @@ const content = {
     formTitle: 'కార్పొరేట్ ధ్యాన సెషన్ కోసం అభ్యర్థించండి',
     formBody:
       'మీ వివరాలను క్రింద పంచుకోండి. మా బృందం మీ అవసరాలు తెలుసుకోవడానికి మిమ్మల్ని సంప్రదిస్తుంది. ఎటువంటి బలవంతం లేదు.',
+    formSections: {
+      organization: 'సంస్థ',
+      contact: 'సంప్రదింపు వ్యక్తి',
+      address: 'కార్యాలయ చిరునామా',
+    },
     labels: {
       companyName: 'సంస్థ పేరు',
       contactName: 'సంప్రదింపు వ్యక్తి పేరు',
@@ -131,6 +160,8 @@ const content = {
     },
   },
 } as const;
+
+const BENEFIT_ICONS = [FiActivity, FiFeather, FiCompass, FiSun];
 
 export default function CorporateRegisterPage() {
   const router = useRouter();
@@ -194,188 +225,251 @@ export default function CorporateRegisterPage() {
     }
   };
 
+  const formSectionLabel = (label: string) => (
+    <div className="col-span-full -mb-3 flex items-center gap-3 border-b border-[color:var(--border)] pb-2.5">
+      <span className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+      <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">{label}</p>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[color:var(--bg)]">
 
       {/* ================= HERO ================= */}
-      <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <p className="eyebrow">Corporate Wellness</p>
-          <h1 className="mt-4 font-display text-[clamp(30px,3.8vw,44px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">
-            {copy.heroTitle}
-          </h1>
+      <section className="relative overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_15%_20%,color-mix(in_srgb,var(--accent)_10%,transparent),transparent_60%),radial-gradient(45%_60%_at_90%_90%,color-mix(in_srgb,var(--accent)_8%,transparent),transparent_60%)]" />
+        <div className="relative mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] py-[clamp(56px,8vh,88px)] md:grid-cols-2">
+          <Reveal>
+            <p className="eyebrow">Corporate Wellness</p>
+            <h1 className="mt-4 font-display text-[clamp(30px,3.8vw,44px)] leading-[1.12] tracking-[-0.015em] text-[color:var(--ink)]">
+              {copy.heroTitle}
+            </h1>
 
-          <p className="mt-6 text-lg text-[color:var(--muted)] max-w-xl">
-            {copy.heroBody}
-          </p>
+            <p className="mt-6 max-w-xl text-[15.5px] leading-[1.8] text-[color:var(--muted)]">
+              {copy.heroBody}
+            </p>
 
-          <ul className="mt-8 space-y-3 text-[color:var(--muted)]">
-            {copy.heroPoints.map((item) => (
-              <li key={item} className="flex items-start gap-2.5">
-                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
-                <span>{item}</span>
-              </li>
+            <ul className="mt-8 space-y-3 text-[14.5px] text-[color:var(--muted)]">
+              {copy.heroPoints.map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <div className="relative">
+              <div aria-hidden className="absolute -right-5 -top-5 h-24 w-24 rotate-45 border border-[color:var(--accent)]/30" />
+              <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-panel">
+                <Image
+                  src="/corporate.jpg"
+                  alt="Corporate meditation session"
+                  width={1200}
+                  height={800}
+                  className="h-full w-full rounded-[var(--radius-lg)] object-cover"
+                />
+              </div>
+              <div aria-hidden className="absolute -bottom-4 -left-4 -z-10 h-28 w-28 rounded-[var(--radius-md)] border border-[color:var(--accent)]/40" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ================= STATS BAND ================= */}
+      <section className="mx-auto max-w-[1200px] px-[var(--gutter)] pb-[clamp(48px,6vh,64px)]">
+        <Reveal>
+          <div className="grid grid-cols-2 gap-y-8 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--surface)_96%,transparent),color-mix(in_srgb,var(--surface-2)_88%,transparent))] px-6 py-10 shadow-card md:grid-cols-4">
+            {copy.stats.map(([value, label], index) => (
+              <div key={label} className={`flex flex-col items-center gap-1.5 px-4 text-center ${index > 0 ? 'md:border-l md:border-[color:var(--border)]' : ''}`}>
+                <CountUp
+                  value={value.endsWith('K') ? Math.round(parseFloat(value) * 1000) : parseInt(value, 10)}
+                  suffix={value.includes('%') ? '%' : '+'}
+                  className="font-display text-[clamp(28px,3.4vw,40px)] leading-none text-[color:var(--ink)]"
+                />
+                <p className="text-[13px] uppercase tracking-[0.14em] text-[color:var(--muted)]">{label}</p>
+              </div>
             ))}
-          </ul>
-        </div>
-
-        <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
-          <Image
-            src="/corporate.jpg"
-            alt="Corporate meditation session"
-            width={1200}
-            height={800}
-            className="w-full h-full object-cover"
-          />
-        </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* ================= WHY CORPORATES ================= */}
-      <section className="max-w-5xl mx-auto px-6 pb-20">
-        <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-card md:p-10">
-          <p className="eyebrow">Why Sahaja Yoga</p>
-          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
-            {copy.whyTitle}
-          </h2>
+      <section className="mx-auto max-w-[900px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
+        <Reveal>
+          <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-card md:p-10">
+            <p className="eyebrow">Why Sahaja Yoga</p>
+            <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+              {copy.whyTitle}
+            </h2>
 
-          <p className="mt-4 text-[color:var(--muted)] leading-relaxed">
-            {copy.whyBody}
-          </p>
-        </div>
+            <p className="mt-4 leading-relaxed text-[color:var(--muted)]">
+              {copy.whyBody}
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ================= QUOTE ================= */}
+      <section className="mx-auto max-w-[900px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
+        <Reveal>
+          <blockquote className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--surface-2)_92%,transparent),color-mix(in_srgb,var(--surface)_96%,transparent))] p-8 shadow-card md:p-12">
+            <span aria-hidden className="pointer-events-none absolute -left-2 -top-8 select-none font-display text-[120px] leading-none text-[color:var(--accent)]/25">“</span>
+            <p className="relative font-display text-[clamp(20px,2.4vw,27px)] leading-[1.45] tracking-[-0.01em] text-[color:var(--ink)]">
+              {copy.quote}
+            </p>
+            <footer className="mt-5 flex items-center gap-2.5">
+              <span className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+              <span className="text-[13px] uppercase tracking-[0.2em] text-[color:var(--muted)]">Sahaja Yoga Meditation</span>
+            </footer>
+          </blockquote>
+        </Reveal>
       </section>
 
       {/* ================= BENEFITS ================= */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <h2 className="mx-auto max-w-2xl font-display text-[clamp(26px,3vw,34px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)] text-center">
-          {copy.benefitsTitle}
-        </h2>
+      <section className="mx-auto max-w-[1200px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
+        <Reveal>
+          <h2 className="mx-auto max-w-2xl text-center font-display text-[clamp(26px,3vw,34px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+            {copy.benefitsTitle}
+          </h2>
 
-        <p className="mt-3 text-[color:var(--muted)] text-center max-w-3xl mx-auto">
-          {copy.benefitsBody}
-        </p>
+          <p className="mx-auto mt-3 max-w-3xl text-center text-[color:var(--muted)]">
+            {copy.benefitsBody}
+          </p>
+        </Reveal>
 
-        <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {copy.benefits.map(([title, text]) => (
-            <InfoCard key={title} title={title} text={text} />
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {copy.benefits.map(([title, text], index) => (
+            <Reveal key={title} delay={index * 80}>
+              <InfoCard icon={BENEFIT_ICONS[index % BENEFIT_ICONS.length]} title={title} text={text} />
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* ================= CUSTOMIZED SESSIONS ================= */}
-      <section className="max-w-5xl mx-auto px-6 pb-20">
-        <div className="rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[color:var(--surface-2)]/70 p-8 shadow-card md:p-10">
-          <p className="eyebrow">Tailored Sessions</p>
-          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
-            {copy.customTitle}
-          </h2>
+      <section className="mx-auto max-w-[900px] px-[var(--gutter)] pb-[clamp(48px,6vh,72px)]">
+        <Reveal>
+          <div className="rounded-[var(--radius-xl)] border border-[color:var(--accent)]/40 bg-[color:var(--surface-2)]/70 p-8 shadow-card md:p-10">
+            <p className="eyebrow">Tailored Sessions</p>
+            <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+              {copy.customTitle}
+            </h2>
 
-          <p className="mt-4 text-[color:var(--muted)] leading-relaxed">
-            {copy.customBody}
-          </p>
+            <p className="mt-4 leading-relaxed text-[color:var(--muted)]">
+              {copy.customBody}
+            </p>
 
-          <ul className="mt-6 space-y-2 text-[color:var(--muted)]">
-            {copy.customPoints.map((item) => (
-              <li key={item} className="flex items-start gap-2.5">
-                <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+            <ul className="mt-6 space-y-2 text-[color:var(--muted)]">
+              {copy.customPoints.map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
 
-          <p className="mt-6 text-[color:var(--muted)]">
-            {copy.customFooter}
-          </p>
-        </div>
+            <p className="mt-6 text-[color:var(--muted)]">
+              {copy.customFooter}
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       {/* ================= FORM ================= */}
-      <section className="max-w-4xl mx-auto px-6 pb-28">
-        <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-panel md:p-12">
-          <p className="eyebrow">Request a Session</p>
-          <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
-            {copy.formTitle}
-          </h2>
+      <section className="mx-auto max-w-[860px] px-[var(--gutter)] pb-28">
+        <Reveal>
+          <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-panel md:p-12">
+            <p className="eyebrow">Request a Session</p>
+            <h2 className="mt-4 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+              {copy.formTitle}
+            </h2>
 
-          <p className="mt-2 text-[color:var(--muted)] max-w-2xl">
-            {copy.formBody}
-          </p>
+            <p className="mt-2 max-w-2xl text-[color:var(--muted)]">
+              {copy.formBody}
+            </p>
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input label={copy.labels.companyName} error={errors['companyName']} onChange={(v) =>
-              setFormData({ ...formData, companyName: v })
-            } />
+            <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+              {formSectionLabel(copy.formSections.organization)}
+              <Input label={copy.labels.companyName} error={errors['companyName']} onChange={(v) =>
+                setFormData({ ...formData, companyName: v })
+              } />
 
-            <Input label={copy.labels.contactName} error={errors['contactPerson.name']} onChange={(v) =>
-              setFormData({ ...formData, contactPerson: { ...formData.contactPerson, name: v } })
-            } />
+              {formSectionLabel(copy.formSections.contact)}
+              <Input label={copy.labels.contactName} error={errors['contactPerson.name']} onChange={(v) =>
+                setFormData({ ...formData, contactPerson: { ...formData.contactPerson, name: v } })
+              } />
 
-            <Input label={copy.labels.position} error={errors['contactPerson.position']} onChange={(v) =>
-              setFormData({ ...formData, contactPerson: { ...formData.contactPerson, position: v } })
-            } />
+              <Input label={copy.labels.position} error={errors['contactPerson.position']} onChange={(v) =>
+                setFormData({ ...formData, contactPerson: { ...formData.contactPerson, position: v } })
+              } />
 
-            <Input label={copy.labels.email} type="email" error={errors['contactPerson.email']} onChange={(v) =>
-              setFormData({ ...formData, contactPerson: { ...formData.contactPerson, email: v } })
-            } />
+              <Input label={copy.labels.email} type="email" error={errors['contactPerson.email']} onChange={(v) =>
+                setFormData({ ...formData, contactPerson: { ...formData.contactPerson, email: v } })
+              } />
 
-            <Input label={copy.labels.phone} error={errors['contactPerson.phone']} onChange={(v) =>
-              setFormData({ ...formData, contactPerson: { ...formData.contactPerson, phone: v } })
-            } />
+              <Input label={copy.labels.phone} error={errors['contactPerson.phone']} onChange={(v) =>
+                setFormData({ ...formData, contactPerson: { ...formData.contactPerson, phone: v } })
+              } />
 
-            <div>
-              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
-                {copy.labels.preferredDate}
-              </label>
-              <DatePicker
-                selected={formData.preferredProgramDate}
-                onChange={(date) =>
-                  setFormData({ ...formData, preferredProgramDate: date || new Date() })
-                }
-                className="mt-1 admin-input w-full"
-                dateFormat="yyyy-MM-dd"
-              />
+              <div>
+                <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+                  {copy.labels.preferredDate}
+                </label>
+                <DatePicker
+                  selected={formData.preferredProgramDate}
+                  onChange={(date) =>
+                    setFormData({ ...formData, preferredProgramDate: date || new Date() })
+                  }
+                  className="mt-1 admin-input w-full"
+                  dateFormat="yyyy-MM-dd"
+                />
+              </div>
+
+              {formSectionLabel(copy.formSections.address)}
+              <Input label={copy.labels.address} className="md:col-span-2" error={errors['officeAddress.street']} onChange={(v) =>
+                setFormData({ ...formData, officeAddress: { ...formData.officeAddress, street: v } })
+              } />
+
+              <div>
+                <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
+                <CityPicker
+                  value={formData.officeAddress.city}
+                  onChange={(v) => setFormData({ ...formData, officeAddress: { ...formData.officeAddress, city: v } })}
+                  className={`mt-1 w-full ${errors['officeAddress.city'] ? '!border-[color:var(--danger)]' : ''}`}
+                />
+                {errors['officeAddress.city'] && <p className="mt-1 text-[13.5px] text-[color:var(--danger)]">{errors['officeAddress.city']}</p>}
+              </div>
+
+              <Input label={copy.labels.state} error={errors['officeAddress.state']} onChange={(v) =>
+                setFormData({ ...formData, officeAddress: { ...formData.officeAddress, state: v } })
+              } />
+
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+                  {copy.labels.remarks}
+                </label>
+                <textarea
+                  rows={4}
+                  className="mt-1 admin-input w-full resize-none"
+                  onChange={(e) =>
+                    setFormData({ ...formData, additionalRemarks: e.target.value })
+                  }
+                />
+              </div>
             </div>
 
-            <Input label={copy.labels.address} className="md:col-span-2" error={errors['officeAddress.street']} onChange={(v) =>
-              setFormData({ ...formData, officeAddress: { ...formData.officeAddress, street: v } })
-            } />
-
-            <div>
-              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">{copy.labels.city}</label>
-              <CityPicker
-                value={formData.officeAddress.city}
-                onChange={(v) => setFormData({ ...formData, officeAddress: { ...formData.officeAddress, city: v } })}
-                className={`mt-1 w-full ${errors['officeAddress.city'] ? '!border-[color:var(--danger)]' : ''}`}
-              />
-              {errors['officeAddress.city'] && <p className="mt-1 text-[13.5px] text-[color:var(--danger)]">{errors['officeAddress.city']}</p>}
-            </div>
-
-            <Input label={copy.labels.state} error={errors['officeAddress.state']} onChange={(v) =>
-              setFormData({ ...formData, officeAddress: { ...formData.officeAddress, state: v } })
-            } />
-
-            <div className="md:col-span-2">
-              <label className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
-                {copy.labels.remarks}
-              </label>
-              <textarea
-                rows={4}
-                className="mt-1 admin-input w-full resize-none"
-                onChange={(e) =>
-                  setFormData({ ...formData, additionalRemarks: e.target.value })
-                }
-              />
-            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="btn btn-primary mt-10 w-full"
+            >
+              {loading && <LoadingSpinner />}
+              {loading ? copy.submitting : copy.submit}
+            </button>
           </div>
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-className="btn btn-primary mt-10 w-full"
-          >
-            {loading && <LoadingSpinner />}
-            {loading ? copy.submitting : copy.submit}
-          </button>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
@@ -409,11 +503,13 @@ function Input({
   );
 }
 
-function InfoCard({ title, text }: { title: string; text: string }) {
+function InfoCard({ icon: Icon, title, text }: { icon: any; title: string; text: string }) {
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
-      <div className="mb-4 h-1.5 w-10 rounded-full bg-[color:var(--accent)]" />
-      <h3 className="font-display text-[19px] leading-snug text-[color:var(--ink)]">{title}</h3>
+    <div className="h-full rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
+      <div className="inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-sm)] border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 text-[color:var(--accent)]">
+        <Icon className="h-5 w-5" aria-hidden />
+      </div>
+      <h3 className="mt-5 font-display text-[19px] leading-snug text-[color:var(--ink)]">{title}</h3>
       <p className="mt-3 text-[14.5px] leading-[1.75] text-[color:var(--muted)]">{text}</p>
     </div>
   );

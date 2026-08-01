@@ -35,6 +35,7 @@ const languageCopy = {
     default_city: "Hyderabad",
     view_details: "View details",
     centers_count: "centers",
+    no_results: "No centers match your search — try a different zone or clear the filters.",
   },
   te: {
     title: "కేంద్రాలు",
@@ -57,6 +58,7 @@ const languageCopy = {
     default_city: "హైదరాబాద్",
     view_details: "వివరాలు చూడండి",
     centers_count: "కేంద్రాలు",
+    no_results: "మీ శోధనకు సరిపోయే కేంద్రాలు లేవు — వేరే జోన్ ప్రయత్నించండి లేదా ఫిల్టర్లను తీసివేయండి.",
   },
 } as const;
 
@@ -157,7 +159,8 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
 
   return (
     <div className="mx-auto max-w-6xl px-4 lg:px-6">
-      <div className="py-8">
+      <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[radial-gradient(70%_120%_at_12%_0%,color-mix(in_srgb,var(--accent)_9%,transparent),transparent_55%),linear-gradient(135deg,color-mix(in_srgb,var(--surface)_94%,transparent),color-mix(in_srgb,var(--surface-2)_86%,transparent))] px-6 py-10 shadow-card md:px-10 md:py-12">
+        <div aria-hidden className="absolute -right-8 -top-8 h-28 w-28 rotate-45 border border-[color:var(--accent)]/25" />
         <p className="eyebrow">{copy.finder}</p>
         <h1 className="mt-3 font-display text-[clamp(28px,3.4vw,40px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
           {copy.title}
@@ -165,6 +168,15 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
         <p className="mt-2.5 max-w-2xl text-base leading-relaxed text-[color:var(--muted)]">
           {copy.welcome}
         </p>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-4 py-1.5 text-[13px] font-semibold text-[color:var(--accent)]">
+            <span className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+            {copy.always_free}
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-4 py-1.5 text-[13px] font-medium text-[color:var(--muted)]">
+            {query.trim() ? `${filteredCenters.length} / ` : ""}{centers.length} {copy.centers_count}
+          </span>
+        </div>
       </div>
 
       <div className="relative mb-6">
@@ -185,19 +197,34 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] py-3 pl-12 pr-4 text-[color:var(--ink)] outline-none placeholder:text-[color:var(--muted)]"
+          className="admin-input w-full py-3 pl-12 pr-4"
           placeholder={copy.search}
         />
       </div>
 
-      {zoneChips.length > 0 && query.trim() && (
-        <div className="mb-6 flex flex-wrap gap-2">
-          {zoneChips.slice(0, 8).map((zone) => (
+      {allZones.length > 0 && (
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              query.trim() === ""
+                ? "bg-[color:var(--primary)] text-white"
+                : "border border-[color:var(--border)] text-[color:var(--muted)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+            }`}
+          >
+            All
+          </button>
+          {(query.trim() ? zoneChips : allZones).slice(0, 9).map((zone) => (
             <button
               key={zone}
               type="button"
               onClick={() => setQuery(zone)}
-              className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                query.trim().toLowerCase() === zone.toLowerCase()
+                  ? "bg-[color:var(--primary)] text-white"
+                  : "border border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--muted)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]"
+              }`}
             >
               {zone}
             </button>
@@ -206,8 +233,9 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
       )}
 
       {filteredCenters.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[color:var(--border)] py-16 text-center">
-          <p className="text-[color:var(--muted)]">{copy.loading}</p>
+        <div className="rounded-[var(--radius-lg)] border border-dashed border-[color:var(--border)] py-20 text-center">
+          <span className="mx-auto block h-2.5 w-2.5 rotate-45 bg-[color:var(--accent)]/60" aria-hidden />
+          <p className="mt-4 text-[color:var(--muted)]">{copy.no_results}</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -215,12 +243,12 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
             const joined = isFollowing(center._id);
 
             return (
-              <article key={center._id} className="flex flex-col h-full rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-shadow hover:shadow-sm">
+              <article key={center._id} className="flex h-full flex-col rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <Link
                       href={`/centers/${centerSlug(center)}`}
-                      className="text-lg font-semibold text-[color:var(--ink)] transition-colors hover:text-[color:var(--primary)]"
+                      className="font-display text-lg font-medium leading-snug text-[color:var(--ink)] transition-colors hover:text-[color:var(--primary)]"
                     >
                       {center.zone}
                     </Link>
@@ -242,17 +270,26 @@ export default function CentersClient({ initialCenters }: { initialCenters: Publ
                   ) : null}
                 </div>
 
-                <div className="mt-4 flex-1 space-y-2 text-sm text-[color:var(--muted)]">
+                <div className="mt-4 flex-1 space-y-2.5 text-sm text-[color:var(--muted)]">
                   <div className="flex gap-2">
-                    <span className="shrink-0 w-16 font-medium text-[color:var(--ink)]">{copy.day}</span>
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center">
+                      <span className="h-1 w-1 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                    </span>
+                    <span className="shrink-0 font-medium text-[color:var(--ink)]">{copy.day}</span>
                     <span>{center.day}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="shrink-0 w-16 font-medium text-[color:var(--ink)]">{copy.time}</span>
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center">
+                      <span className="h-1 w-1 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                    </span>
+                    <span className="shrink-0 font-medium text-[color:var(--ink)]">{copy.time}</span>
                     <span className="numeric-font">{formatCenterTime(center.time)}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="shrink-0 w-16 font-medium text-[color:var(--ink)]">{copy.contact}</span>
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center">
+                      <span className="h-1 w-1 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                    </span>
+                    <span className="shrink-0 font-medium text-[color:var(--ink)]">{copy.contact}</span>
                     <span className="numeric-font">{center.contactNumbers}</span>
                   </div>
                   <div className="mt-3 pt-3 border-t border-[color:var(--border)]">
