@@ -83,13 +83,48 @@ Admin approving a volunteer request now also updates `User.role` → `"Volunteer
 ## Import Aliases
 - `@/*` → `./src/*` (configured in `tsconfig.json` paths)
 
+## Design System — "Warm Editorial Serenity" (applied P0–P6)
+Full spec: `docs/UI_REVAMP_PLAN.md`. Token source of truth: `src/app/globals.css`.
+
+### Palette (CSS variables, `bg-[color:var(--x)]` / `text-[color:var(--x)]`)
+- `--bg` ivory paper `#FBF7F0`, `--surface`/`--surface-2`/`--surface-3` cards, `--ink` espresso `#292420`, `--muted`
+- `--primary` espresso-brown (buttons), `--accent` bronze/gold `#C29A5E` (eyebrows, rules, diamonds), `--border`/`--border-strong`
+- `--danger`, `--success` for form errors/confirmations; dark mode via `.dark` overrides of the same variables
+- NO hardcoded hex colors anywhere (enforced; use tokens)
+
+### Typography
+- Display: `font-display` → Fraunces (loaded via next/font, `--font-display`) for h1/h2/section titles: `text-[clamp(...)] font-display leading-[1.1] tracking-[-0.015em]`
+- Body: `font-sans` → Ysabeau; `--font-telugu` for Telugu fallback
+- `.eyebrow` = small uppercase gold kicker above every section heading
+
+### Buttons & Inputs
+- `.btn` base + `.btn-primary` (espresso), `.btn-secondary`, `.btn-ghost`, `.btn-lg`, `.btn-sm`, `.btn-disabled` (or `.btn:disabled`)
+- `.admin-input` for ALL form inputs/selects/textareas; error state = `!border-[color:var(--danger)]`
+
+### Shapes
+- Radius tokens: `rounded-[var(--radius-sm/md/lg/xl)]` (14/20/24/32); `.arch` for arch-cropped portraits
+- Shadows: `shadow-card/soft/panel/pop` (Tailwind tokens in `tailwind.config.js`)
+
+### Motion (zero-dependency, IntersectionObserver + CSS)
+- `src/components/motion/`: `Reveal` (fade/slide/scale), `MaskedReveal` (word-by-word text), `CountUp`, `Parallax`, `Marquee`, `useInView`
+- `.masked-reveal-word/.masked-reveal-inner`, `[data-reveal]` + `.is-visible`, `.marquee-track` with `marquee-scroll`
+- `prefers-reduced-motion` renders everything static — never break this
+- Client components only; server pages can embed them (import is fine)
+
+### Page conventions
+- Section rhythm: `py-[clamp(56px,7vh,80px)]`, containers `mx-auto max-w-[1200px] px-[var(--gutter)]`
+- Section header = `.eyebrow` + Fraunces `h2` + gold rule/diamond (`h-[2px] w-12 bg-[color:var(--accent)]` + rotated diamond)
+- Bullet lists use gold rotated diamonds: `h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]`
+- Auth pages use the sanctum split: arch portrait panel (hidden on mobile) + form card
+- `#8A1457`/`#5B2C41` maroon and `#E39321` orange were replaced by `--primary`/`--accent` (P4/P6)
+
 ## Key Patterns
 - Forms use plain React `useState` with custom `onChange` handlers (no react-hook-form)
 - Each page with form has a local `Field` or `Input` wrapper component at the bottom
 - CSS variables for theming: `var(--ink)`, `var(--muted)`, `var(--primary)`, `var(--surface)`, `var(--border)`, `var(--bg)`
 - `admin-input` class for standard input styling
-- `admin-btn-primary` class for primary buttons
-- `rounded-[28px]` or `rounded-[32px]` for card containers
+- `btn btn-primary` for primary buttons (`.btn` system, not `admin-btn-primary`)
+- `rounded-[var(--radius-*)]` for card containers
 
 ## Build / Run
 ```bash
