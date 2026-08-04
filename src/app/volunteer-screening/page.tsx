@@ -95,19 +95,20 @@ export default function VolunteerScreeningPage() {
       <header className="max-w-[680px]">
         <p className="eyebrow">Volunteer with us</p>
         <h1 className="mt-4 font-display text-[clamp(32px,5vw,48px)] leading-[1.1] tracking-[-0.015em] text-[color:var(--ink)]">
-          Volunteer screening
+          Volunteer Form
         </h1>
         <div className="mt-6 h-[2px] w-12 bg-[color:var(--accent)]" />
-        <p className="mt-6 text-[15px] leading-7 text-[color:var(--muted)]">
-          With love, this little form is open to everyone. It is not an exam — there are no marks to score, and nothing to
+        <p className="mt-6 text-[18px] leading-7 text-[color:var(--muted)]">
+          With love, this little form is open to everyone. It is not an exam,  there are no marks to score, and nothing to
           prepare for. We simply wish to meet you a little: why your heart is drawn to service, and how you would gently
           hold a seeker in their first steps.
         </p>
-        <p className="mt-4 text-[15px] leading-7 text-[color:var(--muted)]">
+        <p className="mt-4 text-[18px] leading-7 text-[color:var(--muted)]">
           Every seeker who comes to us is like family. Their details are shared with us in trust, and we look after them
-          very personally, very carefully. So before anyone joins us in this service, we like to know them a little — not
+          very personally, very carefully. So before anyone joins us in this service, we like to know them a little, not
           to judge, but so that every seeker who reaches out is held with the same love and care they deserve.
         </p>
+        <p className="mt-4 text-[18px] leading-7 text-[color:var(--muted)]">With great love for our brothers and sisters ❤️</p>
       </header>
 
       <form onSubmit={handleSubmit} className="mt-[clamp(40px,6vh,64px)] space-y-10">
