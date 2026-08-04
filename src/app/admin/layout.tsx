@@ -30,6 +30,7 @@ const menuItems = [
   { name: 'Event Registrations', icon: <MdHowToReg size={22} />, href: '/admin/event-registrations' },
   { name: 'Outreach', icon: <MdCampaign size={22} />, href: '/admin/outreach' },
   { name: 'Volunteers', icon: <MdVolunteerActivism size={22} />, href: '/admin/volunteers' },
+  { name: 'Volunteer Screening', icon: <MdHowToReg size={22} />, href: '/admin/volunteer-assessments' },
   { name: 'Feature Requests', icon: <MdLightbulb size={22} />, href: '/admin/feature-requests' },
   { name: 'Event Requests', icon: <MdEvent size={22} />, href: '/admin/event-requests' },
   { name: 'Analytics', icon: <MdInsights size={22} />, href: '/admin/analytics' },

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
 import CityPicker from '@/components/CityPicker';
 import { useTranslations } from '@/app/provider/localeProvider';
@@ -215,6 +216,24 @@ export default function VolunteerRequestPage() {
               )}
             </div>
           )}
+
+          {/* ---- Public Volunteer Screening ---- */}
+          <div className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_96%,transparent),color-mix(in_srgb,var(--primary-700)_88%,transparent))] p-6 text-[color:var(--on-primary)] shadow-soft md:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:color-mix(in_srgb,var(--on-primary)_70%,transparent)]">New — open to everyone</p>
+            <h2 className="mt-2 font-display text-xl font-medium text-[color:var(--on-primary)] md:text-2xl">
+              Apply through the volunteer screening
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[color:color-mix(in_srgb,var(--on-primary)_85%,transparent)]">
+              Anyone — registered or not — can apply to volunteer through a short screening form. Answer a few questions
+              about how you would guide seekers; the team reviews every application personally.
+            </p>
+            <Link
+              href="/volunteer-screening"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-[color:var(--accent)] px-6 py-2.5 text-sm font-semibold text-[color:var(--on-primary)] transition hover:opacity-90"
+            >
+              Open the screening form
+            </Link>
+          </div>
 
           {/* ---- Volunteer Interest Form ---- */}
           <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">

@@ -112,6 +112,7 @@ export const NAV_LINKS = [
         { labelKey: 'footer.add_seeker', path: '/add-seeker' },
         { labelKey: 'footer.share_experience', path: '/share-your-experience' },
         { labelKey: 'footer.volunteer', path: '/volunteer' },
+        { labelKey: 'footer.volunteer_screening', path: '/volunteer-screening' },
         { labelKey: 'footer.admin_dashboard', path: '/admin/dashboard' },
       ],
     },
