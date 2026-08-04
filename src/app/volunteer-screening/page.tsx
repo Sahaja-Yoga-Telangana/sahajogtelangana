@@ -21,6 +21,17 @@ const emptyForm = {
   answers: {} as Record<string, string>,
 };
 
+const SECTION_TITLES: Record<string, string> = {
+  'why-volunteer': 'Your story',
+  'other-yoga-practice': 'A seeker’s path',
+  'money-question': 'A gentle question',
+  'how-much-to-share': 'First steps',
+  'one-on-one-request': 'The collective way',
+  'seeker-ownership': 'Belonging to all',
+  'nearest-center': 'Finding a center',
+  'bandhan-blank': 'Our simple ritual',
+};
+
 export default function VolunteerScreeningPage() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -71,9 +82,9 @@ export default function VolunteerScreeningPage() {
           Thank you, {form.name.split(' ')[0]}!
         </h1>
         <p className="mt-5 max-w-xl text-[15px] leading-7 text-[color:var(--muted)]">
-          Your screening answers have been shared with the team. We will review them and get back to you on
-          <span className="font-medium text-[color:var(--ink)]"> {form.email}</span>. Once approved, your email will be
-          registered as a volunteer.
+          Your words have reached us, and they will be read with love and care. We will write back to you on
+          <span className="font-medium text-[color:var(--ink)]"> {form.email}</span> — and once approved, your email will
+          be welcomed into the family of volunteers.
         </p>
       </div>
     );
@@ -88,9 +99,14 @@ export default function VolunteerScreeningPage() {
         </h1>
         <div className="mt-6 h-[2px] w-12 bg-[color:var(--accent)]" />
         <p className="mt-6 text-[15px] leading-7 text-[color:var(--muted)]">
-          This short form is open to everyone. Tell us a little about yourself, and answer a few questions about how you
-          would guide seekers. There are no right or wrong marks in daily life — we only want to understand how you think,
-          so the team can welcome the right people into volunteer service.
+          With love, this little form is open to everyone. It is not an exam — there are no marks to score, and nothing to
+          prepare for. We simply wish to meet you a little: why your heart is drawn to service, and how you would gently
+          hold a seeker in their first steps.
+        </p>
+        <p className="mt-4 text-[15px] leading-7 text-[color:var(--muted)]">
+          Every seeker who comes to us is like family. Their details are shared with us in trust, and we look after them
+          very personally, very carefully. So before anyone joins us in this service, we like to know them a little — not
+          to judge, but so that every seeker who reaches out is held with the same love and care they deserve.
         </p>
       </header>
 
@@ -180,7 +196,7 @@ export default function VolunteerScreeningPage() {
 
         {SCREENING_QUESTIONS.map((question, index) => (
           <section key={question.id}>
-            <SectionTitle step={String(index + 2).padStart(2, '0')} title={`Question ${index + 1}`} />
+            <SectionTitle step={String(index + 2).padStart(2, '0')} title={SECTION_TITLES[question.id] || `Question ${index + 1}`} />
             <div className="mt-4">
               <p className="text-[15px] font-medium leading-7 text-[color:var(--ink)]">{question.prompt}</p>
 
@@ -248,8 +264,8 @@ export default function VolunteerScreeningPage() {
           <div className="flex items-center gap-3">
             <FiHeart className="text-[color:var(--accent)]" size={20} />
             <p className="text-sm leading-6 text-[color:var(--muted)]">
-              We review every application personally. Keep your answers honest — there is no prepared answer sheet in real
-              life, and the team simply wants to know you.
+              We will read every word of your answers with love. There is no prepared answer sheet in life — just be
+              yourself and speak from your heart. That is all we ask of you.
             </p>
           </div>
           <button type="submit" disabled={saving} className="btn btn-primary btn-lg mt-2 disabled:opacity-60">
