@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#F5EFE6"/><stop offset="0.55" stop-color="#F0E2C8"/><stop offset="1" stop-color="#C29A5E"/>
+  </linearGradient>
+  <radialGradient id="r" cx="0.5" cy="0.4" r="0.5">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.4"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="960" height="540" fill="url(#g)"/>
+<rect width="960" height="540" fill="url(#r)"/>
+<g transform="translate(480,270)" fill="none" stroke="#6E5543" stroke-width="2.5" stroke-opacity="0.8">
+  <path d="M0,-64.8 C 48.0,-27.0 48.0,10.8 0,27.0 C -48.0,10.8 -48.0,-27.0 0,-64.8 Z"/>
+  <path d="M0,-27.0 C 67.2,-5.4 67.2,27.0 0,45.900000000000006 C -67.2,27.0 -67.2,-5.4 0,-27.0 Z" stroke-opacity="0.6"/>
+</g>
+<text x="480" y="516" text-anchor="middle" font-family="Georgia, serif" font-size="22" letter-spacing="4" fill="#463529" fill-opacity="0.55">PLACEHOLDER — REPLACE</text>
+</svg>

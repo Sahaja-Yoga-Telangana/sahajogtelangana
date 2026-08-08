@@ -109,7 +109,7 @@ export default function YogiDashboardShell({
 
         <div className="min-w-0 flex-1">
           <div className="mb-4 lg:hidden">
-            <div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/94 shadow-[0_12px_28px_rgba(25,22,18,0.08)] backdrop-blur">
+            <div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_94%,transparent)] shadow-[0_12px_28px_rgba(25,22,18,0.08)] backdrop-blur">
               <div className="px-2.5 py-2.5">
                 <SidebarNav currentKey={currentKey} mobile t={t} navItems={visibleNavItems} />
               </div>
@@ -151,7 +151,7 @@ function SidebarIntro({ memberName, compact = false }: { memberName?: string; co
   const t = useTranslations();
 
   return (
-    <div className={`rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 ${compact ? 'p-4' : 'p-5'}`}>
+    <div className={`rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] ${compact ? 'p-4' : 'p-5'}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">{t('dashboard.shell_title')}</p>
       <h1 className={`mt-3 font-semibold text-[color:var(--ink)] ${compact ? 'text-xl' : 'text-2xl'}`}>
         {memberName || t('dashboard.shell_name')}
@@ -187,8 +187,8 @@ function SidebarNav({
               mobile
                 ? `group min-w-fit shrink-0 rounded-[18px] px-2.5 py-2 ${
                     active
-                      ? 'border-[color:var(--primary)] bg-[color:var(--primary)] text-white shadow-[0_10px_22px_rgba(108,90,74,0.2)]'
-                      : 'border-[color:var(--border)] bg-[color:var(--surface)]/92 text-[color:var(--muted)]'
+                      ? 'border-[color:var(--primary)] bg-[color:var(--primary)] text-[color:var(--on-primary)] shadow-[0_10px_22px_rgba(108,90,74,0.2)]'
+                      : 'border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)]'
                   }`
                 : `block rounded-[22px] px-4 py-4 ${
                     active

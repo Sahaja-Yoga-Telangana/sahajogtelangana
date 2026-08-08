@@ -248,7 +248,7 @@ export default function EventRegistrationsAdmin() {
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm">
+                  <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] px-4 py-3 text-sm">
                     <p className="text-[color:var(--muted)]">Group total</p>
                     <p className="mt-1 text-lg font-semibold text-[color:var(--ink)]">₹{group.totalAmount.toLocaleString()}</p>
                   </div>
@@ -292,7 +292,7 @@ export default function EventRegistrationsAdmin() {
         )}
       </section>
 
-      <section className="flex flex-col items-center justify-between gap-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-5 py-4 sm:flex-row">
+      <section className="flex flex-col items-center justify-between gap-4 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-5 py-4 sm:flex-row">
         <p className="text-sm text-[color:var(--muted)]">
           Page {meta.page} of {meta.totalPages} • {meta.totalGroups} grouped receipts
         </p>
@@ -321,7 +321,7 @@ export default function EventRegistrationsAdmin() {
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-5">
+    <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-5">
       <p className="text-sm text-[color:var(--muted)]">{label}</p>
       <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">{value}</p>
     </div>
@@ -330,10 +330,10 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 
 function StatusBadge({ paymentState }: { paymentState: ReceiptGroup['paymentState'] }) {
   const palette = paymentState === 'paid'
-    ? 'bg-green-500/10 text-green-700 dark:text-green-300'
+    ? 'bg-[color:color-mix(in_srgb,var(--success)_15%,transparent)] text-[color:var(--success)]'
     : paymentState === 'free'
-      ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300'
-      : 'bg-amber-500/10 text-amber-700 dark:text-amber-300';
+      ? 'bg-[color:color-mix(in_srgb,var(--primary)_15%,transparent)] text-[color:var(--primary)]'
+      : 'bg-[color:color-mix(in_srgb,var(--accent)_15%,transparent)] text-[color:var(--accent)]';
 
   return (
     <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${palette}`}>

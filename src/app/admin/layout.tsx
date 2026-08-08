@@ -30,6 +30,7 @@ const menuItems = [
   { name: 'Event Registrations', icon: <MdHowToReg size={22} />, href: '/admin/event-registrations' },
   { name: 'Outreach', icon: <MdCampaign size={22} />, href: '/admin/outreach' },
   { name: 'Volunteers', icon: <MdVolunteerActivism size={22} />, href: '/admin/volunteers' },
+  { name: 'Volunteer Screening', icon: <MdHowToReg size={22} />, href: '/admin/volunteer-assessments' },
   { name: 'Feature Requests', icon: <MdLightbulb size={22} />, href: '/admin/feature-requests' },
   { name: 'Event Requests', icon: <MdEvent size={22} />, href: '/admin/event-requests' },
   { name: 'Analytics', icon: <MdInsights size={22} />, href: '/admin/analytics' },
@@ -53,17 +54,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* ================= SIDEBAR ================= */}
       <aside
-        className={`admin-sidebar fixed md:sticky md:top-0 z-40 flex h-screen w-72 flex-col overflow-hidden border-r border-white/10 text-white transform transition-transform duration-300
+        className={`admin-sidebar fixed md:sticky md:top-0 z-40 flex h-screen w-72 flex-col overflow-hidden border-r border-[color:var(--sidebar-border)] text-[color:var(--sidebar-fg)] transform transition-transform duration-300
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+        <div className="flex items-center justify-between border-b border-[color:var(--sidebar-border)] px-5 py-5">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.24em] text-white/60">Sahaja Yoga</p>
+            <p className="text-[11px] uppercase tracking-[0.24em] text-[color:var(--sidebar-fg-soft)]">Sahaja Yoga</p>
             <h1 className="mt-1 text-xl font-semibold">Admin Panel</h1>
           </div>
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-[color:var(--sidebar-fg)]"
             onClick={() => setOpen(false)}
           >
             <MdClose size={26} />
@@ -83,8 +84,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition
                   ${
                     active
-                      ? 'bg-white/90 text-[color:var(--primary-600)] font-semibold shadow-soft'
-                      : 'text-white/82 hover:bg-white/10 hover:text-white'
+                      ? 'bg-[color:var(--sidebar-active-bg)] text-[color:var(--sidebar-active-fg)] font-semibold shadow-soft'
+                      : 'text-[color:var(--sidebar-fg-nav)] hover:bg-[color:var(--sidebar-border)] hover:text-[color:var(--sidebar-fg)]'
                   }`}
               >
                 {item.icon}
@@ -98,7 +99,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ================= MAIN CONTENT ================= */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Top Bar */}
-        <header className="md:hidden border-b border-[color:var(--border)] bg-[color:var(--surface)]/90 px-4 py-3 backdrop-blur-sm flex items-center gap-3">
+        <header className="md:hidden border-b border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_90%,transparent)] px-4 py-3 backdrop-blur-sm flex items-center gap-3">
           <button
             onClick={() => setOpen(true)}
             className="text-[color:var(--ink)]"

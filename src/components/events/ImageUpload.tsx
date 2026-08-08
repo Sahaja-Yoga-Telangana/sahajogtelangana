@@ -111,7 +111,7 @@ export default function ImageUpload({
         ) : null}
       </div>
 
-      <div className="rounded-[24px] border border-dashed border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+      <div className="rounded-[24px] border border-dashed border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
         {previewUrl ? (
           <div className="relative overflow-hidden rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface)]">
             <Image
@@ -127,7 +127,7 @@ export default function ImageUpload({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="flex w-full flex-col items-center justify-center gap-3 rounded-[20px] bg-[color:var(--surface)]/80 px-6 py-12 text-center transition-colors duration-300 hover:bg-[color:var(--surface)]"
+            className="flex w-full flex-col items-center justify-center gap-3 rounded-[20px] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-6 py-12 text-center transition-colors duration-300 hover:bg-[color:var(--surface)]"
           >
             <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--surface)] text-[color:var(--primary)]">
               <FiImage className="h-6 w-6" aria-hidden="true" />
@@ -153,7 +153,7 @@ export default function ImageUpload({
         </div>
 
         {uploading ? (
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-[color:var(--surface)]/70">
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-[color:color-mix(in_srgb,var(--surface)_70%,transparent)]">
             <div className="h-full rounded-full bg-[color:var(--primary)] transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
         ) : null}

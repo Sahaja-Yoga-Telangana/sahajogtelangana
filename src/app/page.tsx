@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/options";
 import HomeClient from '@/components/HomeClient';
-import EventBannerGate from '@/components/EventBannerGate';
+import EventBanner from '@/components/EventBanner';
 import type { Metadata } from 'next';
 import { pageMetadata, absoluteUrl } from '@/lib/seo';
 import SeoJsonLd from '@/components/SeoJsonLd';
@@ -28,7 +28,6 @@ export const metadata: Metadata = pageMetadata({
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  const showEventBanner = !!session;
   let bannerEvents: AppEvent[] = [];
   let testimonials: Array<{
     _id: string;
@@ -44,41 +43,39 @@ export default async function Home() {
     console.error("Error connecting while loading home page data:", error);
   }
 
-  if (showEventBanner) {
-    try {
-      const currentDate = new Date();
-      const events = await Event.find({
-        isActive: true,
-        $or: [
-          { endDate: { $gte: currentDate } },
-          { endDate: { $exists: false }, date: { $gte: currentDate } },
-          { endDate: null, date: { $gte: currentDate } },
-        ],
-      })
-        .sort({ date: 1 })
-        .limit(8)
-        .lean();
+  try {
+    const currentDate = new Date();
+    const events = await Event.find({
+      isActive: true,
+      $or: [
+        { endDate: { $gte: currentDate } },
+        { endDate: { $exists: false }, date: { $gte: currentDate } },
+        { endDate: null, date: { $gte: currentDate } },
+      ],
+    })
+      .sort({ date: 1 })
+      .limit(8)
+      .lean();
 
-      bannerEvents = events.map((event: any) => ({
-        _id: event._id.toString(),
-        title: event.title,
-        description: event.description,
-        date: event.date,
-        endDate: event.endDate ?? null,
-        time: event.time,
-        location: event.location,
-        googleMapLink: event.googleMapLink ?? '',
-        contactDetails: event.contactDetails ?? '',
-        priceBelow12: event.priceBelow12 ?? 1000,
-        price12To24: event.price12To24 ?? 1800,
-        price25AndAbove: event.price25AndAbove ?? 2600,
-        image: event.image ?? '',
-        qrImage: event.qrImage ?? '',
-        isActive: event.isActive ?? true,
-      }));
-    } catch (error) {
-      console.error("Error loading banner events:", error);
-    }
+    bannerEvents = events.map((event: any) => ({
+      _id: event._id.toString(),
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      endDate: event.endDate ?? null,
+      time: event.time,
+      location: event.location,
+      googleMapLink: event.googleMapLink ?? '',
+      contactDetails: event.contactDetails ?? '',
+      priceBelow12: event.priceBelow12 ?? 1000,
+      price12To24: event.price12To24 ?? 1800,
+      price25AndAbove: event.price25AndAbove ?? 2600,
+      image: event.image ?? '',
+      qrImage: event.qrImage ?? '',
+      isActive: event.isActive ?? true,
+    }));
+  } catch (error) {
+    console.error("Error loading banner events:", error);
   }
 
   try {
@@ -187,7 +184,7 @@ export default async function Home() {
           },
         ]}
       />
-      <EventBannerGate show={showEventBanner} initialEvents={bannerEvents} />
+      <EventBanner initialEvents={bannerEvents} />
       <HomeClient testimonials={testimonials} isLoggedIn={!!session} />
     </>
   );

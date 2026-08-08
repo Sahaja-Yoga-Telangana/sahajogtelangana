@@ -85,7 +85,7 @@ export default function RequestEventComposer({
 
   return (
     <div className="space-y-6">
-      <div className="request-event-form rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/96 p-6 shadow-soft md:p-8">
+      <div className="request-event-form rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_96%,transparent)] p-6 shadow-soft md:p-8">
         <EventForm
           formData={formData}
           setFormData={setFormData}
@@ -100,7 +100,7 @@ export default function RequestEventComposer({
         />
       </div>
 
-      <div className="request-event-form rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/96 p-6 shadow-soft md:p-8">
+      <div className="request-event-form rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_96%,transparent)] p-6 shadow-soft md:p-8">
         <label className="block">
           <span className="mb-2 block text-sm font-medium text-[color:var(--ink)]">{copy.notesLabel}</span>
           <textarea

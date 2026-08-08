@@ -159,7 +159,7 @@ export default function CentersWidgetEmbed({
     <div className={className}>
       <div className="relative min-h-[520px]">
         {!ready ? (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/88 px-6 text-sm text-[color:var(--muted)]">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_88%,transparent)] px-6 text-sm text-[color:var(--muted)]">
             Loading live center finder...
           </div>
         ) : null}

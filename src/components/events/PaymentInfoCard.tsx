@@ -32,7 +32,7 @@ export default function PaymentInfoCard({
         <p>3. Submit the registration form after payment</p>
       </div>
 
-      {/* <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-4">
+      {/* <div className="mt-6 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_85%,transparent)] p-4">
         <h4 className="mb-2 text-center font-medium text-[color:var(--primary)]">Bank Transfer Details</h4>
         <div className="space-y-1 text-base text-[color:var(--muted)]">
           <p className="font-medium">A/C Name: H H Shri Mataji Nirmala Devi Sahaja Yoga Trust, Hyderabad</p>

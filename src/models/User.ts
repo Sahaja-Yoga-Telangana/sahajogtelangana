@@ -26,6 +26,12 @@ const userSchema = new Schema({
     trim: true,
     default: "",
   },
+  language: {
+    required: false,
+    type: Schema.Types.String,
+    trim: true,
+    default: "",
+  },
   centerInterest: {
     required: false,
     type: Schema.Types.String,
@@ -74,6 +80,12 @@ const existingUserModel = mongoose.models.User as any;
 if (existingUserModel) {
   existingUserModel.schema.add({
     city: {
+      type: Schema.Types.String,
+      required: false,
+      trim: true,
+      default: "",
+    },
+    language: {
       type: Schema.Types.String,
       required: false,
       trim: true,

@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function MagicLink() {
   const [email, setEmail] = useState("");
@@ -35,33 +37,50 @@ export default function MagicLink() {
   };
 
   return (
-    <>
+    <section className="flex min-h-[70vh] items-center justify-center bg-[color:var(--bg)] px-4 py-16">
       <ToastContainer />
-      <div className="h-screen w-screen flex justify-center items-center">
-        <div className="w-[500px] rounded-lg shadow-md p-5">
-          <h1 className="font-bold text-2xl">Magic Link</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="mt-5">
-              <input
-                type="email"
-                className="h-10 rounded-lg outline-purple-400 border w-full p-2"
-                placeholder="Enter your email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <span className="text-red-500">{errors?.email}</span>
-            </div>
-            <div className="mt-5">
-              <button
-                type="submit"
-                className="w-full bg-purple-600 text-white rounded-lg p-2"
-                disabled={loading}
-              >
-                {loading ? "Processing.." : "Submit"}
-              </button>
-            </div>
-          </form>
-        </div>
+      <div className="w-full max-w-md text-center">
+        <p className="eyebrow">Passwordless Access</p>
+        <h1 className="mt-3 font-display text-[clamp(26px,3vw,34px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
+          Magic Link
+        </h1>
+        <p className="mx-auto mt-3 max-w-sm text-[15px] leading-[1.7] text-[color:var(--muted)]">
+          Enter your email and we will send you a secure sign-in link.
+        </p>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-5 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 text-left shadow-panel sm:p-8"
+        >
+          <div>
+            <label htmlFor="email" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+              Email address
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="admin-input"
+              placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {errors?.email && <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">{errors.email}</span>}
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={loading}
+          >
+            {loading && <LoadingSpinner />}
+            {loading ? "Processing.." : "Send Magic Link"}
+          </button>
+          <p className="text-center text-sm text-[color:var(--muted)]">
+            Prefer a password?{" "}
+            <Link href="/login" className="text-[color:var(--primary)] hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </form>
       </div>
-    </>
+    </section>
   );
 }

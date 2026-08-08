@@ -181,7 +181,7 @@ export default function EventForm({
           </div>
 
           {!isPublicProgram ? (
-            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-5">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-[color:var(--ink)]">{pricingTitle}</h3>
                 <p className="mt-1 text-sm text-[color:var(--muted)]">
@@ -240,7 +240,7 @@ export default function EventForm({
                 label="Payment QR image"
                 onUploadStateChange={setQrUploading}
               />
-              <p className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm leading-6 text-[color:var(--muted)]">
+              <p className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] px-4 py-3 text-sm leading-6 text-[color:var(--muted)]">
                 If you do not upload a QR image, the Sahaja Yoga Telangana QR will be used by default.
               </p>
             </div>

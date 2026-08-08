@@ -29,7 +29,7 @@ export default function YogiEventRegistrationsContent({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-6 shadow-soft md:p-8">
+      <section className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-6 shadow-soft md:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('event_regs.eyebrow')}</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)]">{t('event_regs.title')}</h1>
         <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
@@ -43,7 +43,7 @@ export default function YogiEventRegistrationsContent({
             <p className="text-sm text-[color:var(--muted)]">{t('event_regs.upcoming_empty')}</p>
           ) : (
             upcomingEvents.map((eventItem) => (
-              <div key={eventItem._id} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+              <div key={eventItem._id} className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                 <p className="font-semibold text-[color:var(--ink)]">{eventItem.title}</p>
                 <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">
                   {new Date(eventItem.date).toLocaleDateString()} • {eventItem.time}
@@ -59,7 +59,7 @@ export default function YogiEventRegistrationsContent({
             <p className="text-sm text-[color:var(--muted)]">{t('event_regs.history_empty')}</p>
           ) : (
             eventHistory.map((entry) => (
-              <div key={`${entry.receiptNumber}-${entry.registeredAt}`} className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+              <div key={`${entry.receiptNumber}-${entry.registeredAt}`} className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                 <p className="font-semibold text-[color:var(--ink)]">{entry.eventTitle}</p>
                 <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">{t('event_regs.receipt')} #{entry.receiptNumber}</p>
                 <p className="numeric-font mt-1 text-sm text-[color:var(--muted)]">

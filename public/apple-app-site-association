@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMIDPLACEHOLDER.org.sahajayoga.telangana"],
+        "components": [
+          {
+            "/": "/invite/*",
+            "comment": "Open volunteer invite links in the Saadhak app"
+          }
+        ]
+      }
+    ]
+  }
+}

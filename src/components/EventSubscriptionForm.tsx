@@ -55,7 +55,7 @@ export default function EventSubscriptionForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[color:var(--primary)] px-6 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[color:var(--primary)] px-6 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? t('events.subscription_saving') : t('events.subscription_cta')}
           </button>

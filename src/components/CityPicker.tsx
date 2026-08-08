@@ -165,7 +165,7 @@ export default function CityPicker({
                 onMouseEnter={() => setHighlightedIdx(idx)}
                 className={`w-full px-4 py-2.5 text-left transition ${
                   highlightedIdx === idx
-                    ? 'bg-[color:var(--primary)]/10'
+                    ? 'bg-[color:color-mix(in_srgb,var(--primary)_10%,transparent)]'
                     : 'hover:bg-[color:var(--surface-2)]'
                 } ${value === city.name ? 'font-semibold text-[color:var(--primary)]' : 'text-[color:var(--ink)]'}`}
               >

@@ -42,12 +42,12 @@ export default function EventCard({
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+            <div className="rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
               {t('events.badge')}
             </div>
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[color:var(--surface)]/35 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[color:color-mix(in_srgb,var(--surface)_35%,transparent)] to-transparent" />
       </div>
 
       <div className="flex flex-1 flex-col p-6">
@@ -75,7 +75,7 @@ export default function EventCard({
         </div>
 
         <div className="mt-6 flex items-center justify-between">
-          <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
+          <span className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-2.5 text-sm font-semibold text-[color:var(--on-primary)] transition-colors duration-300 group-hover:bg-[color:var(--primary-600)]">
             {ctaLabel || t('events.register')}
           </span>
           <FiArrowRight className="h-5 w-5 text-[color:var(--primary)] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />

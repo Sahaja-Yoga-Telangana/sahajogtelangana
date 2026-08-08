@@ -56,19 +56,19 @@ export default function CreateAdmin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FEF5E7] flex items-center justify-center">
-      <div className="bg-[color:var(--surface)] p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold text-[#8A1457] mb-6 text-center">Create Admin User</h1>
+    <div className="min-h-screen bg-[color:var(--bg)] flex items-center justify-center">
+      <div className="w-full max-w-md rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-panel">
+        <h1 className="mb-6 text-center font-display text-[clamp(24px,2.8vw,30px)] leading-[1.2] text-[color:var(--ink)]">Create Admin User</h1>
         
         {message && (
-          <div className={`p-4 mb-6 rounded ${success ? 'bg-[#F8ECF2] text-[#8A1457]' : 'bg-red-100 text-red-700'}`}>
+          <div className={`p-4 mb-6 rounded ${success ? 'bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] text-[color:var(--primary)]' : 'bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] text-[color:var(--danger)]'}`}>
             {message}
           </div>
         )}
         
         <div className="space-y-4 mb-6">
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-1">Email Address *</label>
+            <label htmlFor="email" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">Email Address *</label>
             <input
               type="email"
               id="email"
@@ -76,14 +76,14 @@ export default function CreateAdmin() {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Enter admin email"
-              className="w-full p-2 border border-gray-300 rounded text-gray-900"
+              className="admin-input w-full"
               required
               disabled={loading || success}
             />
           </div>
           
           <div>
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-1">Password *</label>
+            <label htmlFor="password" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">Password *</label>
             <input
               type="password"
               id="password"
@@ -91,14 +91,14 @@ export default function CreateAdmin() {
               value={formData.password}
               onChange={handleInputChange}
               placeholder="Enter admin password"
-              className="w-full p-2 border border-gray-300 rounded text-gray-900"
+              className="admin-input w-full"
               required
               disabled={loading || success}
             />
           </div>
           
           <div>
-            <label htmlFor="name" className="block text-gray-700 font-medium mb-1">Name</label>
+            <label htmlFor="name" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">Name</label>
             <input
               type="text"
               id="name"
@@ -106,7 +106,7 @@ export default function CreateAdmin() {
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Admin name"
-              className="w-full p-2 border border-gray-300 rounded text-gray-900"
+              className="admin-input w-full"
               disabled={loading || success}
             />
           </div>
@@ -115,18 +115,16 @@ export default function CreateAdmin() {
         <button
           onClick={handleCreateAdmin}
           disabled={loading || success || !formData.email || !formData.password}
-          className={`w-full p-3 rounded ${
-            success 
-              ? 'bg-green-500 hover:bg-green-600' 
-              : 'bg-[#8A1457] hover:bg-[#6A0F43]'
-          } text-white font-medium transition-colors disabled:opacity-50`}
+          className={`btn w-full ${
+            success ? 'bg-[color:var(--success)] hover:bg-[color:var(--success)]' : 'btn-primary'
+          }`}
         >
           {loading ? 'Creating...' : success ? 'Admin Created Successfully' : 'Create Admin User'}
         </button>
         
         {success && (
           <div className="mt-4 text-center">
-            <a href="/admin/login" className="text-[#8A1457] hover:underline">
+            <a href="/admin/login" className="text-[color:var(--primary)] hover:underline">
               Go to Admin Login
             </a>
           </div>

@@ -10,6 +10,13 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'serif'],
+      },
+      boxShadow: {
+        card: '0 1px 2px -1px var(--shadow-color), 0 4px 8px -2px var(--shadow-color), 0 0 0 1px var(--border)',
+        soft: '0 1px 2px -1px var(--shadow-color), 0 6px 12px -3px var(--shadow-color), 0 16px 32px -8px var(--shadow-color), 0 0 0 1px var(--border)',
+        panel: '0 1px 2px -1px var(--shadow-color), 0 6px 12px -3px var(--shadow-color), 0 16px 32px -8px var(--shadow-color), 0 0 0 1px var(--border)',
+        pop: '0 2px 4px -2px var(--shadow-color), 0 10px 20px -4px var(--shadow-color), 0 32px 64px -16px var(--shadow-color), 0 0 0 1px var(--border)',
       },
       colors: {
         green: {

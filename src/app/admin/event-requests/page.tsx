@@ -124,27 +124,27 @@ export default function AdminEventRequestsPage() {
               />
             </div>
 
-            <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+            <div className="mt-6 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Description</p>
               <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.description}</p>
             </div>
 
             {request.additionalNotes ? (
-              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Additional notes</p>
                 <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.additionalNotes}</p>
               </div>
             ) : null}
 
             {request.adminNotes ? (
-              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Admin notes</p>
                 <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">{request.adminNotes}</p>
               </div>
             ) : null}
 
             {request.approvedEventId ? (
-              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4 text-sm text-[color:var(--muted)]">
+              <div className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4 text-sm text-[color:var(--muted)]">
                 This request has been published as a live event and can now be refined from the events admin page.
               </div>
             ) : null}

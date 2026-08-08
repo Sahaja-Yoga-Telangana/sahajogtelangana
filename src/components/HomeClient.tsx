@@ -7,6 +7,9 @@ import VirtualTour from "@/components/VirtualTour";
 import ContactUs from "@/components/ContactUs";
 import LocalSeoSection from "@/components/LocalSeoSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import Marquee from "@/components/motion/Marquee";
+
+const PEACE_WORDS = ['peace', 'silence', 'balance', 'stillness', 'love', 'awareness', 'grace', 'union'];
 
 type TestimonialCard = {
   _id: string;
@@ -26,12 +29,21 @@ export default function HomeClient({
   return (
     <div className="bg-[color:var(--bg)]">
       <Hero />
-      <hr/>
       <LocalSeoSection />
-      {/* <AboutUs /> */}
       <VirtualTour />
       <IntroButton />
       <TestimonialsSection testimonials={testimonials} isLoggedIn={isLoggedIn} />
+      <Marquee
+        items={PEACE_WORDS.map((word) => (
+          <span key={word} className="flex items-center gap-10">
+            <span className="font-display text-[clamp(28px,3vw,38px)] italic text-[color:var(--border-strong)]">
+              {word}
+            </span>
+            <span className="h-2 w-2 rotate-45 bg-[color:color-mix(in_srgb,var(--accent)_50%,transparent)]" aria-hidden />
+          </span>
+        ))}
+        speed="40s"
+      />
       <Camp />
       <Guide />
       <Features />

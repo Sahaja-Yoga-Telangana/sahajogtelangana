@@ -244,7 +244,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
         <div className="rounded-[28px] border border-[color:var(--border)] bg-[linear-gradient(145deg,_color-mix(in_srgb,var(--surface)_95%,transparent),_color-mix(in_srgb,var(--accent-200)_42%,transparent))] p-5 shadow-soft sm:rounded-[36px] sm:p-6 md:p-10">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted)]">Seeker Journey Hub</p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[color:var(--ink)] sm:text-4xl md:text-5xl">
+            <h1 className="mt-3 font-display text-[clamp(30px,4vw,46px)] leading-[1.1] tracking-[-0.015em] text-[color:var(--ink)]">
               We will help you find the gentlest way to begin.
             </h1>
             <p className="mt-4 text-base leading-7 text-[color:var(--muted)] sm:text-lg sm:leading-8">
@@ -255,7 +255,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
           <div className="mt-7 flex flex-wrap items-center gap-2.5 sm:mt-8 sm:gap-3">
             {[1, 2, 3].map((item) => (
               <div key={item} className="flex items-center gap-2.5 sm:gap-3">
-                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold sm:h-11 sm:w-11 ${item <= step ? "bg-[color:var(--primary)] text-white" : "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--muted)]"}`}>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold sm:h-11 sm:w-11 ${item <= step ? "bg-[color:var(--primary)] text-[color:var(--on-primary)]" : "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--muted)]"}`}>
                   {item}
                 </div>
                 {item < 3 ? <div className={`h-px w-5 sm:w-8 ${item < step ? "bg-[color:var(--primary)]" : "bg-[color:var(--border)]"}`} /> : null}
@@ -266,7 +266,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
           <div className="mt-4 text-sm text-[color:var(--muted)]">Step {step} of 3</div>
 
           <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]/94 p-5 shadow-sm sm:rounded-[30px] sm:p-6">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_94%,transparent)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
               {step === 1 ? (
                 <QuestionPanel
                   eyebrow="Step 1"
@@ -341,12 +341,12 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                 >
                   <div className="rounded-[24px] border border-[color:var(--border)] bg-[linear-gradient(180deg,_color-mix(in_srgb,var(--surface-2)_88%,transparent),_color-mix(in_srgb,var(--surface)_95%,transparent))] p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">Recommended start</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{draft.recommendations.startPage.title}</h2>
+                    <h2 className="mt-2 font-display text-[22px] font-medium leading-[1.2] text-[color:var(--ink)]">{draft.recommendations.startPage.title}</h2>
                     <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">{draft.recommendations.startPage.description}</p>
                   <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                       <Link
                         href={draft.recommendations.startPage.path}
-                        className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)]"
+                        className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)]"
                       >
                         {getStartPageCtaLabel(draft.recommendations)}
                       </Link>
@@ -358,7 +358,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                           rel={action.external ? "noopener noreferrer" : undefined}
                           className={`inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors ${
                             action.kind === "primary"
-                              ? "bg-[color:var(--primary)] text-white hover:bg-[color:var(--primary-600)]"
+                              ? "bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary-600)]"
                               : "border border-[color:var(--border)] text-[color:var(--ink)] hover:bg-[color:var(--surface-2)]"
                           }`}
                         >
@@ -374,7 +374,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                     </div>
                   </div>
                   {draft.recommendations.fallbackReason ? (
-                    <p className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 px-4 py-3 text-sm leading-7 text-[color:var(--muted)]">
+                    <p className="mt-4 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_75%,transparent)] px-4 py-3 text-sm leading-7 text-[color:var(--muted)]">
                       {draft.recommendations.fallbackReason}
                     </p>
                   ) : null}
@@ -389,7 +389,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
               ) : null}
 
               {error ? (
-                <p className="mt-5 rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-4 py-3 text-sm text-[color:var(--ink)]">
+                <p className="mt-5 rounded-[18px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] px-4 py-3 text-sm text-[color:var(--ink)]">
                   {error}
                 </p>
               ) : null}
@@ -399,7 +399,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
               {draft.recommendations?.center ? (
                 <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">Nearest Center</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{draft.recommendations.center.zone}</h2>
+                  <h2 className="mt-2 font-display text-[22px] font-medium leading-[1.2] text-[color:var(--ink)]">{draft.recommendations.center.zone}</h2>
                   <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">{draft.recommendations.center.city}</p>
                   <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">{draft.recommendations.center.address}</p>
                   <div className="mt-4 grid gap-2 text-sm text-[color:var(--ink)]">
@@ -410,7 +410,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                   <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                     <Link
                       href={draft.recommendations.center.detailPath}
-                      className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)]"
+                      className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)]"
                     >
                       View center
                     </Link>
@@ -429,7 +429,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                 {draft.recommendations?.events?.length ? (
                   <div className="mt-4 space-y-4">
                     {draft.recommendations.events.map((event) => (
-                      <article key={event._id} className="rounded-[22px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                      <article key={event._id} className="rounded-[22px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                         <div className="flex items-center justify-between gap-3">
                           <h3 className="text-lg font-semibold text-[color:var(--ink)]">{event.title}</h3>
                           <span className="rounded-full bg-[color:var(--surface)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted)]">
@@ -460,7 +460,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
 
               <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-sm sm:rounded-[30px] sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">Guided Support</p>
-                <h2 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">Would you like someone to help you personally?</h2>
+                <h2 className="mt-2 font-display text-[22px] font-medium leading-[1.2] text-[color:var(--ink)]">Would you like someone to help you personally?</h2>
                 <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
                   If you want a warmer handoff, leave your details and the local team can follow up with the best next step for you.
                 </p>
@@ -496,7 +496,7 @@ export default function JourneyHubPage({ citySuggestions: _citySuggestions }: { 
                   <button
                     type="submit"
                     disabled={supportLoading}
-                    className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--primary-600)] disabled:opacity-60"
+                    className="inline-flex items-center justify-center rounded-full bg-[color:var(--primary)] px-6 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors hover:bg-[color:var(--primary-600)] disabled:opacity-60"
                   >
                     {supportLoading ? "Sending request..." : "Request guided support"}
                   </button>
@@ -524,8 +524,8 @@ function QuestionPanel({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">{eyebrow}</p>
-      <h2 className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">{title}</h2>
+      <p className="eyebrow">{eyebrow}</p>
+      <h2 className="mt-3 font-display text-[clamp(24px,2.8vw,32px)] leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">{title}</h2>
       <p className="mt-3 text-base leading-8 text-[color:var(--muted)]">{body}</p>
       <div className="mt-6">{children}</div>
     </div>

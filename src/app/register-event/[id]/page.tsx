@@ -533,7 +533,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[color:var(--success)]"></div>
       </div>
     );
   }
@@ -541,9 +541,9 @@ export default function EventRegistration({ params }: { params: { id: string } }
   if (!event) {
     return (
       <div className="container mx-auto px-4 py-10 text-center">
-        <h1 className="text-2xl font-bold text-red-600">Event not found</h1>
+        <h1 className="text-2xl font-bold text-[color:var(--danger)]">Event not found</h1>
         <p className="mt-4">The event you are looking for does not exist or has been removed.</p>
-        <Link href="/" className="mt-6 inline-block bg-[#8A1457] text-white px-6 py-2 rounded-md">
+        <Link href="/" className="mt-6 inline-block btn btn-primary">
           Return to Home
         </Link>
       </div>
@@ -577,7 +577,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/85 px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
+                  <div className="rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_85%,transparent)] px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[color:var(--primary)]">
                     Sahaja Yoga Event
                   </div>
                 </div>
@@ -605,7 +605,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     href={event.googleMapLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
                   >
                     Open in Google Maps
                     <FiExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -613,14 +613,14 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 ) : null}
                 <a
                   href="#registration-form"
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--surface-2)]"
                 >
                   Register Now
                 </a>
               </div>
 
               {(event.googleMapLink || event.contactDetails) ? (
-                <div className="mt-8 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-5">
+                <div className="mt-8 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-5">
                   <h2 className="text-lg font-semibold text-[color:var(--ink)]">Helpful details</h2>
                   <div className="mt-3 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
                     {event.googleMapLink ? <p>Use the map link for exact venue navigation before you travel.</p> : null}
@@ -637,20 +637,20 @@ export default function EventRegistration({ params }: { params: { id: string } }
           <h2 className="mb-6 text-center text-2xl font-bold text-[color:var(--ink)]">Register for the Event</h2>
           
           {successMessage && !showReceipt && (
-            <div className="mb-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 px-4 py-3 text-[color:var(--primary)]">
+            <div className="mb-4 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_85%,transparent)] px-4 py-3 text-[color:var(--primary)]">
               {successMessage}
             </div>
           )}
           
           {errorMessage && (
-            <div className="mb-4 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-600 dark:text-red-300">
+            <div className="mb-4 rounded-2xl border !border-[color:color-mix(in_srgb,var(--danger)_40%,transparent)] bg-red-500/10 px-4 py-3 text-[color:var(--danger)] ">
               {errorMessage}
             </div>
           )}
           
           {showReceipt && (receiptData || bulkReceiptData) ? (
             <div className="mb-8">
-              <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/85 p-6 text-[color:var(--primary)]">
+              <div className="mb-4 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_85%,transparent)] p-6 text-[color:var(--primary)]">
                 <h3 className="mb-4 text-center text-xl font-bold text-[color:var(--primary)]">Registration Successful!</h3>
                 <p className="mb-6 text-center text-[color:var(--muted)]">Your registration has been confirmed. Please keep this receipt for your records.</p>
                 
@@ -660,7 +660,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       <h4 className="text-xl font-bold text-[color:var(--ink)]">Sahaja Yoga Telangana</h4>
                       <p className="text-base text-[color:var(--muted)]">Event Registration Receipt</p>
                     </div>
-                    <div className="rounded-[20px] bg-[color:var(--surface-2)]/80 px-4 py-3 text-left sm:text-right">
+                    <div className="rounded-[20px] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] px-4 py-3 text-left sm:text-right">
                       <p className="numeric-font text-base text-[color:var(--muted)]">Receipt #: {
                         bulkReceiptData 
                           ? bulkReceiptData[0]?._id.substring(0, 8) 
@@ -719,7 +719,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       <h5 className="mb-3 font-semibold text-[color:var(--ink)]">Participants Information</h5>
                       <div className="hidden overflow-x-auto sm:block">
                         <table className="min-w-full divide-y divide-[color:var(--border)]">
-                          <thead className="bg-[color:var(--surface-2)]/80">
+                          <thead className="bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)]">
                             <tr>
                               <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Name</th>
                               <th scope="col" className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Age</th>
@@ -749,7 +749,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                       </div>
                       <div className="space-y-3 sm:hidden">
                         {bulkReceiptData.map((registration, index) => (
-                          <div key={index} className="rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                          <div key={index} className="rounded-[18px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                             <p className="font-semibold text-[color:var(--ink)]">{registration.name}</p>
                             <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
                               <p className="text-[color:var(--muted)]">Age</p>
@@ -767,7 +767,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   
                   <div className="mb-4">
                     {isFreeEvent ? (
-                      <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-4">
+                      <div className="rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-4">
                         <h5 className="mb-2 font-semibold text-[color:var(--ink)]">Free Entry</h5>
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           <div>
@@ -828,7 +828,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-center">
                   <button 
                     onClick={handlePrintReceipt} 
-                    className="flex min-h-[48px] items-center justify-center rounded-full bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                    className="flex min-h-[48px] items-center justify-center rounded-full bg-[color:var(--primary)] px-4 py-3 font-bold text-[color:var(--on-primary)] transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -856,18 +856,18 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           setEmail(e.target.value);
                           setEmailError('');
                         }}
-                        className={`min-h-[48px] flex-1 rounded-t-xl border bg-[color:var(--surface)] p-3 text-[color:var(--ink)] sm:rounded-l-xl sm:rounded-tr-none ${emailError ? 'border-red-500' : 'border-[color:var(--border)]'}`}
+                        className={`min-h-[48px] flex-1 rounded-t-xl border bg-[color:var(--surface)] p-3 text-[color:var(--ink)] sm:rounded-l-xl sm:rounded-tr-none ${emailError ? '!border-[color:var(--danger)]' : 'border-[color:var(--border)]'}`}
                       />
                       <button
                         onClick={handleSendEmail}
                         disabled={sendingEmail || emailSent}
-                        className="inline-flex min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-b-xl bg-[color:var(--primary)] px-4 py-3 font-bold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 sm:rounded-b-none sm:rounded-r-xl"
+                        className="inline-flex min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-b-xl bg-[color:var(--primary)] px-4 py-3 font-bold text-[color:var(--on-primary)] transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60 sm:rounded-b-none sm:rounded-r-xl"
                       >
                         {sendingEmail && <LoadingSpinner />}
                         {sendingEmail ? 'Sending...' : emailSent ? 'Sent!' : 'Email Receipt'}
                       </button>
                     </div>
-                    {emailError && <p className="text-red-500 text-base mt-1">{emailError}</p>}
+                    {emailError && <p className="text-[color:var(--danger)] text-base mt-1">{emailError}</p>}
                     {emailSent && <p className="mt-1 text-base text-[color:var(--primary)]">Receipt has been sent to your email!</p>}
                   </div>
                 </div>
@@ -882,12 +882,12 @@ export default function EventRegistration({ params }: { params: { id: string } }
           ) : (
             <div>
               <div className="mb-8 flex justify-center">
-                <div className="inline-flex rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-1">
+                <div className="inline-flex rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-1">
                 <button
                   type="button"
                   onClick={() => setIsBulkRegistration(false)}
                   className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${!isBulkRegistration 
-                    ? 'bg-[color:var(--primary)] text-white shadow-sm' 
+                    ? 'bg-[color:var(--primary)] text-[color:var(--on-primary)] shadow-sm' 
                     : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]'}`}
                 >
                   Individual Registration
@@ -896,7 +896,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   type="button"
                   onClick={() => setIsBulkRegistration(true)}
                   className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${isBulkRegistration 
-                    ? 'bg-[color:var(--primary)] text-white shadow-sm' 
+                    ? 'bg-[color:var(--primary)] text-[color:var(--on-primary)] shadow-sm' 
                     : 'text-[color:var(--muted)] hover:text-[color:var(--ink)]'}`}
                 >
                   Bulk Registration
@@ -908,7 +908,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 <div>
                   <form onSubmit={handleSubmit}>
                     {isBulkRegistration && (
-                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 p-5">
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_75%,transparent)] p-5">
                         <h3 className="font-medium text-[color:var(--primary)]">Bulk Registration</h3>
                         <p className="mt-2 text-base text-[color:var(--muted)]">
                           Register multiple participants with a single payment. Shared contact details entered once below will be used for every participant.
@@ -917,7 +917,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     )}
                     
                     {isBulkRegistration ? (
-                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 p-5">
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_65%,transparent)] p-5">
                         <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">Shared details</h3>
                         <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
                           These details apply to all entries in this bulk registration.
@@ -932,10 +932,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               name="state"
                               value={formData.state}
                               onChange={handleInputChange}
-                              className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                              className={`admin-input ${errors.state ? '!border-[color:var(--danger)]' : ''}`}
                               placeholder="Your state"
                             />
-                            {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                            {errors.state && <p className="text-[color:var(--danger)] text-base mt-1">{errors.state}</p>}
                           </div>
                           
                           <div>
@@ -946,10 +946,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               name="city"
                               value={formData.city}
                               onChange={handleInputChange}
-                              className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                              className={`admin-input ${errors.city ? '!border-[color:var(--danger)]' : ''}`}
                               placeholder="Your city"
                             />
-                            {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                            {errors.city && <p className="text-[color:var(--danger)] text-base mt-1">{errors.city}</p>}
                           </div>
                         </div>
 
@@ -961,10 +961,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.email ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Enter your email"
                           />
-                          {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                          {errors.email && <p className="text-[color:var(--danger)] text-base mt-1">{errors.email}</p>}
                         </div>
                       </div>
                     ) : null}
@@ -979,10 +979,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className={`admin-input ${errors.name ? 'border-red-500' : ''}`}
+                        className={`admin-input ${errors.name ? '!border-[color:var(--danger)]' : ''}`}
                         placeholder="Enter full name"
                       />
-                      {errors.name && <p className="text-red-500 text-base mt-1">{errors.name}</p>}
+                      {errors.name && <p className="text-[color:var(--danger)] text-base mt-1">{errors.name}</p>}
                     </div>
                     
                     {!isBulkRegistration ? (
@@ -995,10 +995,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.state ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.state ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Your state"
                           />
-                          {errors.state && <p className="text-red-500 text-base mt-1">{errors.state}</p>}
+                          {errors.state && <p className="text-[color:var(--danger)] text-base mt-1">{errors.state}</p>}
                         </div>
                         
                         <div>
@@ -1009,10 +1009,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                             name="city"
                             value={formData.city}
                             onChange={handleInputChange}
-                            className={`admin-input ${errors.city ? 'border-red-500' : ''}`}
+                            className={`admin-input ${errors.city ? '!border-[color:var(--danger)]' : ''}`}
                             placeholder="Your city"
                           />
-                          {errors.city && <p className="text-red-500 text-base mt-1">{errors.city}</p>}
+                          {errors.city && <p className="text-[color:var(--danger)] text-base mt-1">{errors.city}</p>}
                         </div>
                       </div>
                     ) : null}
@@ -1025,11 +1025,11 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         name="age"
                         value={formData.age}
                         onChange={handleInputChange}
-                        className={`admin-input ${errors.age ? 'border-red-500' : ''}`}
+                        className={`admin-input ${errors.age ? '!border-[color:var(--danger)]' : ''}`}
                         placeholder="Age"
                         min="1"
                       />
-                      {errors.age && <p className="text-red-500 text-base mt-1">{errors.age}</p>}
+                      {errors.age && <p className="text-[color:var(--danger)] text-base mt-1">{errors.age}</p>}
                     </div>
                     
                     {!isBulkRegistration ? (
@@ -1041,10 +1041,10 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`admin-input ${errors.email ? 'border-red-500' : ''}`}
+                          className={`admin-input ${errors.email ? '!border-[color:var(--danger)]' : ''}`}
                           placeholder="Enter your email"
                         />
-                        {errors.email && <p className="text-red-500 text-base mt-1">{errors.email}</p>}
+                        {errors.email && <p className="text-[color:var(--danger)] text-base mt-1">{errors.email}</p>}
                       </div>
                     ) : null}
                     
@@ -1053,7 +1053,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         <button
                           type="button"
                           onClick={handleAddParticipant}
-                          className="inline-flex items-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
+                          className="inline-flex items-center rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors duration-300 hover:bg-[color:var(--primary-600)]"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1068,7 +1068,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                         <h3 className="mb-3 text-base font-semibold text-[color:var(--ink)]">Added Participants</h3>
                         <div className="overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface)]">
                           <table className="min-w-full divide-y divide-[color:var(--border)]">
-                            <thead className="bg-[color:var(--surface-2)]/80">
+                            <thead className="bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)]">
                               <tr>
                                 <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Name</th>
                                 <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-[color:var(--muted)]">Age</th>
@@ -1096,7 +1096,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                                     <button
                                       type="button"
                                       onClick={() => handleRemoveParticipant(index)}
-                                      className="text-red-600 hover:text-red-800"
+                                      className="text-[color:var(--danger)] hover:text-red-800"
                                     >
                                       Remove
                                     </button>
@@ -1107,13 +1107,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
                           </table>
                         </div>
                         {errors.participants && (
-                          <p className="text-red-500 text-base mt-1">{errors.participants}</p>
+                          <p className="text-[color:var(--danger)] text-base mt-1">{errors.participants}</p>
                         )}
                       </div>
                     )}
                     
                     {totalAmount > 0 && (
-                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/80 p-5">
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_80%,transparent)] p-5">
                         <p className="font-medium text-[color:var(--primary)]">
                           {isBulkRegistration 
                             ? `Total Registration Fee: ₹${totalAmount.toLocaleString()}`
@@ -1152,15 +1152,15 @@ export default function EventRegistration({ params }: { params: { id: string } }
                               });
                             }
                           }}
-                          className={`admin-input ${errors.transactionNumber ? 'border-red-500' : ''}`}
+                          className={`admin-input ${errors.transactionNumber ? '!border-[color:var(--danger)]' : ''}`}
                           placeholder="Enter payment transaction ID"
                         />
                         {errors.transactionNumber && (
-                          <p className="text-red-500 text-base mt-1">{errors.transactionNumber}</p>
+                          <p className="text-[color:var(--danger)] text-base mt-1">{errors.transactionNumber}</p>
                         )}
                       </div>
                     ) : (
-                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/75 p-5">
+                      <div className="mb-5 rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_75%,transparent)] p-5">
                         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[color:var(--muted)]">Free Event</p>
                         <p className="mt-2 text-sm leading-7 text-[color:var(--ink)]">
                           Registration is free for all categories. No payment reference is required.
@@ -1170,7 +1170,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     
                     <button
                       type="submit"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-5 py-3 text-sm font-semibold text-[color:var(--on-primary)] transition-colors duration-300 hover:bg-[color:var(--primary-600)] disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={submitting || (isBulkRegistration && participants.length === 0)}
                     >
                       {submitting && <LoadingSpinner />}
@@ -1218,7 +1218,7 @@ function InfoPill({
   numeric?: boolean;
 }) {
   return (
-    <div className={`flex items-start gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/65 px-4 py-3 ${className}`}>
+    <div className={`flex items-start gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_65%,transparent)] px-4 py-3 ${className}`}>
       <span className="mt-0.5 text-[color:var(--primary)]">{icon}</span>
       <span className={`text-sm leading-6 text-[color:var(--ink)] ${numeric ? 'numeric-font' : ''}`}>{label}</span>
     </div>
@@ -1227,7 +1227,7 @@ function InfoPill({
 
 function PricingRow({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-2)]/78 px-4 py-3">
+    <div className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_78%,transparent)] px-4 py-3">
       <span className="text-sm font-medium text-[color:var(--ink)]">{label}</span>
       <span className="numeric-font text-sm font-semibold text-[color:var(--primary)]">₹{value.toLocaleString()}</span>
     </div>

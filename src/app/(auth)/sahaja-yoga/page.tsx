@@ -1,9 +1,14 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { getRequestLocale } from '@/lib/serverLocale';
+import SeoJsonLd from '@/components/SeoJsonLd';
+import Reveal from '@/components/motion/Reveal';
+import MaskedReveal from '@/components/motion/MaskedReveal';
 
 const content = {
   en: {
     badge: 'Meditation • Self-Realization • Inner Peace',
+    eyebrow: 'The Method',
     title: 'Sahaja Yoga Meditation',
     intro:
       'Sahaja Yoga is a unique meditation method that enables a spontaneous experience of self-realization, a state of thoughtless awareness, inner silence, and deep peace that unfolds naturally from within.',
@@ -54,9 +59,12 @@ const content = {
     ctaTitle: 'Experience It for Yourself',
     ctaBody:
       'Sahaja Yoga offers a direct, experiential path to inner peace and self-realization, freely available to all, without obligation.',
+    ctaButton: 'Start Your Journey',
+    ctaSecondary: 'Visit a Center',
   },
   te: {
     badge: 'ధ్యానం • స్వీయ సాక్షాత్కారం • అంతరశాంతి',
+    eyebrow: 'పద్ధతి',
     title: 'సహజ యోగ ధ్యానం',
     intro:
       'సహజ యోగ అనేది స్వీయ సాక్షాత్కారాన్ని సహజసిద్ధంగా అనుభవించేందుకు సహాయపడే ప్రత్యేక ధ్యాన పద్ధతి. ఇది నిర్విచార అవగాహన, అంతర నిశ్శబ్దం, లోతైన శాంతి వంటి అనుభవాలను లోనుండే మేల్కొలుపుతుంది.',
@@ -107,6 +115,8 @@ const content = {
     ctaTitle: 'మీరు స్వయంగా అనుభవించండి',
     ctaBody:
       'సహజ యోగ అంతరశాంతి, స్వీయ సాక్షాత్కారానికి ప్రత్యక్ష అనుభవమయిన మార్గాన్ని అందిస్తుంది. ఇది అందరికీ ఉచితంగా లభిస్తుంది.',
+    ctaButton: 'మీ ప్రయాణాన్ని ప్రారంభించండి',
+    ctaSecondary: 'కేంద్రాన్ని సందర్శించండి',
   },
 } as const;
 
@@ -116,92 +126,240 @@ export default function AboutSahajaYogaPage() {
 
   return (
     <main className="bg-[color:var(--bg)]">
-      <section className="max-w-6xl mx-auto px-6 py-28 text-center">
-        <span className="inline-block mb-4 px-4 py-1 rounded-full bg-[color:var(--accent-200)]/60 text-[color:var(--ink)] text-base font-medium">
-          {copy.badge}
-        </span>
-        <h1 className="text-4xl md:text-5xl font-bold text-[color:var(--ink)] tracking-tight">{copy.title}</h1>
-        <p className="mt-8 text-lg text-[color:var(--muted)] max-w-4xl mx-auto leading-relaxed">{copy.intro}</p>
+      <SeoJsonLd
+        json={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: copy.title,
+            description: copy.intro,
+          },
+        ]}
+      />
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_55%,transparent),_transparent_45%)]" />
+        <div className="relative mx-auto max-w-[1200px] px-[var(--gutter)] py-[clamp(64px,8vh,96px)] text-center">
+          <p className="eyebrow">{copy.eyebrow}</p>
+          <MaskedReveal
+            as="h1"
+            delay={60}
+            text={copy.title}
+            className="mx-auto mt-5 max-w-4xl text-[clamp(36px,5vw,56px)] font-display leading-[1.05] tracking-[-0.02em] text-[color:var(--ink)]"
+          />
+          <p className="mx-auto mt-6 max-w-3xl text-[17px] leading-[1.8] text-[color:var(--muted)] md:text-lg">
+            {copy.intro}
+          </p>
+          <div className="mt-8 flex justify-center gap-3">
+            <Link href="/meditate" className="btn btn-primary">
+              {copy.ctaButton}
+            </Link>
+            <Link href="/centers" className="btn btn-secondary">
+              {copy.ctaSecondary}
+            </Link>
+          </div>
+        </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-28 grid md:grid-cols-2 gap-14 items-center">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] mb-6">{copy.whatTitle}</h2>
-          {copy.what.map((paragraph) => (
-            <p key={paragraph} className="text-[color:var(--muted)] leading-relaxed mb-5">{paragraph}</p>
-          ))}
-        </div>
-        <div className="relative rounded-3xl overflow-hidden shadow-soft">
-          <Image src="/sahaja5.jpg" alt="What is Sahaja Yoga" width={600} height={420} className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+      {/* What is Sahaja Yoga */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="slide-left">
+            <div>
+                            <h2 className="mt-4 text-[clamp(26px,3vw,34px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+                {copy.whatTitle}
+              </h2>
+              <div className="mt-6 space-y-4">
+                {copy.what.map((paragraph) => (
+                  <p key={paragraph} className="text-[15.5px] leading-[1.8] text-[color:var(--muted)]">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <Reveal variant="scale" className="relative">
+            <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_50%,transparent)] blur-3xl" />
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/sahaja5.jpg"
+                alt="What is Sahaja Yoga"
+                width={600}
+                height={420}
+                className="aspect-[10/7] w-full object-cover"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 pb-28">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center text-[color:var(--ink)] mb-10">{copy.firstMeditation}</h2>
-        <div className="youtube-container rounded-3xl shadow-soft overflow-hidden ring-1 ring-black/5">
-          <iframe src="https://www.youtube.com/embed/hcSJrufqdq0" title={copy.firstMeditation} allowFullScreen />
+      {/* First meditation video */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto max-w-5xl px-[var(--gutter)]">
+          <div className="mb-10 text-center">
+            <div className="mb-5 flex items-center justify-center gap-2">
+              <div className="h-[2px] w-12 bg-[color:var(--accent)]" />
+              <div className="h-1.5 w-1.5 rotate-45 bg-[color:var(--accent)]" />
+              <div className="h-[2px] w-12 bg-[color:var(--accent)]" />
+            </div>
+            <h2 className="text-[clamp(24px,2.8vw,32px)] font-display leading-[1.2] text-[color:var(--ink)]">
+              {copy.firstMeditation}
+            </h2>
+          </div>
+          <Reveal>
+            <div className="youtube-container overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <iframe
+                src="https://www.youtube.com/embed/hcSJrufqdq0"
+                title={copy.firstMeditation}
+                allowFullScreen
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-28">
-        <div className="bg-[color:var(--surface)] backdrop-blur rounded-3xl p-10 md:p-14 shadow-soft grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] mb-6">{copy.differentTitle}</h2>
-            {copy.different.map((paragraph) => (
-              <p key={paragraph} className="text-[color:var(--muted)] leading-relaxed mb-5">{paragraph}</p>
+      {/* How different */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="scale" className="order-2 lg:order-1">
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/sahaja2.jpg"
+                alt="How Sahaja Yoga is different"
+                width={600}
+                height={420}
+                className="aspect-[10/7] w-full object-cover"
+              />
+            </div>
+          </Reveal>
+          <Reveal variant="slide-right" className="order-1 lg:order-2">
+            <div>
+                            <h2 className="mt-4 text-[clamp(26px,3vw,34px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+                {copy.differentTitle}
+              </h2>
+              <ul className="mt-6 space-y-4">
+                {copy.different.map((paragraph) => (
+                  <li key={paragraph} className="flex items-start gap-3 text-[15.5px] leading-[1.8] text-[color:var(--muted)]">
+                    <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                    <span>{paragraph}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Origins */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="slide-left">
+            <div>
+                            <h2 className="mt-4 text-[clamp(26px,3vw,34px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+                {copy.originsTitle}
+              </h2>
+              <div className="mt-6 space-y-4">
+                {copy.origins.map((paragraph) => (
+                  <p key={paragraph} className="text-[15.5px] leading-[1.8] text-[color:var(--muted)]">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <Reveal variant="scale">
+            <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[color:var(--border)] shadow-panel">
+              <Image
+                src="/sahaja3.jpg"
+                alt="Shri Mataji Nirmala Devi"
+                width={600}
+                height={420}
+                className="aspect-[10/7] w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Benefits */}
+      <section className="py-[clamp(56px,7vh,80px)] bg-[color:var(--surface-2)]">
+        <div className="mx-auto max-w-[1200px] px-[var(--gutter)]">
+          <div className="mb-12 text-center">
+                        <h2 className="mx-auto mt-4 max-w-2xl text-[clamp(26px,3vw,34px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+              {copy.benefitsTitle}
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {copy.benefits.map((benefit, index) => (
+              <Reveal key={benefit.title} delay={index * 80}>
+                <div className="group h-full rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-panel">
+                  <div className="h-1.5 w-10 rotate-0 rounded-full bg-[color:var(--accent)] transition-all duration-300 group-hover:w-14" />
+                  <h3 className="mt-5 text-[19px] font-semibold leading-snug text-[color:var(--ink)]">
+                    {benefit.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] leading-[1.75] text-[color:var(--muted)]">{benefit.text}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
-          <Image src="/sahaja2.jpg" alt="How Sahaja Yoga is different" width={600} height={420} className="rounded-2xl shadow-md" />
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-28 grid md:grid-cols-2 gap-14 items-center">
-        <Image src="/sahaja3.jpg" alt="Shri Mataji Nirmala Devi" width={600} height={420} className="rounded-3xl shadow-soft" />
-        <div>
-          <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] mb-6">{copy.originsTitle}</h2>
-          {copy.origins.map((paragraph) => (
-            <p key={paragraph} className="mt-4 text-[color:var(--muted)] leading-relaxed">{paragraph}</p>
-          ))}
+      {/* Awards + Science */}
+      <section className="py-[clamp(56px,7vh,80px)]">
+        <div className="mx-auto grid max-w-[1200px] gap-8 px-[var(--gutter)] lg:grid-cols-2">
+          <Reveal variant="slide-left">
+            <div className="h-full rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-card md:p-10">
+              <p className="eyebrow">{copy.awardsTitle}</p>
+              <h2 className="mt-4 text-[clamp(24px,2.6vw,30px)] font-display leading-[1.2] text-[color:var(--ink)]">{copy.awardsTitle}</h2>
+              <ul className="mt-6 space-y-4">
+                {copy.awards.map((award) => (
+                  <li key={award} className="flex items-start gap-3 text-[15px] leading-relaxed text-[color:var(--muted)]">
+                    <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rotate-45 bg-[color:var(--accent)]" aria-hidden />
+                    <span>{award}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+          <Reveal variant="slide-right" delay={100}>
+            <div className="flex h-full flex-col justify-center rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[linear-gradient(135deg,var(--surface),var(--surface-2))] p-8 shadow-card md:p-10">
+                            <h2 className="mt-4 text-[clamp(26px,3vw,34px)] font-display leading-[1.2] tracking-[-0.01em] text-[color:var(--ink)]">
+                {copy.scienceTitle}
+              </h2>
+              <p className="mt-6 text-[15.5px] leading-[1.8] text-[color:var(--muted)]">{copy.science}</p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-28">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center text-[color:var(--ink)] mb-12">{copy.benefitsTitle}</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {copy.benefits.map((benefit) => (
-            <BenefitCard key={benefit.title} title={benefit.title} text={benefit.text} />
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-5xl mx-auto px-6 pb-28">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center text-[color:var(--ink)] mb-8">{copy.awardsTitle}</h2>
-        <div className="bg-[color:var(--surface)] rounded-2xl p-8 shadow-soft border border-gray-100">
-          <ul className="space-y-3 text-[color:var(--muted)] leading-relaxed">
-            {copy.awards.map((award) => <li key={award}>• {award}</li>)}
-          </ul>
-        </div>
-      </section>
-
-      <section className="max-w-5xl mx-auto px-6 pb-28">
-        <h2 className="text-2xl md:text-3xl font-semibold text-center text-[color:var(--ink)] mb-6">{copy.scienceTitle}</h2>
-        <p className="text-[color:var(--muted)] leading-relaxed text-center max-w-4xl mx-auto">{copy.science}</p>
-      </section>
-
-      <section className="text-center pb-32 px-6">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[color:var(--ink)] mb-4">{copy.ctaTitle}</h2>
-        <p className="text-[color:var(--muted)] max-w-2xl mx-auto leading-relaxed">{copy.ctaBody}</p>
+      {/* CTA */}
+      <section className="pb-[clamp(72px,9vh,104px)]">
+        <Reveal>
+          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[var(--radius-xl)] px-[var(--gutter)] py-16 text-center">
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,var(--primary-700),var(--primary-600))]" />
+            <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[color:color-mix(in_srgb,var(--accent)_25%,transparent)] blur-3xl" />
+            <div className="relative">
+              <h2 className="text-[clamp(28px,3.4vw,38px)] font-display leading-[1.15] text-[color:var(--on-primary)]">
+                {copy.ctaTitle}
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-[15.5px] leading-[1.8] text-[color:color-mix(in_srgb,var(--on-primary)_85%,transparent)]">{copy.ctaBody}</p>
+              <div className="mt-8 flex justify-center gap-3">
+                <Link href="/meditate" className="btn bg-[color:var(--on-primary)] text-[color:var(--primary-700)] hover:bg-[color:color-mix(in_srgb,var(--on-primary)_90%,transparent)]">
+                  {copy.ctaButton}
+                </Link>
+                <Link
+                  href="/seeker-registration"
+                  className="btn border border-[color:color-mix(in_srgb,var(--on-primary)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--on-primary)_10%,transparent)] text-[color:var(--on-primary)] hover:bg-[color:color-mix(in_srgb,var(--on-primary)_20%,transparent)]"
+                >
+                  {copy.ctaSecondary}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
     </main>
-  );
-}
-
-function BenefitCard({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="bg-[color:var(--surface)] rounded-2xl p-7 shadow-soft border border-gray-100 hover:shadow-md transition">
-      <h3 className="text-lg font-semibold text-[color:var(--ink)]">{title}</h3>
-      <p className="mt-4 text-[color:var(--muted)] text-base leading-relaxed">{text}</p>
-    </div>
   );
 }

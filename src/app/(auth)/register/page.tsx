@@ -142,149 +142,106 @@ export default function SignUp() {
 
   return (
     <section className="min-h-screen flex flex-col bg-[color:var(--bg)] text-[color:var(--ink)]">
-      <div className="grid grid-cols-1 lg:grid-cols-2 flex-grow">
-        <div className="relative flex items-center justify-center px-4 py-10 bg-cover bg-center lg:px-8">
-          <div className="absolute inset-0">
-            <Image
-              className="h-full w-full object-cover object-center"
-              src="/pune.jpeg"
-              alt=""
-              width={1920}
-              height={1080}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-          </div>
-          <div className="relative z-10 text-center">
-            <h3 className="text-4xl font-bold text-white">
-              Sahaja Yoga
-            </h3>
-            <h2 className="text-white text-xl font-semibold mt-4">
+      <div className="grid flex-grow grid-cols-1 lg:grid-cols-2">
+        {/* Left Sanctum Panel */}
+        <div className="relative hidden overflow-hidden bg-[linear-gradient(160deg,var(--surface-2),var(--bg)_60%)] lg:flex lg:items-center lg:justify-center">
+          <div className="pointer-events-none absolute -left-20 top-16 h-72 w-72 rounded-full bg-[color:color-mix(in_srgb,var(--accent-200)_50%,transparent)] blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-[color:color-mix(in_srgb,var(--primary-200)_40%,transparent)] blur-3xl" />
+          <div className="relative px-10 text-center">
+            <div className="arch relative mx-auto h-[440px] w-[320px] overflow-hidden border border-[color:var(--border)] bg-[color:var(--surface)] shadow-panel">
+              <Image src="/pune.jpeg" alt="" fill sizes="320px" className="object-cover" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[color:color-mix(in_srgb,var(--primary-700)_30%,transparent)] via-transparent to-transparent" />
+            </div>
+            <div className="mx-auto -mt-2 flex h-12 w-40 items-center justify-center rounded-b-[20px] border border-t-0 border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">
+              <p className="eyebrow !tracking-[0.3em]">Sahaja Yoga</p>
+            </div>
+            <h3 className="mt-10 font-display text-[clamp(24px,2.6vw,32px)] leading-[1.25] text-[color:var(--ink)]">
               Register as a Sahaja Yogi
-            </h2>
+            </h3>
+            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-[1.7] text-[color:var(--muted)]">
+              Begin your journey of self-realization and inner peace.
+            </p>
           </div>
         </div>
+
+        {/* Right Form Panel */}
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
-          <div className="w-full max-w-md space-y-8 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-soft">
-            <div>
-              <h2 className="text-3xl font-semibold leading-tight text-[color:var(--ink)] sm:text-4xl">
+          <div className="w-full max-w-md">
+            <div className="mb-8 text-center lg:text-left">
+              <p className="eyebrow">Create Account</p>
+              <h1 className="mt-3 font-display text-[clamp(28px,3.2vw,36px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
                 Sign up
-              </h2>
-              <p className="mt-2 text-base text-[color:var(--muted)]">
-                Already have an account?
-                <Link
-                  href="/login"
-                  className="font-medium text-[color:var(--ink)] transition-all duration-200 hover:underline ml-2"
-                >
+              </h1>
+              <p className="mt-2 text-[15px] text-[color:var(--muted)]">
+                Already have an account?{" "}
+                <Link href="/login" className="font-medium text-[color:var(--primary)] hover:underline">
                   Sign In
                 </Link>
               </p>
             </div>
-            <form action="#" method="POST" className="mt-8">
-              <div className="space-y-5">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="text-base font-medium text-[color:var(--muted)]"
-                  >
-                    Full Name
-                  </label>
-                  <div className="mt-2">
+
+            <div className="rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-panel sm:p-8">
+              <form action="#" method="POST">
+                <div className="space-y-5">
+                  <div>
+                    <label htmlFor="name" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+                      Full Name
+                    </label>
                     <input
-                      className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
+                      className="admin-input"
                       type="text"
                       placeholder="Full Name"
                       id="name"
-                      onChange={(e) =>
-                        setUserState({ ...userState, name: e.target.value })
-                      }
-                    ></input>
-                    <span className="text-red-500 font-bold">
-                      {errors?.name}
-                    </span>
+                      onChange={(e) => setUserState({ ...userState, name: e.target.value })}
+                    />
+                    {errors?.name && <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">{errors.name}</span>}
                   </div>
-                </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="text-base font-medium text-[color:var(--muted)]"
-                  >
-                    Email address
-                  </label>
-                  <div className="mt-2">
+                  <div>
+                    <label htmlFor="email" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+                      Email address
+                    </label>
                     <input
-                      className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
+                      className="admin-input"
                       type="email"
                       placeholder="Email"
                       id="email"
-                      onChange={(e) =>
-                        setUserState({ ...userState, email: e.target.value })
-                      }
-                    ></input>
-                    <span className="text-red-500 font-bold">
-                      {errors?.email}
-                    </span>
+                      onChange={(e) => setUserState({ ...userState, email: e.target.value })}
+                    />
+                    {errors?.email && <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">{errors.email}</span>}
                   </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="password"
-                      className="text-base font-medium text-[color:var(--muted)]"
-                    >
+                  <div>
+                    <label htmlFor="password" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
                       Password
                     </label>
-                  </div>
-                  <div className="mt-2">
                     <input
-                      className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
+                      className="admin-input"
                       type="password"
                       placeholder="Password"
                       id="password"
-                      onChange={(e) =>
-                        setUserState({ ...userState, password: e.target.value })
-                      }
-                    ></input>
-                    <span className="text-red-500 font-bold">
-                      {errors?.password}
-                    </span>
+                      onChange={(e) => setUserState({ ...userState, password: e.target.value })}
+                    />
+                    {errors?.password && <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">{errors.password}</span>}
                   </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="password"
-                      className="text-base font-medium text-[color:var(--muted)]"
-                    >
+                  <div>
+                    <label htmlFor="password_confirmation" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
                       Confirm Password
                     </label>
-                  </div>
-                  <div className="mt-2">
                     <input
-                      className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-2 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
+                      className="admin-input"
                       type="password"
                       placeholder="Confirm Password"
                       id="password_confirmation"
                       onChange={(e) =>
-                        setUserState({
-                          ...userState,
-                          password_confirmation: e.target.value,
-                        })
+                        setUserState({ ...userState, password_confirmation: e.target.value })
                       }
-                    ></input>
+                    />
                   </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="homePractice"
-                    className="text-base font-medium text-[color:var(--muted)] mt-4"
-                  >
-                    What should we do before leaving home?
-                  </label>
-                  <div className="mt-2">
+                  <div>
+                    <label htmlFor="homePractice" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+                      What should we do before leaving home?
+                    </label>
                     <input
-                      className="flex h-10 w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-2)] px-3 py-4 mb-4 text-base text-[color:var(--ink)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--focus)]"
+                      className="admin-input"
                       type="text"
                       placeholder="Enter your answer"
                       id="homePractice"
@@ -292,20 +249,15 @@ export default function SignUp() {
                       value={userState.homePractice}
                     />
                     {!isHomePracticeCorrect && userState.homePractice && (
-                      <span className="text-red-500 font-bold">
+                      <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">
                         Please enter the correct answer.
                       </span>
                     )}
                   </div>
-                </div>
-
-                <div>
                   <button
                     type="button"
-                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-3.5 py-2.5 font-semibold leading-7 text-white ${
-                      loading || !isHomePracticeCorrect
-                        ? "bg-[color:var(--border)] cursor-not-allowed"
-                        : "bg-[color:var(--primary)] hover:bg-[color:var(--primary-600)]"
+                    className={`btn w-full ${
+                      loading || !isHomePracticeCorrect ? "btn-disabled" : "btn-primary"
                     }`}
                     onClick={submitForm}
                     disabled={loading || !isHomePracticeCorrect}
@@ -313,8 +265,9 @@ export default function SignUp() {
                     {loading && <LoadingSpinner />}
                     {loading ? "Processing..." : "Create Account"}
                   </button>
-                  </div>
-            </form>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

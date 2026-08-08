@@ -184,7 +184,7 @@ export default function SeekerFollowupsPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-[18px] border border-[color:var(--border)] bg-[color:var(--surface-2)]/70 p-4">
+                <div className="mt-4 rounded-[18px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] p-4">
                   <p className="text-sm text-[color:var(--muted)]">
                     Source: <span className="font-medium text-[color:var(--ink)]">{seeker.source || 'Website'}</span>
                   </p>

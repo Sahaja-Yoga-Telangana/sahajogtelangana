@@ -45,7 +45,7 @@ export default function SeekerRegistrationDownloads({
 }) {
   const filePrefix = slugify(event.title);
   const buttonClass = compact
-    ? 'inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)]/96 px-3 py-2 text-xs font-semibold text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-colors hover:bg-[color:var(--surface)]'
+    ? 'inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_96%,transparent)] px-3 py-2 text-xs font-semibold text-[color:var(--primary)] shadow-[0_10px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-colors hover:bg-[color:var(--surface)]'
     : 'inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-xs font-semibold text-[color:var(--primary)] transition-colors hover:bg-[color:var(--surface-2)]';
 
   return (

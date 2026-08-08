@@ -28,10 +28,10 @@ const Button = ({ type, title, icon, variant, full, href, externalHref }: Button
   }
 
   const variantClass = {
-    primary: 'bg-[color:var(--primary)] text-white hover:bg-[color:var(--primary-600)]',
+    primary: 'bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary-600)]',
     secondary: 'border border-[color:var(--border)] text-[color:var(--ink)] hover:bg-[color:var(--surface-2)]',
     ghost: 'text-[color:var(--ink)] hover:bg-[color:var(--surface-2)]',
-  }[variant] || 'bg-[color:var(--primary)] text-white hover:bg-[color:var(--primary-600)]';
+  }[variant] || 'bg-[color:var(--primary)] text-[color:var(--on-primary)] hover:bg-[color:var(--primary-600)]';
 
   return (
     <button

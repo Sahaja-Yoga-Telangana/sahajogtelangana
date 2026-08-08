@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const AboutUs = () => {
   return (
-    <section className="py-16 bg-[#FEF5E7]">
+    <section className="py-16 bg-[color:var(--surface-2)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle title="About Us" />
         
@@ -13,7 +13,7 @@ const AboutUs = () => {
           <div className="bg-[color:var(--surface)] shadow-md rounded-lg overflow-hidden">
             <div className="p-6">
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[#8A1457] shadow-lg bg-[#F8ECF2] p-1">
+                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] p-1">
                   <Image 
                     src="/shri-mataji2.jpg" 
                     alt="Shri Mataji at Chhindwara" 
@@ -24,7 +24,7 @@ const AboutUs = () => {
                 </div>
               </div>
               
-              <h3 className="text-2xl font-bold text-center text-[#5D2E46] mb-4">Shrine Chhindwara</h3>
+              <h3 className="text-2xl font-bold text-center text-[color:var(--ink)] mb-4">Shrine Chhindwara</h3>
               
               <p className="text-gray-700 mb-6 text-center">
                 Shri Mataji was born as Nirmala Salve on March 21, 1923 to Shri 
@@ -38,7 +38,7 @@ const AboutUs = () => {
               <div className="flex justify-center">
                 <a 
                   href="#" 
-                  className="bg-[#8A1457] text-white px-6 py-2 rounded-md hover:bg-[#6A0F43] transition-colors inline-flex items-center"
+                  className="btn btn-primary hover:bg-[color:var(--primary-600)] transition-colors inline-flex items-center"
                 >
                   Read More
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +53,7 @@ const AboutUs = () => {
           <div className="bg-[color:var(--surface)] shadow-md rounded-lg overflow-hidden">
             <div className="p-6">
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[#8A1457] shadow-lg bg-[#F8ECF2] p-1">
+                <div className="w-32 h-32 relative rounded-full overflow-hidden border-3 border-[color:var(--accent)] shadow-card bg-[color:color-mix(in_srgb,var(--accent-200)_40%,transparent)] p-1">
                   <Image 
                     src="/shri-mataji5.jpg" 
                     alt="Shri Mataji Meditation" 
@@ -64,7 +64,7 @@ const AboutUs = () => {
                 </div>
               </div>
               
-              <h3 className="text-2xl font-bold text-center text-[#5D2E46] mb-4">Sahaja Yoga</h3>
+              <h3 className="text-2xl font-bold text-center text-[color:var(--ink)] mb-4">Sahaja Yoga</h3>
               
               <p className="text-gray-700 mb-6 text-center">
                 Sahaja Yoga is a method of achieving a unique state of meditation 
@@ -78,7 +78,7 @@ const AboutUs = () => {
               <div className="flex justify-center">
                 <a 
                   href="#" 
-                  className="bg-[#8A1457] text-white px-6 py-2 rounded-md hover:bg-[#6A0F43] transition-colors inline-flex items-center"
+                  className="btn btn-primary hover:bg-[color:var(--primary-600)] transition-colors inline-flex items-center"
                 >
                   Read More
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

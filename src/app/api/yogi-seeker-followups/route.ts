@@ -3,11 +3,16 @@ import { connect } from '@/database/mongo.config';
 import { getRequiredSession } from '@/lib/auth';
 import { Seeker } from '@/models/Seeker';
 import { VolunteerProfile } from '@/models/VolunteerProfile';
+import { INDIAN_CITIES, NEIGHBORING_STATES, CityEntry } from '@/data/indian-districts';
+import { isTerminalStatus, computeSnoozedUntil } from '@/lib/seeker-snooze';
 
 export const dynamic = 'force-dynamic';
 
 type FollowUpVolunteer = {
+  _id?: string;
   name: string;
+  language?: string;
+  city?: string;
   roles?: string[];
   staffingFocus?: string;
   isActive?: boolean;
@@ -17,6 +22,12 @@ function hasFollowUpAccess(volunteer: any) {
   const roles = Array.isArray(volunteer?.roles) ? volunteer.roles : [];
   const values = [...roles, volunteer?.staffingFocus || ''].map((value) => String(value).toLowerCase());
   return volunteer?.isActive !== false && values.some((value) => value.includes('follow'));
+}
+
+function resolveCity(cityName: string): CityEntry | undefined {
+  return INDIAN_CITIES.find(
+    (c) => c.name.toLowerCase() === cityName.trim().toLowerCase()
+  );
 }
 
 async function getVolunteer(): Promise<{ session: any; volunteer: FollowUpVolunteer | null }> {
@@ -43,10 +54,14 @@ function seekerProjection() {
     addedBy: 1,
     addedAt: 1,
     followUpStatus: 1,
+    seekerPhase: 1,
     assignedVolunteer: 1,
     volunteerFollowUpCompletedAt: 1,
     volunteerFollowUpCompletedBy: 1,
     lastContactDate: 1,
+    snoozedUntil: 1,
+    snoozedBy: 1,
+    snoozeReason: 1,
     source: 1,
     eventInterest: 1,
     centerInterest: 1,
@@ -106,35 +121,74 @@ export async function POST() {
       );
     }
 
-    const claimedIds = [];
+    const volLang = (volunteer.language || '').toLowerCase().trim();
+    const volCity = (volunteer.city || '').trim();
+    const volCityEntry = resolveCity(volCity);
+    const volState = volCityEntry?.state || '';
+    const volZone = volCityEntry?.zone || '';
+    const neighboringStates = volState ? NEIGHBORING_STATES[volState] || [] : [];
 
-    for (let index = 0; index < 4; index += 1) {
+    const unassignedFilter: any = {
+      $and: [
+        { $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }] },
+        { $or: [
+          { snoozedUntil: { $exists: false } },
+          { snoozedUntil: null },
+          { snoozedUntil: { $lte: new Date() } },
+        ] },
+      ],
+    };
+
+    if (volLang) {
+      unassignedFilter.preferredLanguage = { $regex: new RegExp(`^${volLang.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') };
+    }
+
+    const candidates = await Seeker.find(unassignedFilter, { _id: 1, city: 1 })
+      .sort({ addedAt: 1 })
+      .limit(20)
+      .lean();
+
+    const scored: { _id: any; ring: number }[] = candidates.map((c: any) => {
+      const entry = resolveCity(String(c.city || ''));
+      let ring = 4;
+      if (entry) {
+        const cName = entry.name.toLowerCase();
+        const vName = volCity.toLowerCase();
+        if (cName === vName) {
+          ring = 0;
+        } else if (entry.state === volState) {
+          ring = 1;
+        } else if (neighboringStates.includes(entry.state)) {
+          ring = 2;
+        } else if (volZone && entry.zone === volZone) {
+          ring = 3;
+        }
+      }
+      return { _id: c._id, ring };
+    });
+
+    scored.sort((a, b) => a.ring - b.ring);
+
+    const claimedIds: string[] = [];
+    for (const candidate of scored.slice(0, 4)) {
       const seeker = await Seeker.findOneAndUpdate(
         {
-          $and: [
-            { $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }] },
-            { $or: [
-              { snoozedUntil: { $exists: false } },
-              { snoozedUntil: null },
-              { snoozedUntil: { $lte: new Date() } }
-            ] }
-          ]
+          _id: candidate._id,
+          $or: [{ assignedVolunteer: '' }, { assignedVolunteer: { $exists: false } }],
         },
         {
-          $set: {
-            assignedVolunteer: volunteer.name,
-          },
+          $set: { assignedVolunteer: volunteer.name },
           $unset: {
             snoozedUntil: '',
             volunteerFollowUpCompletedAt: '',
             volunteerFollowUpCompletedBy: '',
           },
         },
-        { sort: { addedAt: 1 }, new: true, projection: { _id: 1 } }
+        { new: true, projection: { _id: 1 } }
       );
-
-      if (!seeker) break;
-      claimedIds.push(seeker._id);
+      if (seeker) {
+        claimedIds.push(seeker._id.toString());
+      }
     }
 
     const seekers = await Seeker.find({
@@ -173,6 +227,7 @@ export async function PATCH(request: NextRequest) {
     const update: any = {
       $set: {
         followUpStatus: status,
+        seekerPhase: String(body.seekerPhase || '').trim(),
         lastContactDate: body.lastContactDate ? new Date(body.lastContactDate) : new Date(),
         preferredLanguage: String(body.preferredLanguage || 'English').trim(),
         eventInterest: String(body.eventInterest || '').trim(),
@@ -183,11 +238,23 @@ export async function PATCH(request: NextRequest) {
 
     if (isCompletedOrFollowUp) {
       update.$set.assignedVolunteer = '';
-      update.$set.snoozedUntil = new Date(Date.now() + 3.5 * 24 * 60 * 60 * 1000);
-      update.$unset = {
-        volunteerFollowUpCompletedAt: '',
-        volunteerFollowUpCompletedBy: '',
-      };
+      // Keep the volunteer's attribution on terminal statuses too, so per-volunteer
+      // dashboards can count "converted by me" / "dormant by me".
+      update.$set.volunteerFollowUpCompletedAt = new Date();
+      update.$set.volunteerFollowUpCompletedBy = volunteer.name;
+      if (isTerminalStatus(status)) {
+        update.$unset = {
+          snoozedUntil: '',
+          snoozedBy: '',
+          snoozeReason: '',
+        };
+      } else {
+        update.$set.snoozedUntil = computeSnoozedUntil(new Date(), body.snoozeDays);
+        update.$set.snoozedBy = volunteer.name;
+        if (body.snoozeReason) {
+          update.$set.snoozeReason = String(body.snoozeReason).trim();
+        }
+      }
     } else {
       update.$set.volunteerFollowUpCompletedAt = new Date();
       update.$set.volunteerFollowUpCompletedBy = volunteer.name;

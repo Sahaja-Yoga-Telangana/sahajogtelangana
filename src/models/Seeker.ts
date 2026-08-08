@@ -54,6 +54,11 @@ const seekerSchema = new Schema({
     trim: true,
     default: "New",
   },
+  seekerPhase: {
+    type: String,
+    trim: true,
+    default: "New Seeker",
+  },
   assignedVolunteer: {
     type: String,
     trim: true,
@@ -71,6 +76,20 @@ const seekerSchema = new Schema({
   lastContactDate: {
     type: Date,
     required: false,
+  },
+  snoozedUntil: {
+    type: Date,
+    required: false,
+  },
+  snoozedBy: {
+    type: String,
+    trim: true,
+    default: "",
+  },
+  snoozeReason: {
+    type: String,
+    trim: true,
+    default: "",
   },
   notes: {
     type: String,
@@ -98,6 +117,7 @@ seekerSchema.index({ addedAt: -1 });
 seekerSchema.index({ city: 1, followUpStatus: 1 });
 seekerSchema.index({ assignedVolunteer: 1, followUpStatus: 1 });
 seekerSchema.index({ assignedVolunteer: 1, volunteerFollowUpCompletedAt: 1 });
+seekerSchema.index({ snoozedUntil: 1 });
 
 const existingSeekerModel = mongoose.models.Seeker as any;
 
@@ -139,6 +159,11 @@ if (existingSeekerModel) {
       trim: true,
       default: "New",
     },
+    seekerPhase: {
+      type: String,
+      trim: true,
+      default: "New Seeker",
+    },
     assignedVolunteer: {
       type: String,
       trim: true,
@@ -156,6 +181,20 @@ if (existingSeekerModel) {
     lastContactDate: {
       type: Date,
       required: false,
+    },
+    snoozedUntil: {
+      type: Date,
+      required: false,
+    },
+    snoozedBy: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    snoozeReason: {
+      type: String,
+      trim: true,
+      default: "",
     },
     notes: {
       type: String,

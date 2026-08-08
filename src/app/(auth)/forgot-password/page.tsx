@@ -1,8 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+type LoginErrorType = {
+  email?: string;
+  password?: string;
+};
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -34,38 +40,46 @@ export default function ForgotPassword() {
   };
 
   return (
-    <>
+    <section className="flex min-h-[70vh] items-center justify-center bg-[color:var(--bg)] px-4 py-16">
       <ToastContainer />
-      <div className="h-screen w-screen flex justify-center items-center">
-        <div className="w-[500px] p-5 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold">Forgot Password ?</h1>
-          <p>
-            Don't worry it happens. just enter your email below and we will send
-            an email to you.
+      <div className="w-full max-w-md text-center">
+        <p className="eyebrow">Password Reset</p>
+        <h1 className="mt-3 font-display text-[clamp(26px,3vw,34px)] leading-[1.15] tracking-[-0.015em] text-[color:var(--ink)]">
+          Forgot Password?
+        </h1>
+        <p className="mx-auto mt-3 max-w-sm text-[15px] leading-[1.7] text-[color:var(--muted)]">
+          Don&apos;t worry, it happens. Enter your email below and we will send you a reset link.
+        </p>
+
+        <form
+          onSubmit={submit}
+          className="mt-8 space-y-5 rounded-[var(--radius-xl)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 text-left shadow-panel sm:p-8"
+        >
+          <div>
+            <label htmlFor="email" className="mb-2 block text-[14px] font-medium text-[color:var(--muted)]">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              className="admin-input"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            {errors?.email && <span className="mt-1.5 block text-[13.5px] text-[color:var(--danger)]">{errors.email}</span>}
+          </div>
+          <button className="btn btn-primary w-full" disabled={loading}>
+            {loading && <LoadingSpinner />}
+            {loading ? "Processing" : "Send Reset Link"}
+          </button>
+          <p className="text-center text-sm text-[color:var(--muted)]">
+            Remembered it?{" "}
+            <Link href="/login" className="text-[color:var(--primary)] hover:underline">
+              Back to sign in
+            </Link>
           </p>
-          <form onSubmit={submit}>
-            <div className="mt-5">
-              <label className="block">Email</label>
-              <input
-                type="email"
-                placeholder="xxxxx@gmail.com"
-                className="w-full h-10 p-2 border rounded-md outline-red-400"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <span className="text-red-500">{errors?.email}</span>
-            </div>
-            <div className="mt-5">
-              <button
-                className="w-full bg-black p-2 rounded-lg text-white inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                disabled={loading}
-              >
-                {loading && <LoadingSpinner />}
-                {loading ? "Processing" : "Submit"}
-              </button>
-            </div>
-          </form>
-        </div>
+        </form>
       </div>
-    </>
+    </section>
   );
 }

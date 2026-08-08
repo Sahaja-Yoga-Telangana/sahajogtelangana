@@ -40,14 +40,14 @@ export default function EventsPage() {
     return (
       <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_42%,transparent),_transparent_28%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_82%,transparent),_var(--bg))] py-14">
         <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8">
-          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-6 py-10 shadow-soft backdrop-blur-sm md:px-10 animate-pulse">
+          <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-6 py-10 shadow-soft backdrop-blur-sm md:px-10 animate-pulse">
             <div className="h-4 w-24 rounded-full bg-[color:var(--border)]" />
             <div className="mt-6 h-10 w-72 rounded-lg bg-[color:var(--border)]" />
             <div className="mt-4 h-4 w-full max-w-2xl rounded bg-[color:var(--border)]" />
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-[28px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 p-5 animate-pulse">
+              <div key={i} className="rounded-[28px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] p-5 animate-pulse">
                 <div className="aspect-[4/3] w-full rounded-2xl bg-[color:var(--border)]" />
                 <div className="mt-4 space-y-3">
                   <div className="h-4 w-3/4 rounded bg-[color:var(--border)]" />
@@ -65,7 +65,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_color-mix(in_srgb,var(--accent-200)_42%,transparent),_transparent_28%),linear-gradient(180deg,_color-mix(in_srgb,var(--surface)_82%,transparent),_var(--bg))] py-14">
       <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8">
-        <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)]/80 px-6 py-10 shadow-soft backdrop-blur-sm md:px-10">
+        <div className="rounded-[32px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-6 py-10 shadow-soft backdrop-blur-sm md:px-10">
           <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)]">{t('events.eyebrow')}</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--ink)] md:text-5xl">{t('events.title')}</h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-[color:var(--muted)] md:text-base">
@@ -86,7 +86,7 @@ export default function EventsPage() {
             {events.map((event) => (
               <div key={event._id} className="flex h-full flex-col gap-3">
                 <EventCard event={event} />
-                <div className="flex flex-col gap-2 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--surface)]/88 p-3 shadow-soft">
+                <div className="flex flex-col gap-2 rounded-[20px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] p-3 shadow-soft">
                   <SeekerRegistrationDownloads event={event} />
                 </div>
               </div>
