@@ -183,7 +183,6 @@ async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
     "meta-llama/llama-3.2-11b-vision-instruct:free",
     "google/gemini-flash-1.5-exp:free",
     "qwen/qwen-2-vl-72b-instruct:free",
-    "openai/gpt-4o-mini",
   ];
   let lastError = "";
 
@@ -242,128 +241,6 @@ async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
   throw new Error(lastError || "All OpenRouter models failed.");
 }
 
-// 4. OpenAI API Provider (gpt-4o-mini / gpt-4o)
-async function tryOpenAI(apiKey: string, dataUri: string): Promise<any[]> {
-  const models = ["gpt-4o-mini", "gpt-4o"];
-  let lastError = "";
-
-  for (const model of models) {
-    try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: OCR_PROMPT },
-                {
-                  type: "image_url",
-                  image_url: {
-                    url: dataUri,
-                  },
-                },
-              ],
-            },
-          ],
-          temperature: 0.1,
-          max_tokens: 2048,
-          response_format: { type: "json_object" },
-        }),
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        lastError = `OpenAI (${model}) error ${response.status}: ${errText}`;
-        console.warn(lastError);
-        continue;
-      }
-
-      const result = await response.json();
-      const text = result?.choices?.[0]?.message?.content;
-      if (!text) {
-        lastError = `OpenAI (${model}) returned empty content`;
-        continue;
-      }
-
-      return parseJsonArrayFromText(text);
-    } catch (e: any) {
-      lastError = `OpenAI (${model}) exception: ${e.message}`;
-      console.warn(lastError);
-    }
-  }
-
-  throw new Error(lastError || "All OpenAI models failed.");
-}
-
-// 5. Anthropic Claude API Provider
-async function tryAnthropic(apiKey: string, base64Data: string, mimeType: string): Promise<any[]> {
-  const models = ["claude-3-5-haiku-20241022", "claude-3-haiku-20240307"];
-  let lastError = "";
-
-  for (const model of models) {
-    try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-          model: model,
-          max_tokens: 2048,
-          messages: [
-            {
-              role: "user",
-              content: [
-                {
-                  type: "image",
-                  source: {
-                    type: "base64",
-                    media_type: mimeType as any,
-                    data: base64Data,
-                  },
-                },
-                {
-                  type: "text",
-                  text: OCR_PROMPT,
-                },
-              ],
-            },
-          ],
-        }),
-      });
-
-      if (!response.ok) {
-        const errText = await response.text();
-        lastError = `Anthropic (${model}) error ${response.status}: ${errText}`;
-        console.warn(lastError);
-        continue;
-      }
-
-      const result = await response.json();
-      const text = result?.content?.[0]?.text;
-      if (!text) {
-        lastError = `Anthropic (${model}) returned empty content`;
-        continue;
-      }
-
-      return parseJsonArrayFromText(text);
-    } catch (e: any) {
-      lastError = `Anthropic (${model}) exception: ${e.message}`;
-      console.warn(lastError);
-    }
-  }
-
-  throw new Error(lastError || "All Anthropic models failed.");
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { image } = await request.json();
@@ -391,8 +268,6 @@ export async function POST(request: NextRequest) {
     const geminiKey = process.env.GEMINI_API_KEY || "AIzaSyBcqiqjMmBF6mNIjRjHffZvHwx8gOu4Qvg";
     const groqKey = process.env.GROQ_API_KEY || "";
     const openrouterKey = process.env.OPENROUTER_API_KEY || "";
-    const openaiKey = process.env.OPENAI_API_KEY || "";
-    const anthropicKey = process.env.ANTHROPIC_API_KEY || "";
 
     let rawSeekers: any[] = [];
     let providerUsed = "";
@@ -431,29 +306,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 4. Try OpenAI
-    if (rawSeekers.length === 0 && openaiKey) {
-      try {
-        console.log("Attempting OCR with OpenAI gpt-4o-mini fallback...");
-        rawSeekers = await tryOpenAI(openaiKey, dataUri);
-        providerUsed = "OpenAI GPT-4o";
-      } catch (err: any) {
-        errors.push(`OpenAI: ${err.message}`);
-      }
-    }
-
-    // 5. Try Anthropic Claude
-    if (rawSeekers.length === 0 && anthropicKey) {
-      try {
-        console.log("Attempting OCR with Anthropic Claude Vision fallback...");
-        rawSeekers = await tryAnthropic(anthropicKey, base64Data, mimeType);
-        providerUsed = "Anthropic Claude";
-      } catch (err: any) {
-        errors.push(`Anthropic: ${err.message}`);
-      }
-    }
-
-    // If all providers failed
+    // If all configured providers failed
     if (rawSeekers.length === 0) {
       console.error("All OCR providers failed:", errors);
       const combinedError = errors.join(" | ") || "No OCR provider keys configured or all providers returned an error.";
