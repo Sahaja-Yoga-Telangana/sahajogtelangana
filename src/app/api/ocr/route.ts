@@ -61,9 +61,9 @@ function parseJsonArrayFromText(text: string): any[] {
   throw new Error("Could not parse a valid JSON array from AI model response.");
 }
 
-// 1. Google Gemini API Provider
+// 1. Google Gemini API Provider (Active Models: gemini-2.0-flash, gemini-1.5-flash)
 async function tryGemini(apiKey: string, base64Data: string, mimeType: string): Promise<any[]> {
-  const models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
+  const models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-flash-8b"];
   let lastError = "";
 
   for (const model of models) {
@@ -96,6 +96,11 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
 
       if (!response.ok) {
         const errText = await response.text();
+        if (errText.includes("leaked") || errText.includes("PERMISSION_DENIED")) {
+          lastError = `Gemini API key is blocked/leaked. Please generate a new key at aistudio.google.com`;
+          console.warn(lastError);
+          break; // Don't loop if key itself is blocked
+        }
         lastError = `Gemini (${model}) error ${response.status}: ${errText}`;
         console.warn(lastError);
         continue;
@@ -118,9 +123,9 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
   throw new Error(lastError || "All Gemini models failed.");
 }
 
-// 2. Groq Cloud Vision API Provider (Free & Fast)
+// 2. Groq Cloud Vision API Provider (Active Model: llama-3.2-11b-vision-preview)
 async function tryGroq(apiKey: string, dataUri: string): Promise<any[]> {
-  const models = ["llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview"];
+  const models = ["llama-3.2-11b-vision-preview"];
   let lastError = "";
 
   for (const model of models) {
@@ -129,7 +134,7 @@ async function tryGroq(apiKey: string, dataUri: string): Promise<any[]> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiKey.trim()}`,
         },
         body: JSON.stringify({
           model: model,
@@ -149,7 +154,6 @@ async function tryGroq(apiKey: string, dataUri: string): Promise<any[]> {
           ],
           temperature: 0.1,
           max_tokens: 2048,
-          response_format: { type: "json_object" },
         }),
       });
 
@@ -174,15 +178,18 @@ async function tryGroq(apiKey: string, dataUri: string): Promise<any[]> {
     }
   }
 
-  throw new Error(lastError || "All Groq models failed.");
+  throw new Error(lastError || "Groq vision model failed.");
 }
 
-// 3. OpenRouter API Provider (Supports free & open-source vision models)
+// 3. OpenRouter API Provider (Active Free & Open Vision Models)
 async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
   const models = [
     "meta-llama/llama-3.2-11b-vision-instruct:free",
-    "google/gemini-flash-1.5-exp:free",
-    "qwen/qwen-2-vl-72b-instruct:free",
+    "google/gemini-2.0-flash-exp:free",
+    "google/gemini-2.0-flash-thinking-exp:free",
+    "qwen/qwen-2.5-vl-72b-instruct:free",
+    "meta-llama/llama-3.2-11b-vision-instruct",
+    "google/gemini-flash-1.5",
   ];
   let lastError = "";
 
@@ -192,7 +199,7 @@ async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiKey.trim()}`,
           "HTTP-Referer": "https://sahajayogatelangana.org",
           "X-Title": "Sahaja Yoga Telangana Seeker Scanner",
         },
@@ -241,6 +248,51 @@ async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
   throw new Error(lastError || "All OpenRouter models failed.");
 }
 
+// 4. Together AI Vision Provider (Fallback)
+async function tryTogether(apiKey: string, dataUri: string): Promise<any[]> {
+  try {
+    const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey.trim()}`,
+      },
+      body: JSON.stringify({
+        model: "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: OCR_PROMPT },
+              {
+                type: "image_url",
+                image_url: {
+                  url: dataUri,
+                },
+              },
+            ],
+          },
+        ],
+        temperature: 0.1,
+        max_tokens: 2048,
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`Together AI error ${response.status}: ${errText}`);
+    }
+
+    const result = await response.json();
+    const text = result?.choices?.[0]?.message?.content;
+    if (!text) throw new Error("Together AI returned empty content");
+
+    return parseJsonArrayFromText(text);
+  } catch (e: any) {
+    throw new Error(`Together AI exception: ${e.message}`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { image } = await request.json();
@@ -264,16 +316,17 @@ export async function POST(request: NextRequest) {
       dataUri = `data:${mimeType};base64,${base64Data}`;
     }
 
-    // Provider Keys
-    const geminiKey = process.env.GEMINI_API_KEY || "AIzaSyBcqiqjMmBF6mNIjRjHffZvHwx8gOu4Qvg";
+    // Provider Keys from Environment
+    const geminiKey = process.env.GEMINI_API_KEY || "";
     const groqKey = process.env.GROQ_API_KEY || "";
     const openrouterKey = process.env.OPENROUTER_API_KEY || "";
+    const togetherKey = process.env.TOGETHER_API_KEY || "";
 
     let rawSeekers: any[] = [];
     let providerUsed = "";
     const errors: string[] = [];
 
-    // 1. Try Gemini
+    // 1. Try Gemini (if key configured)
     if (geminiKey) {
       try {
         console.log("Attempting OCR with Google Gemini API...");
@@ -287,7 +340,7 @@ export async function POST(request: NextRequest) {
     // 2. Try Groq (Free Fallback)
     if (rawSeekers.length === 0 && groqKey) {
       try {
-        console.log("Attempting OCR with Groq Cloud Vision API fallback...");
+        console.log("Attempting OCR with Groq Cloud Vision (Llama 3.2 Vision)...");
         rawSeekers = await tryGroq(groqKey, dataUri);
         providerUsed = "Groq Cloud (Llama 3.2 Vision)";
       } catch (err: any) {
@@ -306,14 +359,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 4. Try Together AI (if key configured)
+    if (rawSeekers.length === 0 && togetherKey) {
+      try {
+        console.log("Attempting OCR with Together AI Vision fallback...");
+        rawSeekers = await tryTogether(togetherKey, dataUri);
+        providerUsed = "Together AI Vision";
+      } catch (err: any) {
+        errors.push(`Together AI: ${err.message}`);
+      }
+    }
+
     // If all configured providers failed
     if (rawSeekers.length === 0) {
       console.error("All OCR providers failed:", errors);
-      const combinedError = errors.join(" | ") || "No OCR provider keys configured or all providers returned an error.";
+      const combinedError = errors.join(" | ") || "No OCR provider keys configured.";
       return NextResponse.json(
         {
           status: 500,
-          message: `Scan failed. ${combinedError}. Please verify your GEMINI_API_KEY, GROQ_API_KEY, or OPENROUTER_API_KEY in Vercel environment variables.`,
+          message: `Scan failed. ${combinedError}. Please verify your GROQ_API_KEY, GEMINI_API_KEY, or OPENROUTER_API_KEY in Vercel project environment variables.`,
           errors: errors,
         },
         { status: 500 }

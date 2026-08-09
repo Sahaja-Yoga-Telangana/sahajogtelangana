@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
-import { FiCheckCircle, FiAlertCircle, FiClock, FiUserPlus, FiLogIn } from 'react-icons/fi';
+import { FiCheckCircle, FiAlertCircle, FiClock, FiUserPlus, FiLogIn, FiArrowRight } from 'react-icons/fi';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import CityPicker from '@/components/CityPicker';
 import { VOLUNTEER_INTEREST_OPTIONS, VOLUNTEER_LANGUAGES } from '@/constants/volunteer';
@@ -175,11 +175,27 @@ export default function InvitePage() {
           <StateCard
             icon={<FiCheckCircle className="h-10 w-10 text-[color:var(--success)]" />}
             title="Welcome to the team!"
-            body="You are now a volunteer. You can access the dashboard and start helping seekers."
+            body={
+              <>
+                You are now a volunteer and your access is active.
+                <span className="mt-2 block font-medium text-[color:var(--ink)]">
+                  Now open the app, log in, and start helping seekers.
+                </span>
+              </>
+            }
             action={
-              <button onClick={() => router.push('/dashboard')} className="admin-btn-primary px-6">
-                Go to Dashboard
-              </button>
+              <div className="flex flex-col gap-3">
+                <a
+                  href={`sytelangana://volunteer?token=${token}`}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--accent)] px-8 py-4 text-lg font-bold text-[color:var(--on-primary)] shadow-panel transition hover:opacity-90"
+                >
+                  Redirect to the App Now
+                  <FiArrowRight className="h-5 w-5" />
+                </a>
+                <button onClick={() => router.push('/dashboard')} className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-[color:var(--primary)] transition hover:bg-[color:color-mix(in_srgb,var(--primary)_8%,transparent)]">
+                  Continue in the browser — Go to Dashboard
+                </button>
+              </div>
             }
           />
         );
@@ -202,21 +218,31 @@ export default function InvitePage() {
 
             {!session ? (
               <>
-                <p className="mt-2 text-sm leading-7 text-[color:var(--muted)] max-w-md mx-auto">
-                  Sign in to accept the invitation and become a volunteer. This link can only be used once.
-                </p>
+                <div className="mt-4 rounded-2xl border border-[color:var(--accent)] bg-[color:color-mix(in_srgb,var(--accent)_10%,transparent)] p-4 text-left">
+                  <p className="text-sm font-bold text-[color:var(--ink)]">
+                    You must log in to the app first
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-[color:var(--muted)]">
+                    To fill this form and accept the invitation, you need to be logged in to your Sahaja Yoga account.
+                    Sign in below — you will be brought straight back here to continue.
+                  </p>
+                </div>
                 <div className="mt-8">
                   <button
                     onClick={() => signIn(undefined, { callbackUrl: `/invite/${token}` })}
-                    className="inline-flex items-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-3 text-base font-semibold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)]"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--primary)] px-8 py-4 text-lg font-bold text-[color:var(--on-primary)] transition hover:bg-[color:var(--primary-600)]"
                   >
-                    <FiLogIn className="h-4 w-4" />
-                    Sign in to accept
+                    <FiLogIn className="h-5 w-5" />
+                    Log in to accept
                   </button>
                 </div>
               </>
             ) : (
               <div className="mt-6 text-left space-y-5">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--success)_12%,transparent)] px-4 py-1.5 text-xs font-semibold text-[color:var(--success)]">
+                  <FiCheckCircle className="h-3.5 w-3.5" />
+                  Logged in as {session?.user?.email}
+                </div>
                 <p className="text-sm text-[color:var(--muted)]">
                   Complete your volunteer profile to accept. This link can only be used once.
                 </p>
@@ -326,7 +352,7 @@ function StateCard({
 }: {
   icon: React.ReactNode;
   title: string;
-  body: string;
+  body: React.ReactNode;
   action?: React.ReactNode;
 }) {
   return (
