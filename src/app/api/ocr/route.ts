@@ -61,9 +61,9 @@ function parseJsonArrayFromText(text: string): any[] {
   throw new Error("Could not parse a valid JSON array from AI model response.");
 }
 
-// 1. Google Gemini API Provider (Active Models: gemini-2.0-flash, gemini-1.5-flash)
+// 1. Google Gemini API Provider (Prioritizing gemini-2.5-flash)
 async function tryGemini(apiKey: string, base64Data: string, mimeType: string): Promise<any[]> {
-  const models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-flash-8b"];
+  const models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
   let lastError = "";
 
   for (const model of models) {
