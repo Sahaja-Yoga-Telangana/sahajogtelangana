@@ -86,19 +86,6 @@ const Hero = () => {
               </div>
             </Parallax>
           </div>
-
-          {/* Right Image */}
-          <div className="w-full lg:w-1/2 flex justify-center relative">
-            <div className="relative w-72 h-80 md:w-96 md:h-[430px] rounded-[32px] overflow-hidden shadow-soft border border-[color:var(--border)] bg-[color:var(--surface-2)]">
-              <Image
-                src="/Shri-Mataji-Nirmala-Devi-Lane-Cove-Sydney-X4.jpg"
-                alt="Shri Mataji Nirmala Devi"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-
         </div>
       </div>
     </section>

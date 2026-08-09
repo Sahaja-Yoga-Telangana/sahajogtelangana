@@ -21,15 +21,6 @@ type InviteRecord = {
   expiresAt: string | null;
 };
 
-type InviteRecord = {
-  _id: string;
-  token: string;
-  status: string;
-  usedByEmail: string | null;
-  usedAt: string | null;
-  createdAt: string;
-};
-
 export default function VolunteerRequestPage() {
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
