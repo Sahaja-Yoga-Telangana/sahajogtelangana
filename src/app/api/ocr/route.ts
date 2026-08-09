@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const OCR_PROMPT = `You are an OCR scanner for Sahaja Yoga seeker registration sheets and handwriting sheets.
-Extract seeker records from the provided image into a JSON array of objects.
+Extract all contact/seeker records from the provided image into a JSON array of objects.
 
-For each seeker found in the image, extract:
+For each seeker/person found in the image, extract:
 - "name": string (Full Name of seeker, e.g. "Ramesh Reddy")
 - "phone": string (10-digit Indian mobile number formatted as pure digits without spaces or country code e.g. "9876543210")
 - "city": string (City / Town / Mandal name, e.g. "Hyderabad", "Warangal", "Nizamabad", "Secunderabad")
@@ -11,13 +11,13 @@ For each seeker found in the image, extract:
 - "preferredLanguage": string (optional, e.g. "Telugu", "Hindi", "English", "Odia", "Marathi")
 - "notes": string (brief description or "OCR Scanned")
 
-Return ONLY a valid JSON array of objects, e.g. [{"name":"...","phone":"...","city":"...","email":"","preferredLanguage":"Telugu","notes":"OCR Scanned"}].
-Do NOT include markdown formatting, backticks, or explanatory text.`;
+If the image contains no names or phone numbers, return an empty array: []
+Return ONLY a valid JSON array of objects. Do NOT include markdown formatting, backticks, or explanatory text.`;
 
 // Ultra-resilient parser for JSON, Markdown tables, Bullet lists, Key-Values, and raw OCR text
-function parseSeekersFromAiResponse(text: string): any[] {
+function parseSeekersFromAiResponse(text: string): { seekers: any[]; success: boolean } {
   if (!text || !text.trim()) {
-    throw new Error("AI model returned empty text.");
+    return { seekers: [], success: true };
   }
 
   let cleaned = text.trim();
@@ -29,15 +29,27 @@ function parseSeekersFromAiResponse(text: string): any[] {
 
   try {
     const parsed = JSON.parse(cleaned);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    if (Array.isArray(parsed)) return { seekers: parsed, success: true };
     if (parsed && typeof parsed === "object") {
       for (const key of Object.keys(parsed)) {
-        if (Array.isArray(parsed[key]) && parsed[key].length > 0) return parsed[key];
+        if (Array.isArray(parsed[key])) return { seekers: parsed[key], success: true };
       }
-      if (parsed.name || parsed.phone) return [parsed];
+      if (parsed.name || parsed.phone) return { seekers: [parsed], success: true };
     }
   } catch {
     // Continue to regex & heuristic parsing
+  }
+
+  // If AI explicitly says no records found or non-seeker image
+  if (
+    cleaned.startsWith("[]") ||
+    cleaned.includes("no seeker") ||
+    cleaned.includes("not a Sahaja Yoga") ||
+    cleaned.includes("no contact") ||
+    cleaned.includes("no record") ||
+    cleaned.includes("cannot fulfill")
+  ) {
+    return { seekers: [], success: true };
   }
 
   // 2. Regex search for JSON array [ { ... } ]
@@ -45,7 +57,7 @@ function parseSeekersFromAiResponse(text: string): any[] {
   if (arrayMatch) {
     try {
       const parsed = JSON.parse(arrayMatch[0]);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return { seekers: parsed, success: true };
     } catch {
       // Continue
     }
@@ -56,7 +68,7 @@ function parseSeekersFromAiResponse(text: string): any[] {
   if (objMatch) {
     try {
       const parsed = JSON.parse(objMatch[0]);
-      if (parsed && (parsed.name || parsed.phone)) return [parsed];
+      if (parsed && (parsed.name || parsed.phone)) return { seekers: [parsed], success: true };
     } catch {
       // Continue
     }
@@ -93,7 +105,7 @@ function parseSeekersFromAiResponse(text: string): any[] {
           }
         }
       }
-      if (seekers.length > 0) return seekers;
+      if (seekers.length > 0) return { seekers, success: true };
     }
   }
 
@@ -106,13 +118,11 @@ function parseSeekersFromAiResponse(text: string): any[] {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    // Check for phone number (10 digits starting with 6, 7, 8, 9 or prefixed with 91)
     const phoneMatch = trimmed.match(/(?:\+?91[\s\-]?)?([6789]\d{9})/);
     const nameMatch = trimmed.match(/(?:name|seeker|person)\s*[:=-]\s*([A-Za-z\s.'’]+?)(?:,|\n|phone|mobile|city|language|$)/i);
     const cityMatch = trimmed.match(/(?:city|town|place|address|mandal|dist)\s*[:=-]\s*([A-Za-z\s]+?)(?:,|\n|phone|mobile|language|$)/i);
     const langMatch = trimmed.match(/(?:lang|language)\s*[:=-]\s*([A-Za-z\s]+?)(?:,|\n|$)/i);
 
-    // Numbered item or bullet point start (e.g. "1. Ramesh Reddy - 9876543210 - Hyderabad")
     const isNewItem = /^(\d+[\.\)]|\*|\-|\•)\s+/.test(trimmed);
 
     if (isNewItem && currentSeeker && (currentSeeker.name || currentSeeker.phone)) {
@@ -127,7 +137,6 @@ function parseSeekersFromAiResponse(text: string): any[] {
     if (nameMatch) {
       currentSeeker.name = nameMatch[1].trim();
     } else if (isNewItem && !currentSeeker.name) {
-      // Clean bullet and try using line text as name
       const withoutBullet = trimmed.replace(/^(\d+[\.\)]|\*|\-|\•)\s+/, "");
       const firstPart = withoutBullet.split(/[,-:|]/)[0]?.trim();
       if (firstPart && !/\d/.test(firstPart) && firstPart.length > 2) {
@@ -145,7 +154,6 @@ function parseSeekersFromAiResponse(text: string): any[] {
       currentSeeker.preferredLanguage = langMatch[1].trim();
     }
 
-    // If both name and phone found on this line, save seeker
     if (currentSeeker.phone && (currentSeeker.name || isNewItem)) {
       if (!currentSeeker.name) {
         const words = trimmed.replace(phoneMatch ? phoneMatch[0] : "", "").replace(/[^\w\s]/g, " ").trim();
@@ -163,15 +171,11 @@ function parseSeekersFromAiResponse(text: string): any[] {
     extractedSeekers.push(currentSeeker);
   }
 
-  if (extractedSeekers.length > 0) {
-    return extractedSeekers;
-  }
-
-  throw new Error(`Could not parse seeker records from AI response. Output received: ${cleaned.substring(0, 150)}...`);
+  return { seekers: extractedSeekers, success: true };
 }
 
-// 1. Google Gemini API Provider (Supports gemini-2.0-flash with backoff)
-async function tryGemini(apiKey: string, base64Data: string, mimeType: string): Promise<any[]> {
+// 1. Google Gemini API Provider
+async function tryGemini(apiKey: string, base64Data: string, mimeType: string): Promise<{ seekers: any[]; success: boolean }> {
   const models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-2.0-pro-exp-02-05"];
   let lastError = "";
 
@@ -196,14 +200,10 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
                 ],
               },
             ],
-            generationConfig: {
-              responseMimeType: "application/json",
-            },
           }),
         }
       );
 
-      // Handle 429 Free Tier Rate Limit by waiting 2.5 seconds
       if (response.status === 429) {
         console.warn(`Gemini (${model}) hit rate limit (429). Retrying after 2.5s backoff...`);
         await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -236,7 +236,7 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
         if (errText.includes("leaked") || errText.includes("PERMISSION_DENIED")) {
           lastError = `Gemini API key is blocked/leaked. Please generate a new key at aistudio.google.com`;
           console.warn(lastError);
-          return [];
+          return { seekers: [], success: false };
         }
         lastError = `Gemini (${model}) error ${response.status}: ${errText}`;
         console.warn(lastError);
@@ -245,12 +245,7 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
 
       const result = await response.json();
       const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) {
-        lastError = `Gemini (${model}) returned empty text`;
-        continue;
-      }
-
-      return parseSeekersFromAiResponse(text);
+      return parseSeekersFromAiResponse(text || "");
     } catch (e: any) {
       lastError = `Gemini (${model}) exception: ${e.message}`;
       console.warn(lastError);
@@ -260,8 +255,8 @@ async function tryGemini(apiKey: string, base64Data: string, mimeType: string): 
   throw new Error(lastError || "All Gemini models failed.");
 }
 
-// 2. OpenRouter API Provider (Multi-Model Free Vision Router)
-async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
+// 2. OpenRouter API Provider (Multi-Model Vision Router)
+async function tryOpenRouter(apiKey: string, dataUri: string): Promise<{ seekers: any[]; success: boolean }> {
   const models = [
     "openrouter/free",
     "google/gemma-4-31b-it:free",
@@ -312,12 +307,7 @@ async function tryOpenRouter(apiKey: string, dataUri: string): Promise<any[]> {
 
       const result = await response.json();
       const text = result?.choices?.[0]?.message?.content;
-      if (!text) {
-        lastError = `OpenRouter (${model}) returned empty content`;
-        continue;
-      }
-
-      return parseSeekersFromAiResponse(text);
+      return parseSeekersFromAiResponse(text || "");
     } catch (e: any) {
       lastError = `OpenRouter (${model}) exception: ${e.message}`;
       console.warn(lastError);
@@ -356,27 +346,33 @@ export async function POST(request: NextRequest) {
 
     let rawSeekers: any[] = [];
     let providerUsed = "";
+    let providerSucceeded = false;
     const errors: string[] = [];
 
-    // 1. Try OpenRouter (Multi-model Vision Router with ultra-resilient parser)
+    // 1. Try OpenRouter (Multi-model Vision Router)
     if (openrouterKey) {
       try {
         console.log("Attempting OCR with OpenRouter Vision router...");
-        rawSeekers = await tryOpenRouter(openrouterKey, dataUri);
-        providerUsed = "OpenRouter Vision";
+        const res = await tryOpenRouter(openrouterKey, dataUri);
+        if (res.success) {
+          rawSeekers = res.seekers;
+          providerUsed = "OpenRouter Vision";
+          providerSucceeded = true;
+        }
       } catch (err: any) {
         errors.push(`OpenRouter: ${err.message}`);
       }
     }
 
-    // 2. Try Gemini (with 2.5s backoff on 429)
-    if (rawSeekers.length === 0 && geminiKey) {
+    // 2. Try Gemini (if OpenRouter was not configured or errored)
+    if (!providerSucceeded && geminiKey) {
       try {
         console.log("Attempting OCR with Google Gemini API...");
         const res = await tryGemini(geminiKey, base64Data, mimeType);
-        if (res.length > 0) {
-          rawSeekers = res;
+        if (res.success) {
+          rawSeekers = res.seekers;
           providerUsed = "Google Gemini";
+          providerSucceeded = true;
         }
       } catch (err: any) {
         errors.push(`Gemini: ${err.message}`);
@@ -384,7 +380,7 @@ export async function POST(request: NextRequest) {
     }
 
     // If all configured providers failed
-    if (rawSeekers.length === 0) {
+    if (!providerSucceeded) {
       console.error("All OCR providers failed:", errors);
       const combinedError = errors.join(" | ") || "No OCR provider keys configured.";
       return NextResponse.json(
@@ -399,7 +395,6 @@ export async function POST(request: NextRequest) {
 
     // Clean, format, and assign unique IDs to each seeker
     const formattedSeekers = rawSeekers.map((s: any, index: number) => {
-      // Clean phone number: remove non-digits, country code +91 or leading 0
       let cleanPhone = String(s.phone || "").replace(/\D/g, "");
       if (cleanPhone.length === 12 && cleanPhone.startsWith("91")) {
         cleanPhone = cleanPhone.substring(2);
@@ -423,6 +418,10 @@ export async function POST(request: NextRequest) {
         status: 200,
         provider: providerUsed,
         data: formattedSeekers,
+        message:
+          formattedSeekers.length > 0
+            ? `Extracted ${formattedSeekers.length} seekers via ${providerUsed}.`
+            : "No seeker records detected in the image. Please scan a page with seeker names and contact numbers.",
       },
       { status: 200 }
     );
