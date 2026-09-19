@@ -11,6 +11,8 @@ import { Testimonial } from "@/models/Testimonial";
 import { Event } from "@/models/Event";
 import { AppEvent } from "@/lib/events";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = pageMetadata({
   title: 'Sahaja Yoga Meditation in Hyderabad, Telangana — Free Meditation Classes',
   description: 'Learn Sahaja Yoga meditation in Hyderabad, Telangana. Join free meditation classes, explore upcoming events, and connect with local centers for guided meditation.',

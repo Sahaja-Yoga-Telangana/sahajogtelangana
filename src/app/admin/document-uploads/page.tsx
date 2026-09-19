@@ -97,7 +97,7 @@ export default function DocumentUploadsPage() {
         <EmptyState
           icon={<MdUpload size={48} />}
           title="No document uploads"
-          description="Documents uploaded through the mobile app will appear here."
+          message="Documents uploaded through the mobile app will appear here."
         />
       ) : (
         <section className="admin-card overflow-hidden">

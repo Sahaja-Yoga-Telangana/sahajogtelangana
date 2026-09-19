@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { FiShield, FiLock, FiMapPin, FiCamera, FiMail, FiCheckCircle } from 'react-icons/fi';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Sahaja Yoga Telangana App',
-  description: 'Privacy Policy for the Sahaja Yoga Telangana mobile application and website, explaining how user data, location permissions, and accounts are protected.',
+  title: 'Privacy Policy | Sadhak - Sahaja Yoga Telangana App',
+  description: 'Privacy Policy for the Sadhak mobile application by Pranav Vallabhaneni and Sahaja Yoga Telangana, explaining how user data, location permissions, and accounts are protected.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -23,8 +23,14 @@ export default function PrivacyPolicyPage() {
             Privacy Policy & Data Transparency
           </h1>
           <p className="text-sm text-zinc-500 font-light">
-            Last Updated: July 22, 2026 &bull; Effective for SY Telangana Mobile App & Web Services
+            Last Updated: July 22, 2026 &bull; Effective for Sadhak Mobile App & Web Services
           </p>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-xs text-zinc-600 space-y-1">
+            <div><strong>App Name:</strong> Sadhak</div>
+            <div><strong>Developer:</strong> Pranav Vallabhaneni</div>
+            <div><strong>Organization:</strong> Sahaja Yoga Telangana Trust</div>
+            <div><strong>Website:</strong> <a href="https://www.sahajayogatelangana.org" className="text-saffron underline">https://www.sahajayogatelangana.org</a></div>
+          </div>
         </div>
 
         {/* Intro Banner */}
@@ -41,7 +47,7 @@ export default function PrivacyPolicyPage() {
             <FiLock className="text-saffron" /> 1. Information We Collect
           </h2>
           <p className="text-sm text-zinc-600 font-light leading-relaxed">
-            When you use the Sahaja Yoga Telangana mobile application or website, we may collect minimal personal information necessary to facilitate meditation sessions, seeker follow-ups, and event registrations:
+            When you use the Sadhak mobile application (developed by Pranav Vallabhaneni) or the Sahaja Yoga Telangana website, we may collect minimal personal information necessary to facilitate meditation sessions, seeker follow-ups, and event registrations:
           </p>
           <ul className="list-disc list-inside text-sm text-zinc-600 space-y-2 font-light pl-2">
             <li><strong>Account & Registration Information:</strong> Full Name, Email Address, Mobile Phone Number, City, and State when registering for events, seeker follow-ups, or creating a practitioner account.</li>
@@ -114,6 +120,8 @@ export default function PrivacyPolicyPage() {
             You have full control over your personal data. If you wish to update your information, request account deletion, or have any privacy questions, please contact us:
           </p>
           <div className="bg-zinc-50 border border-zinc-200 p-4 rounded-xl text-xs space-y-1 font-mono">
+            <div><strong>App Name:</strong> Sadhak</div>
+            <div><strong>Developer:</strong> Pranav Vallabhaneni</div>
             <div><strong>Organization:</strong> Sahaja Yoga Telangana Trust</div>
             <div><strong>Email:</strong> <a href="mailto:sahajogtelangana@gmail.com" className="text-saffron underline">sahajogtelangana@gmail.com</a></div>
             <div><strong>Website:</strong> <a href="https://www.sahajayogatelangana.org" className="text-saffron underline">https://www.sahajayogatelangana.org</a></div>
