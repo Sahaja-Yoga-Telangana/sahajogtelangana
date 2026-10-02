@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, FormEvent } from 'react';
-import { FiPlus, FiEdit2, FiTrash2, FiSearch, FiX, FiSave, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import {
+  FiPlus, FiEdit2, FiTrash2, FiSearch, FiX, FiSave,
+  FiChevronUp, FiChevronDown, FiChevronRight, FiMapPin, FiUsers,
+} from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import YogiDashboardShell from '@/components/YogiDashboardShell';
 import { useSession } from 'next-auth/react';
@@ -28,7 +31,14 @@ type Session = {
   maxSpeakers: number;
 };
 
-type SortKey = 'sno' | 'institution' | 'date' | 'time' | 'principal' | 'maxSpeakers';
+type Assignment = {
+  _id: string;
+  sessionKey: string;
+  speakerName: string;
+  speakerPhone: string;
+};
+
+type SortKey = 'sno' | 'institution' | 'date' | 'time' | 'principal' | 'speakers';
 
 const emptyForm = {
   institution: '',
@@ -47,15 +57,21 @@ const emptyForm = {
   sno: '',
 };
 
+function sessionKeyFor(s: Session) {
+  return `${s.sno ?? 0}-${s.dateKey}-${s.institution}`;
+}
+
 export default function TourManagementPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [dateFilter, setDateFilter] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('date');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -73,15 +89,27 @@ export default function TourManagementPage() {
 
   useEffect(() => {
     if (status !== 'authenticated') return;
-    fetch('/api/tour-sessions')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) setError(data.error);
-        else setSessions(data.rows || []);
+    Promise.all([
+      fetch('/api/tour-sessions').then((r) => r.json()),
+      fetch('/api/tour-assignments').then((r) => r.json()),
+    ])
+      .then(([s, a]) => {
+        if (s.error) setError(s.error);
+        else setSessions(s.rows || []);
+        if (!a.error) setAssignments(a.assignments || []);
       })
-      .catch(() => setError('Failed to load sessions'))
+      .catch(() => setError('Failed to load data'))
       .finally(() => setLoading(false));
   }, [status]);
+
+  const assignmentsBySession = useMemo(() => {
+    const map = new Map<string, Assignment[]>();
+    assignments.forEach((a) => {
+      if (!map.has(a.sessionKey)) map.set(a.sessionKey, []);
+      map.get(a.sessionKey)!.push(a);
+    });
+    return map;
+  }, [assignments]);
 
   const dates = useMemo(() => {
     const set = new Set<string>();
@@ -148,15 +176,20 @@ export default function TourManagementPage() {
         case 'principal':
           cmp = (a.principal || '').localeCompare(b.principal || '');
           break;
-        case 'maxSpeakers':
-          cmp = (a.maxSpeakers || 4) - (b.maxSpeakers || 4);
+        case 'speakers': {
+          const aKey = sessionKeyFor(a);
+          const bKey = sessionKeyFor(b);
+          const aCount = (a.speaker ? 1 : 0) + (assignmentsBySession.get(aKey)?.length || 0);
+          const bCount = (b.speaker ? 1 : 0) + (assignmentsBySession.get(bKey)?.length || 0);
+          cmp = aCount - bCount;
           break;
+        }
       }
       return sortDir === 'asc' ? cmp : -cmp;
     });
 
     return list;
-  }, [sessions, search, dateFilter, sortKey, sortDir]);
+  }, [sessions, search, dateFilter, sortKey, sortDir, assignmentsBySession]);
 
   const openCreate = () => {
     setEditingId(null);
@@ -233,9 +266,13 @@ export default function TourManagementPage() {
         toast.success(editingId ? 'Session updated.' : 'Session created.');
         setFormOpen(false);
         setEditingId(null);
-        fetch('/api/tour-sessions')
-          .then((r) => r.json())
-          .then((d) => setSessions(d.rows || []));
+        Promise.all([
+          fetch('/api/tour-sessions').then((r) => r.json()),
+          fetch('/api/tour-assignments').then((r) => r.json()),
+        ]).then(([s, a]) => {
+          if (!s.error) setSessions(s.rows || []);
+          if (!a.error) setAssignments(a.assignments || []);
+        });
       } else {
         setFormError(data.error || 'Failed to save session');
         toast.error(data.error || 'Failed to save session');
@@ -490,55 +527,171 @@ export default function TourManagementPage() {
         {/* Table */}
         <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-card">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <table className="w-full min-w-[680px] text-left text-sm">
               <thead>
                 <tr className="border-b border-[color:var(--border)] bg-[color:var(--surface-2)]">
+                  <th className="w-8 px-2 py-3"></th>
                   <th className="px-3 py-3"><SortHeader label="#" field="sno" /></th>
                   <th className="px-3 py-3"><SortHeader label="Institution" field="institution" /></th>
                   <th className="px-3 py-3">Branch</th>
                   <th className="px-3 py-3"><SortHeader label="Date" field="date" /></th>
                   <th className="px-3 py-3"><SortHeader label="Time" field="time" /></th>
-                  <th className="px-3 py-3"><SortHeader label="Principal" field="principal" /></th>
-                  <th className="px-3 py-3"><SortHeader label="Max" field="maxSpeakers" /></th>
+                  <th className="px-3 py-3"><SortHeader label="Speakers" field="speakers" /></th>
                   <th className="sticky right-0 bg-[color:var(--surface-2)] px-3 py-3 text-right font-semibold text-[color:var(--ink)]">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((s) => (
-                  <tr
-                    key={s._id}
-                    className="border-b border-[color:var(--border)] transition-colors hover:bg-[color:var(--surface-2)]"
-                  >
-                    <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.sno || '—'}</td>
-                    <td className="px-3 py-2.5">
-                      <p className="font-medium text-[color:var(--ink)]">{s.institution}</p>
-                      {s.phone && <p className="numeric-font text-xs text-[color:var(--muted)]">{s.phone}</p>}
-                    </td>
-                    <td className="px-3 py-2.5 text-xs text-[color:var(--muted)]">{s.branch}</td>
-                    <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.date || '—'}</td>
-                    <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.time || '—'}</td>
-                    <td className="px-3 py-2.5 text-[color:var(--muted)]">{s.principal || '—'}</td>
-                    <td className="numeric-font px-3 py-2.5 text-[color:var(--ink)]">{s.maxSpeakers || 4}</td>
-                    <td className="sticky right-0 bg-[color:var(--surface)] px-3 py-2.5">
-                      <div className="flex justify-end gap-1.5">
-                        <button
-                          onClick={() => openEdit(s)}
-                          className="btn btn-ghost btn-sm"
-                          title="Edit"
-                        >
-                          <FiEdit2 size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(s._id)}
-                          className="btn btn-sm border border-[color:var(--danger)] text-[color:var(--danger)] hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)]"
-                          title="Delete"
-                        >
-                          <FiTrash2 size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((s) => {
+                  const key = sessionKeyFor(s);
+                  const sessionAssignments = assignmentsBySession.get(key) || [];
+                  const assigned = (s.speaker ? 1 : 0) + sessionAssignments.length;
+                  const max = s.maxSpeakers || 4;
+                  const isExpanded = expandedId === s._id;
+
+                  return (
+                    <>
+                      <tr
+                        key={s._id}
+                        className={`border-b border-[color:var(--border)] transition-colors hover:bg-[color:var(--surface-2)] ${isExpanded ? 'bg-[color:var(--surface-2)]' : ''}`}
+                      >
+                        <td className="px-2 py-2.5">
+                          <button
+                            onClick={() => setExpandedId(isExpanded ? null : s._id)}
+                            className="rounded p-1 text-[color:var(--muted)] hover:bg-[color:var(--surface-3)] hover:text-[color:var(--ink)]"
+                            title={isExpanded ? 'Collapse' : 'Expand'}
+                          >
+                            <FiChevronRight
+                              size={14}
+                              className={`transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                            />
+                          </button>
+                        </td>
+                        <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.sno || '—'}</td>
+                        <td className="px-3 py-2.5">
+                          <p className="font-medium text-[color:var(--ink)]">{s.institution}</p>
+                          {s.phone && <p className="numeric-font text-xs text-[color:var(--muted)]">{s.phone}</p>}
+                        </td>
+                        <td className="px-3 py-2.5 text-xs text-[color:var(--muted)]">{s.branch}</td>
+                        <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.date || '—'}</td>
+                        <td className="numeric-font px-3 py-2.5 text-[color:var(--muted)]">{s.time || '—'}</td>
+                        <td className="px-3 py-2.5">
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+                            assigned === 0
+                              ? 'bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)] text-[color:var(--danger)]'
+                              : assigned >= max
+                                ? 'bg-[color:color-mix(in_srgb,var(--success)_12%,transparent)] text-[color:var(--success)]'
+                                : 'bg-[color:color-mix(in_srgb,var(--accent)_14%,transparent)] text-[color:var(--accent)]'
+                          }`}>
+                            <FiUsers size={11} />
+                            <span className="numeric-font">{assigned}/{max}</span>
+                          </span>
+                        </td>
+                        <td className="sticky right-0 bg-[color:var(--surface)] px-3 py-2.5">
+                          <div className="flex justify-end gap-1.5">
+                            <button
+                              onClick={() => openEdit(s)}
+                              className="btn btn-ghost btn-sm"
+                              title="Edit"
+                            >
+                              <FiEdit2 size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(s._id)}
+                              className="btn btn-sm border border-[color:var(--danger)] text-[color:var(--danger)] hover:bg-[color:color-mix(in_srgb,var(--danger)_10%,transparent)]"
+                              title="Delete"
+                            >
+                              <FiTrash2 size={14} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {isExpanded && (
+                        <tr key={`${s._id}-expanded`} className="border-b border-[color:var(--border)] bg-[color:var(--surface-2)]">
+                          <td colSpan={8} className="px-4 py-4">
+                            <div className="grid gap-4 md:grid-cols-2">
+                              {/* Speakers */}
+                              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
+                                <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                                  <FiUsers size={14} /> Speakers ({assigned}/{max})
+                                </h4>
+                                <div className="space-y-2">
+                                  {s.speaker && (
+                                    <div className="flex items-center gap-2 rounded-lg bg-[color:color-mix(in_srgb,var(--success)_8%,transparent)] px-3 py-2">
+                                      <span className="h-2 w-2 rounded-full bg-[color:var(--success)]" />
+                                      <div>
+                                        <p className="text-sm font-medium text-[color:var(--ink)]">{s.speaker}</p>
+                                        <p className="text-xs text-[color:var(--muted)]">Organizer{s.speakerPhone ? ` · ${s.speakerPhone}` : ''}</p>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {sessionAssignments.map((a) => (
+                                    <div key={a._id} className="flex items-center gap-2 rounded-lg bg-[color:color-mix(in_srgb,var(--accent)_8%,transparent)] px-3 py-2">
+                                      <span className="h-2 w-2 rounded-full bg-[color:var(--accent)]" />
+                                      <div>
+                                        <p className="text-sm font-medium text-[color:var(--ink)]">{a.speakerName}</p>
+                                        <p className="numeric-font text-xs text-[color:var(--muted)]">{a.speakerPhone}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                  {assigned === 0 && (
+                                    <p className="text-sm text-[color:var(--danger)]">No speakers assigned yet.</p>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Details */}
+                              <div className="rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
+                                <h4 className="mb-3 text-sm font-semibold text-[color:var(--ink)]">Session Details</h4>
+                                <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Principal</dt>
+                                    <dd className="text-[color:var(--ink)]">{s.principal || '—'}</dd>
+                                  </div>
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Phone</dt>
+                                    <dd className="numeric-font text-[color:var(--ink)]">{s.phone || '—'}</dd>
+                                  </div>
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Students</dt>
+                                    <dd className="numeric-font text-[color:var(--ink)]">{s.students ?? '—'}</dd>
+                                  </div>
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Direction</dt>
+                                    <dd className="text-[color:var(--ink)]">{s.direction || '—'}</dd>
+                                  </div>
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Approval By</dt>
+                                    <dd className="text-[color:var(--ink)]">{s.approvalBy || '—'}</dd>
+                                  </div>
+                                  <div>
+                                    <dt className="text-xs text-[color:var(--muted)]">Approval Contact</dt>
+                                    <dd className="numeric-font text-[color:var(--ink)]">{s.approvalContact || '—'}</dd>
+                                  </div>
+                                </dl>
+                                {s.remarks && (
+                                  <div className="mt-3">
+                                    <dt className="text-xs text-[color:var(--muted)]">Remarks</dt>
+                                    <dd className="mt-0.5 text-sm text-[color:var(--ink)]">{s.remarks}</dd>
+                                  </div>
+                                )}
+                                {s.mapUrl && (
+                                  <a
+                                    href={s.mapUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-ghost btn-sm mt-3 inline-flex"
+                                  >
+                                    <FiMapPin size={14} /> Open in Maps
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                })}
               </tbody>
             </table>
           </div>
