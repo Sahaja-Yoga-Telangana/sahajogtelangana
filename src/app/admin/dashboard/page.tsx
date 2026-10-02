@@ -54,7 +54,7 @@ const menuItems = [
     name: 'Tour Sessions',
     description: 'Manage Self Realization Tour sessions and speaker capacity.',
     icon: <MdMap size={24} />,
-    href: '/admin/tour-sessions',
+    href: '/tour-management',
   },
   {
     name: 'Event Registrations',

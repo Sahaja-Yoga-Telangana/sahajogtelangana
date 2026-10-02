@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { CustomUser } from "./app/api/auth/[...nextauth]/options";
-import { hasFeatureAccess } from "@/lib/roles";
+import { hasFeatureAccess, normalizeRole } from "@/lib/roles";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -28,6 +28,28 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(
         new URL(
           "/login?error=You do not have permission to access this route.",
+          request.url
+        )
+      );
+    }
+  }
+
+  // Protect /tour-management (Volunteer + Admin only)
+  if (pathname === "/tour-management" || pathname.startsWith("/tour-management/")) {
+    if (!token) {
+      return NextResponse.redirect(
+        new URL(
+          "/login?error=Please login first to access this route",
+          request.url
+        )
+      );
+    }
+    const user: CustomUser | null = token?.user as CustomUser;
+    const role = normalizeRole(user.role);
+    if (role !== "Volunteer" && role !== "Admin") {
+      return NextResponse.redirect(
+        new URL(
+          "/login?error=Only Volunteers and Admins can manage tour sessions.",
           request.url
         )
       );

@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
   {
     key: 'tour-sessions',
     name: 'Tour Sessions',
-    href: '/admin/tour-sessions',
+    href: '/tour-management',
     description: 'Manage Self Realization Tour sessions and speakers.',
     icon: <MdMap size={20} />,
     roles: ['Admin', 'Volunteer'],
@@ -158,7 +158,7 @@ function getActiveKey(pathname: string, hash = '') {
     return 'volunteer';
   }
 
-  if (pathname === '/admin/tour-sessions') {
+  if (pathname === '/tour-management') {
     return 'tour-sessions';
   }
 
