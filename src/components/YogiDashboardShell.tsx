@@ -85,11 +85,15 @@ export default function YogiDashboardShell({
   memberName,
   activeKey,
   userRole,
+  introTitle,
+  introBody,
 }: {
   children: ReactNode;
   memberName?: string;
   activeKey?: string;
   userRole?: string | null;
+  introTitle?: string;
+  introBody?: string;
 }) {
   const pathname = usePathname();
   const [hash, setHash] = useState('');
@@ -116,7 +120,7 @@ export default function YogiDashboardShell({
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 md:px-6 md:py-10">
         <aside className="hidden w-80 shrink-0 lg:block">
           <div className="sticky top-24 space-y-4 rounded-[30px] border border-[color:var(--border)] bg-[color:var(--surface)] p-5 shadow-soft">
-            <SidebarIntro memberName={memberName} />
+            <SidebarIntro memberName={memberName} title={introTitle} body={introBody} />
             <SidebarNav currentKey={currentKey} t={t} navItems={visibleNavItems} />
           </div>
         </aside>
@@ -165,17 +169,27 @@ function getActiveKey(pathname: string, hash = '') {
   return 'dashboard';
 }
 
-function SidebarIntro({ memberName, compact = false }: { memberName?: string; compact?: boolean }) {
+function SidebarIntro({
+  memberName,
+  compact = false,
+  title,
+  body,
+}: {
+  memberName?: string;
+  compact?: boolean;
+  title?: string;
+  body?: string;
+}) {
   const t = useTranslations();
 
   return (
     <div className={`rounded-[24px] border border-[color:var(--border)] bg-[color:color-mix(in_srgb,var(--surface-2)_70%,transparent)] ${compact ? 'p-4' : 'p-5'}`}>
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">{t('dashboard.shell_title')}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)]">{title || t('dashboard.shell_title')}</p>
       <h1 className={`mt-3 font-semibold text-[color:var(--ink)] ${compact ? 'text-xl' : 'text-2xl'}`}>
         {memberName || t('dashboard.shell_name')}
       </h1>
       <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
-        {t('dashboard.shell_body')}
+        {body || t('dashboard.shell_body')}
       </p>
     </div>
   );
