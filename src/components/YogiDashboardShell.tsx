@@ -7,12 +7,13 @@ import {
   MdDashboard,
   MdEventNote,
   MdGroups,
+  MdMap,
   MdPersonAddAlt1,
   MdRateReview,
   MdVolunteerActivism,
 } from 'react-icons/md';
 import { useTranslations } from '@/app/provider/localeProvider';
-import { hasFeatureAccess } from '@/lib/roles';
+import { hasFeatureAccess, normalizeRole } from '@/lib/roles';
 
 type NavItem = {
   key: string;
@@ -21,6 +22,7 @@ type NavItem = {
   description: string;
   icon: ReactNode;
   requiresFeatureAccess?: boolean;
+  roles?: string[];
 };
 
 const navItems: NavItem[] = [
@@ -46,6 +48,14 @@ const navItems: NavItem[] = [
     description: 'Claim a small batch and update seeker follow-up notes.',
     icon: <MdGroups size={20} />,
     requiresFeatureAccess: true,
+  },
+  {
+    key: 'tour-sessions',
+    name: 'Tour Sessions',
+    href: '/admin/tour-sessions',
+    description: 'Manage Self Realization Tour sessions and speakers.',
+    icon: <MdMap size={20} />,
+    roles: ['Admin', 'Volunteer'],
   },
   {
     key: 'event-registrations',
@@ -94,9 +104,13 @@ export default function YogiDashboardShell({
   }, []);
 
   const currentKey = activeKey || getActiveKey(pathname, hash);
-  const visibleNavItems = navItems.filter(
-    (item) => !item.requiresFeatureAccess || hasFeatureAccess(userRole)
-  );
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.roles) {
+      const role = normalizeRole(userRole);
+      return !!role && item.roles.includes(role);
+    }
+    return !item.requiresFeatureAccess || hasFeatureAccess(userRole);
+  });
   return (
     <div className="min-h-screen bg-[color:var(--bg)]">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 md:px-6 md:py-10">
@@ -142,6 +156,10 @@ function getActiveKey(pathname: string, hash = '') {
 
   if (pathname === '/volunteer') {
     return 'volunteer';
+  }
+
+  if (pathname === '/admin/tour-sessions') {
+    return 'tour-sessions';
   }
 
   return 'dashboard';

@@ -9,6 +9,7 @@ import {
   MdHowToReg,
   MdInsights,
   MdLightbulb,
+  MdMap,
   MdMessage,
   MdPeople,
   MdSupervisorAccount,
@@ -48,6 +49,12 @@ const menuItems = [
     description: 'Create, manage, and update upcoming events.',
     icon: <MdCalendarToday size={24} />,
     href: '/admin/events',
+  },
+  {
+    name: 'Tour Sessions',
+    description: 'Manage Self Realization Tour sessions and speaker capacity.',
+    icon: <MdMap size={24} />,
+    href: '/admin/tour-sessions',
   },
   {
     name: 'Event Registrations',
