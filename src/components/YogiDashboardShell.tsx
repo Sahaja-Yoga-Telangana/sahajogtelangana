@@ -270,6 +270,8 @@ function getNavLabel(t: ReturnType<typeof useTranslations>, key: string) {
       return t('dashboard.share_experience');
     case 'volunteer':
       return t('dashboard.volunteer');
+    case 'tour-sessions':
+      return 'Tour Sessions';
     default:
       return t('nav.dashboard');
   }
@@ -287,6 +289,8 @@ function getNavDescription(t: ReturnType<typeof useTranslations>, key: string) {
       return t('dashboard.share_experience_desc');
     case 'volunteer':
       return t('dashboard.volunteer_desc');
+    case 'tour-sessions':
+      return 'Manage tour sessions and speaker capacity.';
     default:
       return t('dashboard.dashboard_desc');
   }
